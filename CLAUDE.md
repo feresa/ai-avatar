@@ -10,8 +10,8 @@
 - `src/components/Hook.tsx`：開場標題、圖示斜線、小膠囊
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
-- `src/timeline.ts`：剪掉段落後的時間換算
-- `scripts/`：`new` / `transcribe` / `fix-captions` / `cuts` / `render` / `studio` 指令
+- `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
+- `scripts/`：`new` / `transcribe` / `fix-captions` / `cuts` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## 改影片的原則
 
@@ -33,9 +33,12 @@
 4. `zooms`：1~3 處，放在最有情緒或最重要的句子，`scale` 1.1~1.2
 5. `cards`：講到條列（第一、第二⋯）、數字、結論時放字卡，`dur` 1.2~2 秒，和字幕不要同時塞太多字
 6. `stickers`：肯定句 → `check`、否定 / 錯誤做法 → `cross`、喜歡 / 感謝 → `heart`、強調 → `fire` 或 `star`，一支片 3~6 個就好，不要擋到臉
-7. `inserts`：講到具體的東西（產品、地點、動作）適合插圖；**專案資料夾裡沒有的圖不要亂填檔名**，改成列清單告訴使用者要準備哪些圖、檔名叫什麼
-8. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
-9. 改完輸出 3~4 張關鍵時間的截圖檢查，再跟使用者說明加了哪些效果、在第幾秒
+7. `inserts`：講到具體的東西（產品、地點、動作）適合插圖。專案資料夾裡有的圖直接用；沒有的就加 `prompt`（中文描述畫面，具體寫人物、動作、場景、光線）或 `stock`（英文圖庫關鍵字），`src` 用 `img-1.jpg`、`img-2.jpg`⋯，再跑 `npm run images -- <名稱>` 產生並打開來看。產品圖（例如美安產品）不要用 AI 畫，請使用者提供真實照片
+8. `transitions`：換話題、段落轉折（「接著」「很多朋友問我」「我的回答」）放 1~3 個，`whip` 或 `flash` 最常用；開場標題結束時可放一個 `flash`。不要每句都放
+9. `music`：跑 `npm run music -- <名稱> <風格>`，靜心呼吸用 `calm`、生活分享用 `warm`、教學清單用 `upbeat`
+10. `publish`：照內容寫標題（20 字內、有吸引力）、說明（2~3 句＋行動呼籲）、5~8 個中文 hashtag；`privacy` 保持 `private`。**不要自己跑 `npm run publish`**，發佈要使用者自己下指令
+11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
+12. 改完輸出 3~4 張關鍵時間的截圖檢查，再跟使用者說明加了哪些效果、在第幾秒
 
 ## 改完要檢查
 

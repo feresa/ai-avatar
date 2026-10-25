@@ -61,6 +61,22 @@ export type Insert = {
   start?: number;
   /** 圖片上的說明小字（可省略） */
   label?: string;
+  /** 自動產生插圖：AI 畫圖的描述（npm run images 會照這段文字產生 src 這張圖） */
+  prompt?: string;
+  /** 自動產生插圖：改用免費圖庫 Pexels 的真實照片，填搜尋關鍵字（英文較準） */
+  stock?: string;
+};
+
+export type TransitionType = "flash" | "zoom" | "whip" | "slide" | "fade" | "glitch";
+
+/** 轉場特效：在某個時間點閃白、推近、甩鏡、滑入、淡黑、故障閃爍 */
+export type Transition = {
+  at: number;
+  type: TransitionType;
+  /** 持續多久（秒），預設 0.35 */
+  dur?: number;
+  /** 加「咻」的音效（預設開） */
+  sound?: boolean;
 };
 
 /** 貼圖小動畫：內建 check / cross / arrow / heart / star / fire，或任何 emoji 文字、或圖片檔 */
@@ -78,6 +94,17 @@ export type Sticker = {
   /** 轉幾度（箭頭指向用） */
   rotate?: number;
   anim?: "pop" | "bounce" | "float";
+  /** 跳出來時加「啵」的音效 */
+  sound?: boolean;
+};
+
+/** 發佈到 YouTube / Instagram 用的文字 */
+export type Publish = {
+  title?: string;
+  description?: string;
+  tags?: string[];
+  /** YouTube 公開程度，預設 private（先自己看過再公開） */
+  privacy?: "private" | "unlisted" | "public";
 };
 
 export type Project = {
@@ -114,7 +141,11 @@ export type Project = {
   cards?: Card[];
   inserts?: Insert[];
   stickers?: Sticker[];
-  music?:{ src: string; volume?: number } | null;
+  transitions?: Transition[];
+  /** 每個剪接點（剪掉停頓的地方）都自動加的轉場，例如 "zoom"；null = 不加 */
+  cutTransition?: TransitionType | null;
+  music?: { src: string; volume?: number } | null;
+  publish?: Publish;
   sfx?: Sfx[];
   /** 下半部加深，字比較清楚 */
   gradient?: boolean;

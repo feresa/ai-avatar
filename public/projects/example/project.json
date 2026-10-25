@@ -103,5 +103,11 @@
       "rotate": -90,
       "anim": "bounce"
     }
+  ],
+  "transitions": [
+    {
+      "at": 3.0,
+      "type": "flash"
+    }
   ]
 }

@@ -158,3 +158,13 @@ export const applyAllTranscripts = () => {
     if (n) console.log(`✏️ ${name}：逐字稿改了 ${n} 句，已更新字幕`);
   }
 };
+
+/** 讀專案根目錄的 .env（API 金鑰放這裡，不會進 git） */
+export const loadEnv = () => {
+  const file = path.join(ROOT, ".env");
+  if (!fs.existsSync(file)) return;
+  for (const line of fs.readFileSync(file, "utf-8").split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+  }
+};

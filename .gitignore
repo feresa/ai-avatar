@@ -8,5 +8,10 @@ public/projects/*/*.MOV
 public/projects/*/*.wav
 public/projects/*/*.mp3
 public/projects/*/*.m4a
+# 自動產生的插圖
+public/projects/*/img-*
 !public/projects/example/**
 .DS_Store
+# API 金鑰、登入資訊
+.env
+.secrets/

@@ -43,10 +43,16 @@ if (fs.existsSync(file)) {
     },
     captions: { enabled: true, highlight: [], maxChars: 9, y: 0.76, hideDuringHook: true },
     zooms: [],
+    cards: [],
+    inserts: [],
+    stickers: [],
+    transitions: [],
+    cutTransition: null,
     music: null,
     sfx: [],
     gradient: true,
     videoVolume: 1,
+    publish: { title: "", description: "", tags: [], privacy: "private" },
   };
   writeProject(name, p);
   console.log(`✅ 建好專案 ${name}（影片 ${durationSec} 秒）`);

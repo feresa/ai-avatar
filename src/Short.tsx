@@ -7,6 +7,7 @@ import { Hook } from "./components/Hook";
 import { Insert } from "./components/Insert";
 import { Sticker } from "./components/Sticker";
 import { mapCaptions, segmentsOf, shiftCaptions, srcToOut } from "./timeline";
+import { transitionLook, transitionsOf } from "./transitions";
 import type { ShortProps } from "./types";
 
 const zoomAt = (t: number, zooms: { start: number; end: number; scale: number }[]) => {
@@ -41,6 +42,10 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   const hookFrom = hook ? Math.round(srcToOut(segs, hook.from) * fps) : 0;
   const hookTo = hook ? Math.round(srcToOut(segs, hook.to) * fps) : 0;
   const cap = p.captions ?? {};
+  const transitions = transitionsOf(p, segs);
+  const look = transitionLook(t, transitions);
+  // 故障閃爍：畫面左右抖動、色偏
+  const jitter = look.glitch ? Math.sin(frame * 2.3) * look.glitch * 0.03 : 0;
   // 字卡、插圖、貼圖：原始影片的時間 → 成品的格數
   const span = (at: number, dur: number) => {
     const from = Math.round(srcToOut(segs, at) * fps);
@@ -50,7 +55,16 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       {/* 影片：每一段保留的內容接起來 */}
-      <AbsoluteFill style={{ transform: `scale(${scale})`, transformOrigin: focus }}>
+      <AbsoluteFill
+        style={{
+          transform: `translateX(${(look.x + jitter) * 100}%) scale(${scale * look.scale})`,
+          transformOrigin: focus,
+          filter:
+            [look.blur > 0.3 ? `blur(${look.blur.toFixed(1)}px)` : "", look.glitch ? `hue-rotate(${Math.round(look.glitch * 40 * Math.sin(frame * 1.7))}deg) saturate(${1 + look.glitch * 0.6}) contrast(${1 + look.glitch * 0.3})` : ""]
+              .filter(Boolean)
+              .join(" ") || undefined,
+        }}
+      >
         {segs.map((s, i) => (
           <Sequence
             key={i}
@@ -76,6 +90,10 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
           </Sequence>
         );
       })}
+
+      {look.overlay && look.overlayOpacity > 0.01 && (
+        <AbsoluteFill style={{ backgroundColor: look.overlay, opacity: look.overlayOpacity }} />
+      )}
 
       {p.gradient !== false && (
         <AbsoluteFill style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%)" }} />
@@ -117,9 +135,23 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       )}
 
       {p.music && <Audio src={staticFile(`${dir}/${p.music.src}`)} volume={p.music.volume ?? 0.12} loop />}
+      {transitions
+        .filter((tr) => tr.sound)
+        .map((tr, i) => (
+          <Sequence key={`trs${i}`} from={Math.max(0, Math.round((tr.t - 0.18) * fps))}>
+            <Audio src={staticFile("sfx/whoosh.wav")} volume={0.5} />
+          </Sequence>
+        ))}
+      {(p.stickers ?? [])
+        .filter((st) => st.sound)
+        .map((st, i) => (
+          <Sequence key={`sts${i}`} from={span(st.at, st.dur).from}>
+            <Audio src={staticFile("sfx/pop.wav")} volume={0.5} />
+          </Sequence>
+        ))}
       {(p.sfx ?? []).map((s, i) => (
         <Sequence key={i} from={Math.round(srcToOut(segs, s.at) * fps)}>
-          <Audio src={staticFile(`${dir}/${s.src}`)} volume={s.volume ?? 0.6} />
+          <Audio src={staticFile(s.src.startsWith("sfx/") ? s.src : `${dir}/${s.src}`)} volume={s.volume ?? 0.6} />
         </Sequence>
       ))}
     </AbsoluteFill>

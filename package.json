@@ -8,7 +8,10 @@
     "transcribe": "tsx scripts/transcribe.ts",
     "fix-captions": "tsx scripts/fix-captions.ts",
     "cuts": "tsx scripts/cuts.ts",
+    "music": "tsx scripts/music.ts",
+    "images": "tsx scripts/images.ts",
     "render": "tsx scripts/render.ts",
+    "publish": "tsx scripts/publish.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
