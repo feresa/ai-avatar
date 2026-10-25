@@ -55,6 +55,7 @@ npm run render -- breath-01
 - 「講到『最重要的是』那句推近」
 - 「開頭三個圖示換成：手機、電腦、相機」
 - 「字幕再大一點，往上移一點」
+- 「字幕比說話慢，再提早一點」（調 `captions.lead`）
 - 「加背景音樂 music.mp3，小聲一點」
 - 「**照逐字稿幫我規劃畫面**」：Claude 會依內容寫開場標題、挑重點詞、加推近、字卡、貼圖，需要插圖的地方會告訴你要準備什麼圖
 - 「講到三個方法的時候，依序跳出 ①②③ 字卡」
@@ -68,7 +69,7 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | 欄位 | 說明 |
 |---|---|
 | `hook` | 開場標題：`lines`（每行文字和顏色）、`badge`（小膠囊）、`icons`（圖示）、`strike`（打斜線）、`from` / `to`（出現時間） |
-| `captions` | 字幕：`highlight`（重點詞）、`maxChars`（一行幾個字）、`y`（垂直位置 0~1）、`fontSize` |
+| `captions` | 字幕：`highlight`（重點詞）、`maxChars`（一行幾個字）、`y`（垂直位置 0~1）、`fontSize`、`lead`（提早幾秒出現，預設 0.15） |
 | `zooms` | 推近：`[{ "at": 秒, "dur": 秒, "scale": 1.15 }]` |
 | `keep` | 要保留的段落 `[[開始, 結束], ...]`，`null` = 整支保留 |
 | `focusX` / `focusY` / `baseZoom` | 直式裁切的焦點和整體放大 |

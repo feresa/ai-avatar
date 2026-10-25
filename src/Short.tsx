@@ -6,7 +6,7 @@ import { Card } from "./components/Card";
 import { Hook } from "./components/Hook";
 import { Insert } from "./components/Insert";
 import { Sticker } from "./components/Sticker";
-import { mapCaptions, segmentsOf, srcToOut } from "./timeline";
+import { mapCaptions, segmentsOf, shiftCaptions, srcToOut } from "./timeline";
 import type { ShortProps } from "./types";
 
 const zoomAt = (t: number, zooms: { start: number; end: number; scale: number }[]) => {
@@ -83,7 +83,7 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
 
       {cap.enabled !== false && captions.length > 0 && (
         <Captions
-          captions={mapCaptions(segs, captions)}
+          captions={mapCaptions(segs, shiftCaptions(captions, cap.lead ?? 0.15))}
           highlight={cap.highlight ?? []}
           maxChars={cap.maxChars ?? 9}
           y={cap.y ?? 0.76}

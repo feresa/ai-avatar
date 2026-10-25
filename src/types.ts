@@ -107,6 +107,8 @@ export type Project = {
     /** 開場標題出現時先不顯示字幕 */
     hideDuringHook?: boolean;
     fontSize?: number;
+    /** 字幕提早幾秒出現（語音辨識的時間常常晚一點），預設 0.15，覺得太早可設 0 */
+    lead?: number;
   };
   zooms?: Zoom[];
   cards?: Card[];

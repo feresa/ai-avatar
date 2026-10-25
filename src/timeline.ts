@@ -53,3 +53,13 @@ export const mapCaptions = (segs: Segment[], caps: Caption[]): Caption[] => {
     return { ...c, startMs: clamp(c.startMs), endMs: clamp(c.endMs), timestampMs: null };
   });
 };
+
+/** 整體提早（秒）：語音辨識給的字時間常常比實際說話晚一點 */
+export const shiftCaptions = (caps: Caption[], lead: number): Caption[] =>
+  lead
+    ? caps.map((c) => ({
+        ...c,
+        startMs: Math.max(0, c.startMs - lead * 1000),
+        endMs: Math.max(0, c.endMs - lead * 1000),
+      }))
+    : caps;
