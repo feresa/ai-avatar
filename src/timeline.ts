@@ -30,13 +30,26 @@ export const srcToOut = (segs: Segment[], t: number): number => {
   return outDuration(segs);
 };
 
-/** 字幕換到成品時間；整個字落在剪掉的段落就拿掉 */
-export const mapCaptions = (segs: Segment[], caps: Caption[]): Caption[] =>
-  caps.flatMap((c) => {
-    const mid = (c.startMs + c.endMs) / 2000;
-    const seg = segs.find((s) => mid >= s.srcStart && mid <= s.srcEnd);
-    if (!seg) return [];
+/**
+ * 字幕換到成品時間。語音辨識給的字時間常常拖到停頓裡，剛好被剪掉；
+ * 所以字不拿掉，落在剪掉段落的字就貼到最近的保留段落邊緣（通常是前一段的結尾）。
+ */
+export const mapCaptions = (segs: Segment[], caps: Caption[]): Caption[] => {
+  if (!segs.length) return [];
+  return caps.map((c) => {
+    const s0 = c.startMs / 1000;
+    const e0 = c.endMs / 1000;
+    const gap = (s: Segment) => Math.max(0, s.srcStart - e0, s0 - s.srcEnd);
+    const overlap = (s: Segment) => Math.min(e0, s.srcEnd) - Math.max(s0, s.srcStart);
+    // 和哪一段重疊最多就算哪一段；都沒重疊就找最近的一段
+    const seg = segs.reduce((best, s) => {
+      const ob = overlap(best);
+      const os = overlap(s);
+      if (os > 0 || ob > 0) return os > ob ? s : best;
+      return gap(s) < gap(best) ? s : best;
+    });
     const shift = (seg.outStart - seg.srcStart) * 1000;
     const clamp = (ms: number) => Math.min(Math.max(ms, seg.srcStart * 1000), seg.srcEnd * 1000) + shift;
-    return [{ ...c, startMs: clamp(c.startMs), endMs: clamp(c.endMs), timestampMs: null }];
+    return { ...c, startMs: clamp(c.startMs), endMs: clamp(c.endMs), timestampMs: null };
   });
+};
