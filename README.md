@@ -6,6 +6,7 @@
 - 逐字跳出的字幕：正在說的字變黃放大，重點詞一直是黃色
 - 自動剪掉停頓
 - 重點處鏡頭推近
+- 重點字卡（「① 腹式呼吸」）、插圖 / 插入影片（B-roll）、貼圖小動畫（打勾、箭頭、愛心、emoji⋯）
 - 直式 9:16（1080×1920）、下半部加深讓字更清楚
 - 背景音樂、音效
 
@@ -55,6 +56,10 @@ npm run render -- breath-01
 - 「開頭三個圖示換成：手機、電腦、相機」
 - 「字幕再大一點，往上移一點」
 - 「加背景音樂 music.mp3，小聲一點」
+- 「**照逐字稿幫我規劃畫面**」：Claude 會依內容寫開場標題、挑重點詞、加推近、字卡、貼圖，需要插圖的地方會告訴你要準備什麼圖
+- 「講到三個方法的時候，依序跳出 ①②③ 字卡」
+- 「講到『手機』的時候，上方小視窗放 phone.jpg」（圖片先放進專案資料夾）
+- 「說『對』的時候跳一個打勾」
 
 Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），預覽畫面會馬上更新。
 
@@ -67,6 +72,9 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `zooms` | 推近：`[{ "at": 秒, "dur": 秒, "scale": 1.15 }]` |
 | `keep` | 要保留的段落 `[[開始, 結束], ...]`，`null` = 整支保留 |
 | `focusX` / `focusY` / `baseZoom` | 直式裁切的焦點和整體放大 |
+| `cards` | 重點字卡：`[{ "at": 秒, "dur": 秒, "text": "① 腹式呼吸", "sub": "小字" }]` |
+| `inserts` | 插圖 / 插入影片：`[{ "at": 秒, "dur": 秒, "src": "photo.jpg", "mode": "full" }]`，`mode` 可選 `full`（蓋滿）、`pip`（上方小視窗）、`top`（上半部） |
+| `stickers` | 貼圖小動畫：`[{ "at": 秒, "dur": 秒, "kind": "check" }]`，`kind` 可選 `check` `cross` `arrow` `heart` `star` `fire`，或用 `"emoji": "🌿"`、`"src": "圖.png"`；`x` `y` 位置、`size` 大小、`rotate` 角度、`anim`（`pop` `bounce` `float`） |
 | `music` / `sfx` | 背景音樂、音效（音檔放在專案資料夾裡） |
 
 所有時間都用**原始影片的秒數**（跟 transcript.txt 一樣），剪掉的段落程式會自動換算。

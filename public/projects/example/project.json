@@ -55,5 +55,53 @@
   "music": null,
   "sfx": [],
   "gradient": true,
-  "videoVolume": 1
+  "videoVolume": 1,
+  "cards": [
+    {
+      "at": 3.3,
+      "dur": 1.6,
+      "text": "① 腹式呼吸",
+      "sub": "每天早上五分鐘",
+      "color": "yellow",
+      "y": 0.42
+    }
+  ],
+  "inserts": [
+    {
+      "at": 5.1,
+      "dur": 2.2,
+      "src": "broll.jpg",
+      "mode": "pip",
+      "label": "插圖範例"
+    }
+  ],
+  "stickers": [
+    {
+      "at": 3.6,
+      "dur": 1.4,
+      "kind": "check",
+      "x": 0.8,
+      "y": 0.3,
+      "size": 0.18
+    },
+    {
+      "at": 6.2,
+      "dur": 1.6,
+      "emoji": "🌿",
+      "x": 0.2,
+      "y": 0.62,
+      "size": 0.16,
+      "anim": "float"
+    },
+    {
+      "at": 5.4,
+      "dur": 1.8,
+      "kind": "arrow",
+      "x": 0.5,
+      "y": 0.53,
+      "size": 0.16,
+      "rotate": -90,
+      "anim": "bounce"
+    }
+  ]
 }

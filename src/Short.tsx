@@ -1,8 +1,11 @@
-// 一支短影片：影片（剪掉停頓、直式裁切、推近）＋ 下半部加深 ＋ 開場標題 ＋ 逐字字幕 ＋ 音樂音效
+// 一支短影片：影片（剪掉停頓、直式裁切、推近）＋ 插圖 ＋ 下半部加深 ＋ 逐字字幕 ＋ 字卡 ＋ 貼圖 ＋ 開場標題 ＋ 音樂音效
 import React from "react";
 import { AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { Captions } from "./components/Captions";
+import { Card } from "./components/Card";
 import { Hook } from "./components/Hook";
+import { Insert } from "./components/Insert";
+import { Sticker } from "./components/Sticker";
 import { mapCaptions, segmentsOf, srcToOut } from "./timeline";
 import type { ShortProps } from "./types";
 
@@ -38,6 +41,11 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   const hookFrom = hook ? Math.round(srcToOut(segs, hook.from) * fps) : 0;
   const hookTo = hook ? Math.round(srcToOut(segs, hook.to) * fps) : 0;
   const cap = p.captions ?? {};
+  // 字卡、插圖、貼圖：原始影片的時間 → 成品的格數
+  const span = (at: number, dur: number) => {
+    const from = Math.round(srcToOut(segs, at) * fps);
+    return { from, durationInFrames: Math.max(1, Math.round(srcToOut(segs, at + dur) * fps) - from) };
+  };
 
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
@@ -60,6 +68,15 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
         ))}
       </AbsoluteFill>
 
+      {(p.inserts ?? []).map((ins, i) => {
+        const sp = span(ins.at, ins.dur);
+        return (
+          <Sequence key={`ins${i}`} {...sp} premountFor={fps}>
+            <Insert insert={ins} dir={dir} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+
       {p.gradient !== false && (
         <AbsoluteFill style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%)" }} />
       )}
@@ -74,6 +91,24 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
           hiddenUntilMs={hook && cap.hideDuringHook !== false ? (hookTo / fps) * 1000 : 0}
         />
       )}
+
+      {(p.cards ?? []).map((c, i) => {
+        const sp = span(c.at, c.dur);
+        return (
+          <Sequence key={`card${i}`} {...sp}>
+            <Card card={c} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+
+      {(p.stickers ?? []).map((st, i) => {
+        const sp = span(st.at, st.dur);
+        return (
+          <Sequence key={`st${i}`} {...sp}>
+            <Sticker sticker={st} dir={dir} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
 
       {hook && hookTo > hookFrom && (
         <Sequence from={hookFrom} durationInFrames={hookTo - hookFrom}>
