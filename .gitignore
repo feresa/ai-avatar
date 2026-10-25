@@ -1,0 +1,12 @@
+node_modules/
+out/
+whisper.cpp/
+# 影片、音檔太大不進 git；每個專案只保留設定檔和字幕
+public/projects/*/*.mp4
+public/projects/*/*.mov
+public/projects/*/*.MOV
+public/projects/*/*.wav
+public/projects/*/*.mp3
+public/projects/*/*.m4a
+!public/projects/example/**
+.DS_Store

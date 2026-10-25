@@ -1,0 +1,198 @@
+[
+ {
+  "text": "大",
+  "startMs": 3200,
+  "endMs": 3370,
+  "timestampMs": 3285,
+  "confidence": 1
+ },
+ {
+  "text": "家",
+  "startMs": 3390,
+  "endMs": 3560,
+  "timestampMs": 3475,
+  "confidence": 1
+ },
+ {
+  "text": "好，",
+  "startMs": 3580,
+  "endMs": 3750,
+  "timestampMs": 3665,
+  "confidence": 1
+ },
+ {
+  "text": "我",
+  "startMs": 4020,
+  "endMs": 4190,
+  "timestampMs": 4105,
+  "confidence": 1
+ },
+ {
+  "text": "是",
+  "startMs": 4210,
+  "endMs": 4380,
+  "timestampMs": 4295,
+  "confidence": 1
+ },
+ {
+  "text": "王",
+  "startMs": 4400,
+  "endMs": 4570,
+  "timestampMs": 4485,
+  "confidence": 1
+ },
+ {
+  "text": "明",
+  "startMs": 4590,
+  "endMs": 4760,
+  "timestampMs": 4675,
+  "confidence": 1
+ },
+ {
+  "text": "智。",
+  "startMs": 4780,
+  "endMs": 4950,
+  "timestampMs": 4865,
+  "confidence": 1
+ },
+ {
+  "text": "今",
+  "startMs": 5220,
+  "endMs": 5390,
+  "timestampMs": 5305,
+  "confidence": 1
+ },
+ {
+  "text": "天",
+  "startMs": 5410,
+  "endMs": 5580,
+  "timestampMs": 5495,
+  "confidence": 1
+ },
+ {
+  "text": "分",
+  "startMs": 5600,
+  "endMs": 5770,
+  "timestampMs": 5685,
+  "confidence": 1
+ },
+ {
+  "text": "享",
+  "startMs": 5790,
+  "endMs": 5960,
+  "timestampMs": 5875,
+  "confidence": 1
+ },
+ {
+  "text": "一",
+  "startMs": 5980,
+  "endMs": 6150,
+  "timestampMs": 6065,
+  "confidence": 1
+ },
+ {
+  "text": "個",
+  "startMs": 6170,
+  "endMs": 6340,
+  "timestampMs": 6255,
+  "confidence": 1
+ },
+ {
+  "text": "簡",
+  "startMs": 6610,
+  "endMs": 6780,
+  "timestampMs": 6695,
+  "confidence": 1
+ },
+ {
+  "text": "單",
+  "startMs": 6800,
+  "endMs": 6970,
+  "timestampMs": 6885,
+  "confidence": 1
+ },
+ {
+  "text": "的",
+  "startMs": 6990,
+  "endMs": 7160,
+  "timestampMs": 7075,
+  "confidence": 1
+ },
+ {
+  "text": "呼",
+  "startMs": 7180,
+  "endMs": 7350,
+  "timestampMs": 7265,
+  "confidence": 1
+ },
+ {
+  "text": "吸",
+  "startMs": 7370,
+  "endMs": 7540,
+  "timestampMs": 7455,
+  "confidence": 1
+ },
+ {
+  "text": "方",
+  "startMs": 7560,
+  "endMs": 7730,
+  "timestampMs": 7645,
+  "confidence": 1
+ },
+ {
+  "text": "法，",
+  "startMs": 7750,
+  "endMs": 7920,
+  "timestampMs": 7835,
+  "confidence": 1
+ },
+ {
+  "text": "每",
+  "startMs": 8190,
+  "endMs": 8360,
+  "timestampMs": 8275,
+  "confidence": 1
+ },
+ {
+  "text": "天",
+  "startMs": 8380,
+  "endMs": 8550,
+  "timestampMs": 8465,
+  "confidence": 1
+ },
+ {
+  "text": "只",
+  "startMs": 8570,
+  "endMs": 8740,
+  "timestampMs": 8655,
+  "confidence": 1
+ },
+ {
+  "text": "要",
+  "startMs": 8760,
+  "endMs": 8930,
+  "timestampMs": 8845,
+  "confidence": 1
+ },
+ {
+  "text": "五",
+  "startMs": 8950,
+  "endMs": 9120,
+  "timestampMs": 9035,
+  "confidence": 1
+ },
+ {
+  "text": "分",
+  "startMs": 9140,
+  "endMs": 9310,
+  "timestampMs": 9225,
+  "confidence": 1
+ },
+ {
+  "text": "鐘。",
+  "startMs": 9330,
+  "endMs": 9500,
+  "timestampMs": 9415,
+  "confidence": 1
+ }
+]

@@ -1,0 +1,59 @@
+{
+  "video": "source.mp4",
+  "durationSec": 8.0,
+  "focusX": 0.5,
+  "focusY": 0.4,
+  "baseZoom": 1,
+  "keep": null,
+  "hook": {
+    "from": 0,
+    "to": 3,
+    "lines": [
+      {
+        "text": "這支片",
+        "color": "white"
+      },
+      {
+        "text": "沒開剪輯軟體",
+        "color": "yellow"
+      }
+    ],
+    "badge": "每個特效都是 Claude 剪的",
+    "icons": [
+      {
+        "label": "剪輯A"
+      },
+      {
+        "label": "剪輯B",
+        "bg": "#1F1F1F"
+      },
+      {
+        "label": "剪輯C",
+        "bg": "#00005B"
+      }
+    ],
+    "strike": true,
+    "y": 0.66
+  },
+  "captions": {
+    "enabled": true,
+    "highlight": [
+      "呼吸",
+      "五分鐘"
+    ],
+    "maxChars": 9,
+    "y": 0.76,
+    "hideDuringHook": true
+  },
+  "zooms": [
+    {
+      "at": 5.5,
+      "dur": 1.5,
+      "scale": 1.12
+    }
+  ],
+  "music": null,
+  "sfx": [],
+  "gradient": true,
+  "videoVolume": 1
+}
