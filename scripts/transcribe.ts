@@ -5,7 +5,7 @@ import { downloadWhisperModel, installWhisperCpp, toCaptions, transcribe, type W
 import * as OpenCC from "opencc-js";
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, die, fmtTime, projectDir, readProject, remotionTool } from "./lib";
+import { ROOT, die, projectDir, readProject, remotionTool, writeTranscript } from "./lib";
 
 const name = process.argv[2] ?? die("用法：npm run transcribe -- 專案名");
 const p = readProject(name);
@@ -45,19 +45,7 @@ const captions: Caption[] = toCaptions({ whisperCppOutput: out }).captions
 fs.writeFileSync(path.join(dir, "captions.json"), JSON.stringify(captions, null, 1));
 
 // 給人看的逐字稿：每句一行，前面是開始時間（原始影片的秒數，剪輯腳本就用這個時間）
-const lines: string[] = [];
-let cur = "";
-let start = 0;
-for (const c of captions) {
-  if (!cur) start = c.startMs / 1000;
-  cur += c.text.trim();
-  if (/[，。！？,.!?]$/.test(c.text.trim()) || cur.length >= 22) {
-    lines.push(`[${fmtTime(start)}] ${cur}`);
-    cur = "";
-  }
-}
-if (cur) lines.push(`[${fmtTime(start)}] ${cur}`);
-fs.writeFileSync(path.join(dir, "transcript.txt"), lines.join("\n") + "\n");
-console.log(`✅ 字幕完成：${captions.length} 個字詞，逐字稿 ${lines.length} 句`);
-console.log(`   public/projects/${name}/transcript.txt（有錯字直接改 captions.json 裡的 text）`);
+const lineCount = writeTranscript(name, captions);
+console.log(`✅ 字幕完成：${captions.length} 個字詞，逐字稿 ${lineCount} 句`);
+console.log(`   public/projects/${name}/transcript.txt（有錯字直接改這個檔，行首的時間不要動）`);
 console.log(`   下一步：npm run cuts -- ${name}（自動剪掉停頓，可略過）`);

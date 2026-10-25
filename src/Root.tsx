@@ -7,8 +7,8 @@ import { outDuration, segmentsOf } from "./timeline";
 import type { Project, ShortProps } from "./types";
 
 const load = async (name: string): Promise<{ project: Project; captions: Caption[] }> => {
-  const project = (await (await fetch(staticFile(`projects/${name}/project.json`))).json()) as Project;
-  const res = await fetch(staticFile(`projects/${name}/captions.json`));
+  const project = (await (await fetch(staticFile(`projects/${name}/project.json`), { cache: "no-store" })).json()) as Project;
+  const res = await fetch(staticFile(`projects/${name}/captions.json`), { cache: "no-store" });
   const captions = res.ok ? ((await res.json()) as Caption[]) : [];
   return { project, captions };
 };

@@ -83,7 +83,11 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 
 ## 常見問題
 
-- **字幕有錯字**：直接改 `captions.json` 裡的 `text`，或請 Claude 幫你改
+- **字幕有錯字**：直接改 `transcript.txt`，存檔就好，**行首的 `[00:04.0]` 時間不要動**。
+  - `npm run render` 會自動把改過的字套進字幕
+  - `npm run studio` 開著的時候改也可以，終端機會顯示「已更新字幕」，預覽畫面按 F5 重新整理
+  - 想手動套用：`npm run fix-captions -- 專案名`
+  - 改過的那句字幕會在原本的時間內平均分配，沒改的句子時間不變
 - **語音模型**：預設 `medium`；想更準可以 `WHISPER_MODEL=large-v3 npm run transcribe -- 專案名`（比較慢）
 - **影片、音檔不會上傳到 GitHub**（太大），只有剪輯腳本和字幕會
 

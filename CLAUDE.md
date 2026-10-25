@@ -11,16 +11,17 @@
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
 - `src/timeline.ts`：剪掉段落後的時間換算
-- `scripts/`：`new` / `transcribe` / `cuts` / `render` 指令
+- `scripts/`：`new` / `transcribe` / `fix-captions` / `cuts` / `render` / `studio` 指令
 
 ## 改影片的原則
 
 1. **先改 project.json，不夠才改元件。** 「標題改字」「重點詞」「哪裡推近」「字幕位置」都是改剪輯腳本
 2. **時間一律用原始影片的秒數**（看 `transcript.txt` 的 `[mm:ss.s]`），不要自己扣掉剪掉的段落
-3. 使用者說「講到某句話的時候」：到 `captions.json` 找那幾個字的 `startMs`，換成秒填進去
-4. 開場標題每行最好 6 個字以內；第二行用黃色當重點
-5. 改元件樣式時，所有專案都會一起變；只想改某一支，就在 project.json 加欄位（並更新 `src/types.ts`）
-6. 不要把影片、音檔加進 git（`.gitignore` 已排除）
+3. 字幕錯字：改 `transcript.txt`（行首時間不要動），再跑 `npm run fix-captions -- <名稱>` 套進 `captions.json`；render / studio 也會自動套用
+4. 使用者說「講到某句話的時候」：到 `captions.json` 找那幾個字的 `startMs`，換成秒填進去
+5. 開場標題每行最好 6 個字以內；第二行用黃色當重點
+6. 改元件樣式時，所有專案都會一起變；只想改某一支，就在 project.json 加欄位（並更新 `src/types.ts`）
+7. 不要把影片、音檔加進 git（`.gitignore` 已排除）
 
 ## 「照逐字稿規劃畫面」怎麼做
 

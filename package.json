@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "studio": "remotion studio",
+    "studio": "tsx scripts/studio.ts",
     "new": "tsx scripts/new.ts",
     "transcribe": "tsx scripts/transcribe.ts",
+    "fix-captions": "tsx scripts/fix-captions.ts",
     "cuts": "tsx scripts/cuts.ts",
     "render": "tsx scripts/render.ts",
     "typecheck": "tsc --noEmit"
