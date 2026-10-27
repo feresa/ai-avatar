@@ -67,7 +67,7 @@ export type Insert = {
   stock?: string;
 };
 
-export type TransitionType = "flash" | "zoom" | "whip" | "slide" | "fade" | "glitch";
+export type TransitionType = "flash" | "zoom" | "whip" | "slide" | "fade" | "glitch" | "zoomblur" | "lightleak";
 
 /** 轉場特效：在某個時間點閃白、推近、甩鏡、滑入、淡黑、故障閃爍 */
 export type Transition = {
@@ -118,6 +118,87 @@ export type AutoReply = {
   tag?: string;
   /** 快速回覆按鈕（逗號分隔） */
   quickReplies?: string;
+};
+
+/** 聚光燈：畫面四周變暗，焦點在臉（或指定位置） */
+export type Spotlight = {
+  at: number;
+  dur: number;
+  /** 變暗程度 0~1，預設 0.8 */
+  strength?: number;
+  /** 亮的範圍 0~1，預設 0.32 */
+  radius?: number;
+  /** 亮的中心（0~1），預設是臉的位置 */
+  x?: number;
+  y?: number;
+};
+
+/** 拉遠揭曉：從很近的特寫，一路拉遠到整個畫面 */
+export type Reveal = {
+  at: number;
+  dur: number;
+  /** 一開始放大幾倍，預設 2.2 */
+  from?: number;
+};
+
+/** 便利貼字 */
+export type Note = {
+  at: number;
+  dur: number;
+  text: string;
+  color?: "yellow" | "pink" | "blue" | "green";
+  /** 位置（0~1），預設右邊、臉的下方 */
+  x?: number;
+  y?: number;
+  /** 轉幾度，預設 4 */
+  rotate?: number;
+  /** 大小（佔畫面寬度），預設 0.36 */
+  size?: number;
+};
+
+/** 前後對比：左邊 before（圖片或影片）、右邊 after（現在的畫面） */
+export type Compare = {
+  at: number;
+  dur: number;
+  /** before 的圖片或影片（放在專案資料夾） */
+  before: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+};
+
+/** 手機示範：畫面中跳出一支手機，螢幕裡放圖片或影片 */
+export type Phone = {
+  at: number;
+  dur: number;
+  src: string;
+  /** 位置（0~1），預設右邊 */
+  x?: number;
+  y?: number;
+  /** 大小（手機寬度佔畫面寬度），預設 0.34 */
+  size?: number;
+  /** 傾斜角度，預設 -8 */
+  tilt?: number;
+  /** 影片從第幾秒開始播 */
+  start?: number;
+};
+
+/** 頭條牆：剪報一張一張貼上來 */
+export type Headline = {
+  at: number;
+  dur: number;
+  items: { text: string; tag?: string; date?: string }[];
+};
+
+/** 卡片環繞：一圈卡片（圖片或文字）在頭上繞 */
+export type Orbit = {
+  at: number;
+  dur: number;
+  /** 圖片檔名（放在專案資料夾）或文字 */
+  items: string[];
+  /** 環的高度（0~1），預設 0.12（頭頂上方） */
+  y?: number;
+  /** 繞幾圈，預設 0.5 */
+  turns?: number;
 };
 
 /** 發佈到各大社群平台（YouTube / Instagram / Facebook / Threads）用的文字與設定 */
@@ -178,6 +259,16 @@ export type Project = {
   inserts?: Insert[];
   stickers?: Sticker[];
   transitions?: Transition[];
+  spotlights?: Spotlight[];
+  reveals?: Reveal[];
+  notes?: Note[];
+  compares?: Compare[];
+  phones?: Phone[];
+  headlines?: Headline[];
+  orbits?: Orbit[];
+  /** 原始影片的寬高（自動填，用來對準裁切位置） */
+  sourceWidth?: number;
+  sourceHeight?: number;
   /** 每個剪接點（剪掉停頓的地方）都自動加的轉場，例如 "zoom"；null = 不加 */
   cutTransition?: TransitionType | null;
   music?: { src: string; volume?: number } | null;

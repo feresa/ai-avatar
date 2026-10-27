@@ -30,6 +30,8 @@ for i in range(n):
     ok, frame = cap.read()
     if not ok:
         continue
+    # 用實際讀到的畫面大小（手機直拍的影片會自動轉正）
+    h, w = frame.shape[:2]
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # 縮小加速：長邊 960
     scale = 960 / max(w, h) if max(w, h) > 960 else 1.0

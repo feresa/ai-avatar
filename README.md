@@ -8,7 +8,8 @@
 - 重點處鏡頭推近
 - 重點字卡（「① 腹式呼吸」）、插圖 / 插入影片（B-roll）、貼圖小動畫（打勾、箭頭、愛心、emoji⋯）
 - 直式 9:16（1080×1920）、下半部加深讓字更清楚
-- 轉場特效：閃白、推近、甩鏡、滑入、淡黑、故障閃爍（附「咻」音效）
+- 轉場特效：閃白、推近、甩鏡、滑入、淡黑、故障閃爍、穿越、漏光（附「咻」音效）
+- 聚光燈、拉遠揭曉、便利貼字、前後對比、手機示範、頭條牆、卡片環繞（用 Remotion 官方特效庫 `@remotion/effects`）
 - 自動配樂（程式合成，沒有版權問題）、貼圖「啵」音效
 - 自動產生插圖（AI 畫圖或免費圖庫照片）
 - 一個指令發佈到 YouTube Shorts、Instagram Reels
@@ -99,6 +100,9 @@ npm run clip -- class-01 class-01-a 3:12 3:58
 - 「講到三個方法的時候，依序跳出 ①②③ 字卡」
 - 「講到『手機』的時候，上方小視窗放 phone.jpg」（圖片先放進專案資料夾）
 - 「說『對』的時候跳一個打勾」
+- 「講到重點那句加聚光燈」「開頭用拉遠揭曉」
+- 「三個步驟用便利貼依序貼上來」「放一面頭條牆，標題是⋯」
+- 「放一張練習前、練習後的對比，before 用 old.jpg」
 
 Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），預覽畫面會馬上更新。
 
@@ -115,7 +119,14 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `cards` | 重點字卡：`[{ "at": 秒, "dur": 秒, "text": "① 腹式呼吸", "sub": "小字" }]` |
 | `inserts` | 插圖 / 插入影片：`[{ "at": 秒, "dur": 秒, "src": "photo.jpg", "mode": "full" }]`，`mode` 可選 `full`（蓋滿）、`pip`（上方小視窗）、`top`（上半部） |
 | `stickers` | 貼圖小動畫：`[{ "at": 秒, "dur": 秒, "kind": "check" }]`，`kind` 可選 `check` `cross` `arrow` `heart` `star` `fire`，或用 `"emoji": "🌿"`、`"src": "圖.png"`；`x` `y` 位置、`size` 大小、`rotate` 角度、`anim`（`pop` `bounce` `float`） |
-| `transitions` | 轉場：`[{ "at": 秒, "type": "flash" }]`，`type` 可選 `flash`（閃白）、`zoom`（推近）、`whip`（甩鏡）、`slide`（滑入）、`fade`（淡黑）、`glitch`（故障閃爍）；`dur` 長度、`sound: false` 不要咻聲 |
+| `transitions` | 轉場：`[{ "at": 秒, "type": "flash" }]`，`type` 可選 `flash`（閃白）、`zoom`（推近）、`whip`（甩鏡）、`slide`（滑入）、`fade`（淡黑）、`glitch`（故障閃爍）、`zoomblur`（穿越）、`lightleak`（漏光）；`dur` 長度、`sound: false` 不要咻聲 |
+| `spotlights` | 聚光燈（四周變暗、亮在臉上）：`[{ "at": 秒, "dur": 秒 }]`，可加 `strength`（0~1）、`radius`、`x` `y` |
+| `reveals` | 拉遠揭曉（從特寫拉遠到全景）：`[{ "at": 秒, "dur": 秒, "from": 2.2 }]` |
+| `notes` | 便利貼字：`[{ "at": 秒, "dur": 秒, "text": "每天\n5 分鐘", "color": "yellow" }]`，`color` 可選 `yellow` `pink` `blue` `green` |
+| `compares` | 前後對比：`[{ "at": 秒, "dur": 秒, "before": "before.jpg", "beforeLabel": "練習前", "afterLabel": "練習後" }]`，左邊放 before 圖片／影片，右邊是現在的畫面 |
+| `phones` | 手機示範：`[{ "at": 秒, "dur": 秒, "src": "app.png" }]`，螢幕裡放圖片或影片 |
+| `headlines` | 頭條牆（剪報一張張貼上）：`[{ "at": 秒, "dur": 秒, "items": [{ "text": "每天呼吸五分鐘", "tag": "頭條", "date": "2026.10.28" }] }]`，最多 6 張 |
+| `orbits` | 卡片環繞（頭上一圈卡片在轉）：`[{ "at": 秒, "dur": 秒, "items": ["腹式呼吸", "photo.jpg", "長吐氣"] }]`，可以放文字或圖片 |
 | `cutTransition` | 每個剪接點（剪掉停頓的地方）都自動加的轉場，例如 `"zoom"`；`null` = 不加 |
 | `music` / `sfx` | 背景音樂、音效（音檔放在專案資料夾裡；`npm run music` 會自動產生）。內建音效：`sfx/whoosh.wav`（咻）、`sfx/pop.wav`（啵），貼圖加 `"sound": true` 會自動配「啵」 |
 | `publish` | 發佈用的文字：`title` 標題、`description` 說明、`tags` 標籤、`scheduleTime` 排程時間、`videoUrl` 公開網址（Threads 專用）、`privacy`（YouTube：`private` 私人 / `unlisted` 不公開 / `public` 公開，預設 private） |

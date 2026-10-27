@@ -5,7 +5,7 @@ import type { Caption } from "@remotion/captions";
 import fs from "node:fs";
 import path from "node:path";
 import type { Project } from "../src/types";
-import { die, findPauses, fmtTime, parseTime, projectDir, readProject, remotionTool, syncProjectList, writeProject, writeTranscript } from "./lib";
+import { die, ensureSourceSize, findPauses, fmtTime, parseTime, projectDir, readProject, remotionTool, syncProjectList, writeProject, writeTranscript } from "./lib";
 
 const [src, name, a0, b0] = process.argv.slice(2);
 if (!src || !name || !a0 || !b0) die("用法：npm run clip -- 長片專案 新專案名 開始 結束\n   例如：npm run clip -- class-01 class-01-a 1:23 2:05");
@@ -91,6 +91,7 @@ const next: Project = {
   publish: { title: "", description: "", tags: [], privacy: "private" },
 };
 writeProject(name, next);
+ensureSourceSize(name);
 syncProjectList();
 console.log(`✅ 新短片專案 ${name}（${dur} 秒）${caps ? `，字幕 ${caps.length} 個字` : "，還沒有字幕：npm run transcribe -- " + name}`);
 console.log(`   下一步：npm run cuts -- ${name}（剪停頓），再請 Claude「照逐字稿幫 ${name} 規劃畫面」`);

@@ -34,6 +34,20 @@ for (const s of p.stickers ?? []) {
   const hh = (size * 1080) / 1920;
   items.push({ kind: "貼圖", at: s.at, dur: s.dur, box: { x: (s.x ?? 0.78) - size / 2, y: (s.y ?? 0.3) - hh / 2, w: size, h: hh }, label: s.emoji ?? s.kind ?? s.src ?? "" });
 }
+for (const n of p.notes ?? []) {
+  const size = n.size ?? 0.36;
+  const hh = (size * 1080) / 1920;
+  items.push({ kind: "便利貼", at: n.at, dur: n.dur, box: { x: (n.x ?? 0.74) - size / 2, y: (n.y ?? 0.52) - hh / 2, w: size, h: hh }, label: n.text });
+}
+for (const ph of p.phones ?? []) {
+  const w = ph.size ?? 0.34;
+  const h = (w * 2.05 * 1080) / 1920;
+  items.push({ kind: "手機", at: ph.at, dur: ph.dur, box: { x: (ph.x ?? 0.78) - w / 2, y: (ph.y ?? 0.45) - h / 2, w, h }, label: ph.src });
+}
+for (const o of p.orbits ?? []) {
+  const y = o.y ?? 0.12;
+  items.push({ kind: "卡片環繞", at: o.at, dur: o.dur, box: { x: 0.05, y: y - 0.08, w: 0.9, h: 0.16 }, label: o.items.join("、") });
+}
 for (const ins of p.inserts ?? []) {
   const mode = ins.mode ?? "full";
   if (mode === "full") continue; // 蓋滿畫面本來就會蓋住臉

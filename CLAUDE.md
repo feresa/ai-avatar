@@ -10,6 +10,8 @@
 - `src/components/Hook.tsx`：開場標題、圖示斜線、小膠囊
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
+- `Note.tsx` 便利貼、`Compare.tsx` 前後對比、`Phone.tsx` 手機示範、`Headlines.tsx` 頭條牆、`Orbit.tsx` 卡片環繞；聚光燈、拉遠揭曉、穿越、漏光、故障在 `Short.tsx` / `transitions.ts`（用 `@remotion/effects`）
+- 影片用 `@remotion/media` 的 `<Video>`（才能套官方特效）；裁切位置靠 `sourceWidth` / `sourceHeight` / `focusX` / `focusY` 算，這些會自動填
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
 - `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
@@ -42,6 +44,15 @@
 8. `transitions`：換話題、段落轉折（「接著」「很多朋友問我」「我的回答」）放 1~3 個，`whip` 或 `flash` 最常用；開場標題結束時可放一個 `flash`。不要每句都放
 9. `music`：跑 `npm run music -- <名稱> <風格>`，靜心呼吸用 `calm`、生活分享用 `warm`、教學清單用 `upbeat`
 10. `publish`：照內容寫標題（20 字內、有吸引力）、說明（2~3 句＋行動呼籲）、5~8 個中文 hashtag；`privacy` 保持 `private`。**不要自己跑 `npm run publish`**，發佈要使用者自己下指令
+10-1. 進階特效（用 Remotion 官方特效庫，一支片挑 2~4 個，不要全部塞）：
+   - `spotlights`：最重要、最有情緒的一句，0.8~2 秒
+   - `reveals`：開場或轉換場景時，從特寫拉遠
+   - `notes`：短句提醒、口訣、數字（10 字以內），可以依序貼 2~3 張
+   - `headlines`：開場引起好奇、或總結「大家都在說」的時候，3~4 張
+   - `orbits`：列舉很多項目時（方法、好處、關鍵字）
+   - `compares`：有前後差異的內容；**before 的圖要使用者提供**，不要亂填
+   - `phones`：示範 App、網站、截圖；**手機裡的圖要使用者提供**
+   - 轉場 `zoomblur`（穿越）適合換段落，`lightleak`（漏光）適合溫暖、靜心、戶外的氛圍
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
 12. 改完先跑 `npm run check -- <名稱>`，有警告就照建議修到沒有；再輸出 3~4 張關鍵時間的截圖檢查（可暫時加 `"debugFace": true` 看臉的框，檢查完拿掉），再跟使用者說明加了哪些效果、在第幾秒
 

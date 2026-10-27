@@ -155,6 +155,7 @@ export const applyTranscript = (name: string, force = false) => {
 /** 每個專案都檢查一次逐字稿有沒有改過 */
 export const applyAllTranscripts = () => {
   for (const name of syncProjectList()) {
+    ensureSourceSize(name);
     const n = applyTranscript(name);
     if (n) console.log(`✏️ ${name}：逐字稿改了 ${n} 句，已更新字幕`);
   }
@@ -299,4 +300,24 @@ export const parseTime = (s: string) => {
   const m = s.match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);
   if (!m) die(`看不懂的時間：${s}（用 83.5 或 1:23.5）`);
   return Number(m![1] ?? 0) * 60 + Number(m![2]);
+};
+
+/** 原始影片的寬高沒填就自動量（直式裁切對準臉要用） */
+export const ensureSourceSize = (name: string) => {
+  const p = readProject(name);
+  if (p.sourceWidth && p.sourceHeight) return p;
+  const r = remotionTool("ffprobe", [
+    "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height:stream_side_data=rotation", "-of", "json",
+    path.join(projectDir(name), p.video),
+  ]);
+  try {
+    const s = (JSON.parse(r.stdout) as { streams: { width: number; height: number; side_data_list?: { rotation?: number }[] }[] }).streams[0];
+    // 手機直拍的影片常常是「橫的畫面＋旋轉 90 度」
+    const rot = Math.abs(s.side_data_list?.find((d) => d.rotation !== undefined)?.rotation ?? 0) % 180;
+    const next = { ...p, sourceWidth: rot === 90 ? s.height : s.width, sourceHeight: rot === 90 ? s.width : s.height };
+    writeProject(name, next);
+    return next;
+  } catch {
+    return p;
+  }
 };

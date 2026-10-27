@@ -1,6 +1,6 @@
 {
   "video": "source.mp4",
-  "durationSec": 8.0,
+  "durationSec": 8,
   "focusX": 0.5,
   "focusY": 0.4,
   "baseZoom": 1,
@@ -106,8 +106,10 @@
   ],
   "transitions": [
     {
-      "at": 3.0,
+      "at": 3,
       "type": "flash"
     }
-  ]
+  ],
+  "sourceWidth": 1080,
+  "sourceHeight": 1920
 }

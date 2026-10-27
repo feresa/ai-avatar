@@ -66,7 +66,7 @@ function round(v: number, total: number) {
 
 // 臉會不會一直移動
 const spread = Math.max(...res.faces.map((f) => Math.abs((f.x + f.w / 2 - cx) * S) / W));
-const next: Project = { ...p, focusX: round(focusX * 1000, 1000), focusY: round(focusY * 1000, 1000), face };
+const next: Project = { ...p, sourceWidth: res.width, sourceHeight: res.height, focusX: round(focusX * 1000, 1000), focusY: round(focusY * 1000, 1000), face };
 writeProject(name, next);
 
 console.log(`✅ ${res.faces.length}/${res.samples} 個取樣點找到臉`);

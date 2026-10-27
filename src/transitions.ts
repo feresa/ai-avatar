@@ -1,4 +1,5 @@
-// 轉場特效：在某個時間點對影片畫面做「閃白、推近、甩鏡、滑入、淡黑、故障閃爍」
+// 轉場特效：在某個時間點對影片畫面做「閃白、推近、甩鏡、滑入、淡黑、故障閃爍、穿越、漏光」
+// 穿越（zoomBlur）、故障（chromaticAberration）、漏光（lightLeak）用 Remotion 官方特效庫 @remotion/effects
 import { Easing, interpolate } from "remotion";
 import { srcToOut, type Segment } from "./timeline";
 import type { Project, TransitionType } from "./types";
@@ -10,7 +11,7 @@ export const transitionsOf = (p: Project, segs: Segment[]): OutTransition[] => {
   const list: OutTransition[] = (p.transitions ?? []).map((x) => ({
     t: srcToOut(segs, x.at),
     type: x.type,
-    dur: x.dur ?? 0.35,
+    dur: x.dur ?? (x.type === "lightleak" ? 1.2 : x.type === "zoomblur" ? 0.6 : 0.35),
     sound: x.sound !== false,
   }));
   if (p.cutTransition) {
@@ -30,13 +31,15 @@ export type TransitionLook = {
   overlay: string | null;
   overlayOpacity: number;
   glitch: number; // 0~1
+  zoomBlur: number; // 0~1（官方 zoomBlur 的強度比例）
+  lightLeak: number | null; // 漏光進度 0~1，null = 沒有
 };
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /** 現在這一刻（成品秒數）轉場對畫面的影響 */
 export const transitionLook = (t: number, list: OutTransition[]): TransitionLook => {
-  const look: TransitionLook = { scale: 1, x: 0, blur: 0, overlay: null, overlayOpacity: 0, glitch: 0 };
+  const look: TransitionLook = { scale: 1, x: 0, blur: 0, overlay: null, overlayOpacity: 0, glitch: 0, zoomBlur: 0, lightLeak: null };
   for (const tr of list) {
     const half = tr.dur / 2;
     if (t < tr.t - tr.dur || t > tr.t + tr.dur) continue;
@@ -73,6 +76,21 @@ export const transitionLook = (t: number, list: OutTransition[]): TransitionLook
           const k = interpolate(t, [tr.t, tr.t + tr.dur], [1, 0], { ...clamp, easing: Easing.out(Easing.cubic) });
           look.x += k;
         }
+        break;
+      }
+      case "zoomblur": {
+        // 穿越：往畫面中心衝進去，剪接點最快、最糊，過了之後從裡面衝出來
+        const p = interpolate(t, [tr.t - half, tr.t + half], [-1, 1], clamp);
+        const k = 1 - Math.abs(p);
+        look.scale *= 1 + 0.45 * Easing.in(Easing.quad)(k);
+        look.zoomBlur = Math.max(look.zoomBlur, k);
+        const o = interpolate(t, [tr.t - half * 0.2, tr.t, tr.t + half * 0.4], [0, 0.35, 0], clamp);
+        if (o > look.overlayOpacity) Object.assign(look, { overlay: "white", overlayOpacity: o });
+        break;
+      }
+      case "lightleak": {
+        // 漏光：暖色光從邊緣掃過整個畫面再退掉
+        if (t >= tr.t - half && t <= tr.t + half) look.lightLeak = interpolate(t, [tr.t - half, tr.t + half], [0, 1], clamp);
         break;
       }
       case "glitch": {

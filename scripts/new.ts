@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Project } from "../src/types";
-import { die, mediaDuration, projectDir, syncProjectList, writeProject } from "./lib";
+import { die, ensureSourceSize, mediaDuration, projectDir, syncProjectList, writeProject } from "./lib";
 
 const argv = process.argv.slice(2);
 const si = argv.indexOf("--script");
@@ -28,7 +28,7 @@ const durationSec = Math.round(mediaDuration(path.join(dir, dest)) * 100) / 100;
 const file = path.join(dir, "project.json");
 if (fs.existsSync(file)) {
   const p = JSON.parse(fs.readFileSync(file, "utf-8")) as Project;
-  writeProject(name, { ...p, video: dest, durationSec });
+  writeProject(name, { ...p, video: dest, durationSec, sourceWidth: undefined, sourceHeight: undefined });
   console.log(`♻️ 專案已存在，只更新影片（${durationSec} 秒）`);
 } else {
   const p: Project = {
@@ -65,6 +65,7 @@ if (fs.existsSync(file)) {
   writeProject(name, p);
   console.log(`✅ 建好專案 ${name}（影片 ${durationSec} 秒）`);
 }
+ensureSourceSize(name);
 const all = syncProjectList();
 console.log(`   專案資料夾：public/projects/${name}/`);
 console.log(`   下一步：npm run transcribe -- ${name}（產生字幕）`);
