@@ -44,7 +44,7 @@ export const syncProjectList = () => {
     .sort();
   fs.writeFileSync(
     path.join(ROOT, "src", "projects.ts"),
-    `// 由 npm run new 自動產生：public/projects/ 底下的專案清單\nexport const PROJECTS: string[] = ${JSON.stringify(names)};\n`,
+    `// 自動產生，不要手動改（也不進 git）：public/projects/ 底下的專案清單\nexport const PROJECTS: string[] = ${JSON.stringify(names)};\n`,
   );
   return names;
 };

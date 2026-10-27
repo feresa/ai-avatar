@@ -18,3 +18,5 @@ public/projects/*/img-*
 # Remotion 官方 skill（npm run skills 安裝，不放進 git）
 .claude/skills/remotion-*/
 .venv-face/
+# 專案清單是自動產生的，每台電腦不一樣
+src/projects.ts

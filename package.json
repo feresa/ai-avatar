@@ -17,7 +17,8 @@
     "images": "tsx scripts/images.ts",
     "render": "tsx scripts/render.ts",
     "publish": "tsx scripts/publish.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "tsx scripts/sync.ts"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",

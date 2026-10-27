@@ -5,10 +5,11 @@ import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 import { generateImages, pendingImages } from "./images";
-import { ROOT, applyTranscript, die, readProject } from "./lib";
+import { ROOT, applyTranscript, die, readProject, syncProjectList } from "./lib";
 
 const name = process.argv[2] ?? die("用法：npm run render -- 專案名");
 readProject(name);
+syncProjectList();
 const n = applyTranscript(name);
 if (n) console.log(`✏️ 逐字稿改了 ${n} 句，已更新字幕`);
 // 有還沒產生的插圖就先產生
