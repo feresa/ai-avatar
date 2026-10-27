@@ -13,6 +13,10 @@
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
 - `scripts/`：`new` / `transcribe` / `fix-captions` / `cuts` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
+## Remotion 官方 skill
+
+改元件、做新特效、處理字幕或渲染問題前，先用 `remotion-best-practices` skill（沒裝的話請使用者跑 `npm run skills`）。只改 project.json 不用。
+
 ## 改影片的原則
 
 1. **先改 project.json，不夠才改元件。** 「標題改字」「重點詞」「哪裡推近」「字幕位置」都是改剪輯腳本

@@ -15,3 +15,5 @@ public/projects/*/img-*
 # API 金鑰、登入資訊
 .env
 .secrets/
+# Remotion 官方 skill（npm run skills 安裝，不放進 git）
+.claude/skills/remotion-*/

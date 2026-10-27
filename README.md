@@ -26,6 +26,7 @@
 
 ```bash
 npm install
+npm run skills   # 安裝 Remotion 官方 skill：Claude 改特效時照官方寫法，比較不會出錯
 ```
 
 ## 做一支影片
