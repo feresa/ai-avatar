@@ -29,7 +29,11 @@ const video = path.join(ROOT, "out", `${name}.mp4`);
 if (!fs.existsSync(video)) die(`找不到成品 ${path.relative(ROOT, video)}，先跑 npm run render -- ${name}`);
 
 const SECRETS = path.join(ROOT, ".secrets");
-const env = (k: string, hint: string) => process.env[k] || die(`.env 裡少了 ${k}\n   ${hint}`);
+// 各平台的錯誤用丟出的方式：all 模式一個平台失敗，其他平台照樣繼續
+const fail = (msg: string): never => {
+  throw new Error(msg);
+};
+const env = (k: string, hint: string) => process.env[k] || fail(`.env 裡少了 ${k}\n   ${hint}`);
 
 const textOf = (proj: Project) => {
   const pub = proj.publish ?? {};
@@ -99,7 +103,7 @@ const youtubeLogin = async (clientId: string, clientSecret: string) => {
     body: new URLSearchParams({ code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirect, grant_type: "authorization_code" }),
   });
   const tok = (await res.json()) as { refresh_token?: string; error_description?: string };
-  if (!tok.refresh_token) die(`Google 登入失敗：${tok.error_description ?? JSON.stringify(tok)}`);
+  if (!tok.refresh_token) fail(`Google 登入失敗：${tok.error_description ?? JSON.stringify(tok)}`);
   fs.mkdirSync(SECRETS, { recursive: true });
   fs.writeFileSync(YT_TOKEN, JSON.stringify({ refresh_token: tok.refresh_token }), { mode: 0o600 });
   return tok.refresh_token as string;
@@ -119,7 +123,7 @@ const youtubeAccessToken = async () => {
   const tok = (await res.json()) as { access_token?: string; error?: string };
   if (!tok.access_token) {
     fs.rmSync(YT_TOKEN, { force: true });
-    die(`YouTube 授權失效（${tok.error}），再跑一次會重新登入`);
+    fail(`YouTube 授權失效（${tok.error}），再跑一次會重新登入`);
   }
   return tok.access_token as string;
 };
@@ -156,11 +160,11 @@ const toYouTube = async () => {
     }),
   });
   const uploadUrl = init.headers.get("location");
-  if (!uploadUrl) die(`YouTube 上傳失敗：${init.status} ${(await init.text()).slice(0, 400)}`);
+  if (!uploadUrl) fail(`YouTube 上傳失敗：${init.status} ${(await init.text()).slice(0, 400)}`);
   console.log("⬆️ 上傳到 YouTube 中...");
   const up = await fetch(uploadUrl as string, { method: "PUT", headers: { "Content-Type": "video/mp4" }, body: fs.readFileSync(video) });
   const json = (await up.json()) as { id?: string; error?: { message: string } };
-  if (!json.id) die(`YouTube 上傳失敗：${json.error?.message ?? up.status}`);
+  if (!json.id) fail(`YouTube 上傳失敗：${json.error?.message ?? up.status}`);
   
   if (scheduleUnix) {
     console.log(`✅ YouTube：https://youtube.com/shorts/${json.id}（已排程於 ${new Date(scheduleUnix * 1000).toLocaleString()} 自動公開）`);
@@ -184,7 +188,7 @@ const toInstagram = async () => {
     body: new URLSearchParams({ media_type: "REELS", upload_type: "resumable", caption, share_to_feed: "true", access_token: token }),
   });
   const c = (await create.json()) as { id?: string; uri?: string; error?: { message: string } };
-  if (!c.id) die(`IG 建立失敗：${c.error?.message ?? create.status}`);
+  if (!c.id) fail(`IG 建立失敗：${c.error?.message ?? create.status}`);
 
   console.log("⬆️ 上傳到 Instagram 中...");
   const size = fs.statSync(video).size;
@@ -193,20 +197,20 @@ const toInstagram = async () => {
     headers: { Authorization: `OAuth ${token}`, offset: "0", file_size: String(size) },
     body: fs.readFileSync(video),
   });
-  if (!up.ok) die(`IG 上傳失敗：${up.status} ${(await up.text()).slice(0, 400)}`);
+  if (!up.ok) fail(`IG 上傳失敗：${up.status} ${(await up.text()).slice(0, 400)}`);
 
   // 等 IG 處理影片
   for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 5000));
     const s = (await (await fetch(`${G}/${c.id}?fields=status_code,status&access_token=${token}`)).json()) as { status_code?: string; status?: string };
     if (s.status_code === "FINISHED") break;
-    if (s.status_code === "ERROR" || s.status_code === "EXPIRED") die(`IG 處理影片失敗：${s.status}`);
+    if (s.status_code === "ERROR" || s.status_code === "EXPIRED") fail(`IG 處理影片失敗：${s.status}`);
     process.stdout.write(`\r   處理中...${(i + 1) * 5} 秒`);
   }
   process.stdout.write("\n");
   const pub = await fetch(`${G}/${user}/media_publish`, { method: "POST", body: new URLSearchParams({ creation_id: c.id as string, access_token: token }) });
   const pj = (await pub.json()) as { id?: string; error?: { message: string } };
-  if (!pj.id) die(`IG 發佈失敗：${pj.error?.message ?? pub.status}`);
+  if (!pj.id) fail(`IG 發佈失敗：${pj.error?.message ?? pub.status}`);
   const link = (await (await fetch(`${G}/${pj.id}?fields=permalink&access_token=${token}`)).json()) as { permalink?: string };
   console.log(`✅ Instagram：${link.permalink ?? pj.id}（IG 發佈後就是公開的）`);
   return pj.id as string;
@@ -231,7 +235,7 @@ const toFacebook = async () => {
     }),
   });
   const init = (await initRes.json()) as { video_id?: string; upload_url?: string; error?: { message: string } };
-  if (!init.video_id || !init.upload_url) die(`Facebook 建立 Reels 失敗：${init.error?.message ?? initRes.statusText}`);
+  if (!init.video_id || !init.upload_url) fail(`Facebook 建立 Reels 失敗：${init.error?.message ?? initRes.statusText}`);
   const uploadUrl = init.upload_url as string;
   const videoId = init.video_id as string;
 
@@ -246,7 +250,7 @@ const toFacebook = async () => {
     },
     body: fs.readFileSync(video),
   });
-  if (!up.ok) die(`Facebook 影片資料上傳失敗：${up.status} ${(await up.text()).slice(0, 400)}`);
+  if (!up.ok) fail(`Facebook 影片資料上傳失敗：${up.status} ${(await up.text()).slice(0, 400)}`);
 
   console.log("⬆️ 正在完成 Facebook 發佈設定...");
   const scheduleUnix = parseScheduleUnix(t.scheduleTime);
@@ -271,7 +275,7 @@ const toFacebook = async () => {
     body: new URLSearchParams(finishParams),
   });
   const finish = (await finishRes.json()) as { success?: boolean; error?: { message: string } };
-  if (!finish.success) die(`Facebook 完成發佈失敗：${finish.error?.message ?? JSON.stringify(finish)}`);
+  if (!finish.success) fail(`Facebook 完成發佈失敗：${finish.error?.message ?? JSON.stringify(finish)}`);
 
   if (scheduleUnix) {
     console.log(`✅ Facebook Reels：已排程於 ${new Date(scheduleUnix * 1000).toLocaleString()} 自動發佈（Video ID: ${init.video_id}）`);
@@ -290,7 +294,7 @@ const toThreads = async () => {
 
   const videoUrl: string | null = t.videoUrl || (process.env.PUBLIC_VIDEO_BASE_URL ? `${process.env.PUBLIC_VIDEO_BASE_URL.replace(/\/$/, "")}/${name}.mp4` : null);
   if (!videoUrl) {
-    die(`Threads 發佈失敗：Threads API 必須透過公開 URL 下載影片。\n` +
+    fail(`Threads API 必須透過公開 URL 下載影片。\n` +
         `請在 project.json 的 publish.videoUrl 填入外部網址，\n` +
         `或在 .env 設定 PUBLIC_VIDEO_BASE_URL（如 https://your-bucket.r2.dev）`);
   }
@@ -311,7 +315,7 @@ const toThreads = async () => {
     }),
   });
   const container = (await createRes.json()) as { id?: string; error?: { message: string } };
-  if (!container.id) die(`Threads 建立容器失敗：${container.error?.message ?? createRes.statusText}`);
+  if (!container.id) fail(`Threads 建立容器失敗：${container.error?.message ?? createRes.statusText}`);
   const containerId = container.id as string;
 
   console.log("⬆️ 等待 Threads 轉碼處理影片...");
@@ -320,7 +324,7 @@ const toThreads = async () => {
     const sRes = await fetch(`${G}/${containerId}?fields=status,status_code&access_token=${token}`);
     const s = (await sRes.json()) as { status_code?: string; status?: string; error?: { message: string } };
     if (s.status_code === "FINISHED") break;
-    if (s.status_code === "ERROR" || s.status_code === "EXPIRED") die(`Threads 處理影片失敗：${s.status ?? s.error?.message}`);
+    if (s.status_code === "ERROR" || s.status_code === "EXPIRED") fail(`Threads 處理影片失敗：${s.status ?? s.error?.message}`);
     process.stdout.write(`\r   處理中...${(i + 1) * 5} 秒`);
   }
   process.stdout.write("\n");
@@ -334,7 +338,7 @@ const toThreads = async () => {
     }),
   });
   const pub = (await pubRes.json()) as { id?: string; error?: { message: string } };
-  if (!pub.id) die(`Threads 發佈失敗：${pub.error?.message ?? pubRes.statusText}`);
+  if (!pub.id) fail(`Threads 發佈失敗：${pub.error?.message ?? pubRes.statusText}`);
 
   console.log(`✅ Threads：發佈成功（Post ID: ${pub.id}）`);
   return pub.id as string;
@@ -346,7 +350,11 @@ console.log(`📦 ${path.relative(ROOT, video)}`);
 console.log(`   標題：${t.title}`);
 if (t.description) console.log(`   說明：${t.description.replace(/\n/g, " ").slice(0, 80)}`);
 if (t.hashtags) console.log(`   標籤：${t.hashtags}`);
-if (t.scheduleTime) console.log(`   排程時間：${t.scheduleTime}`);
+if (t.scheduleTime) {
+  console.log(`   排程時間：${t.scheduleTime}（YouTube、Facebook 會照排程）`);
+  if (target === "instagram" || target === "threads" || target === "all")
+    console.log("   ⚠️ Instagram 和 Threads 不支援排程：按 y 之後會「立刻」發佈到這兩個平台");
+}
 console.log(`   指定發布目標：${target}`);
 
 if (!yes) {
@@ -358,14 +366,22 @@ if (!yes) {
 
 const publishedPostIds: string[] = [];
 
+const one = async (run: () => Promise<string>) => {
+  try {
+    publishedPostIds.push(await run());
+  } catch (e) {
+    die((e as Error).message);
+  }
+};
+
 if (target === "youtube") {
-  publishedPostIds.push(await toYouTube());
+  await one(toYouTube);
 } else if (target === "instagram") {
-  publishedPostIds.push(await toInstagram());
+  await one(toInstagram);
 } else if (target === "facebook") {
-  publishedPostIds.push(await toFacebook());
+  await one(toFacebook);
 } else if (target === "threads") {
-  publishedPostIds.push(await toThreads());
+  await one(toThreads);
 } else if (target === "all") {
   // all 模式：依序執行已設定的平台
   let publishedAny = false;
@@ -419,7 +435,7 @@ if (target === "youtube") {
   }
 
   if (!publishedAny) {
-    die("沒有任何平台的金鑰設定完成，請先編輯 .env 填入要發佈的平台資料");
+    die(publishedPostIds.length === 0 && (process.env.YOUTUBE_CLIENT_ID || process.env.IG_USER_ID || process.env.FB_PAGE_ID || process.env.THREADS_USER_ID) ? "沒有任何平台發佈成功（原因在上面）" : "沒有任何平台的金鑰設定完成，請先編輯 .env 填入要發佈的平台資料");
   }
 }
 

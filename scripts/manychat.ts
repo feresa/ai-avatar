@@ -2,6 +2,7 @@
 // 把 project.json 裡的 autoReply 設定同步到 Vercel 上的 like-manychat
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { AutoReply, Project } from "../src/types";
 import { ROOT, die, loadEnv, readProject } from "./lib";
 
@@ -195,7 +196,7 @@ export const syncManyChatRule = async (projectName: string, extraPostIds: string
 };
 
 // 直接從命令列執行
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const rawArgs = process.argv.slice(2);
   const args = rawArgs.filter((a) => !a.startsWith("--"));
   const postFlag = rawArgs.find((a) => a.startsWith("--post="));
