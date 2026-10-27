@@ -98,13 +98,45 @@ export type Sticker = {
   sound?: boolean;
 };
 
-/** 發佈到 YouTube / Instagram 用的文字 */
+/** like-manychat 留言自動私訊 / 關鍵字規則設定 */
+export type AutoReply = {
+  /** 觸發關鍵字（逗號分隔），例如 "呼吸,深呼吸,+1" */
+  keyword: string;
+  /** 規則名稱（選填，預設為影片標題 + 留言自動私訊） */
+  name?: string;
+  /** 指定貼文 / 影片 ID（逗號分隔，選填；發佈時會自動帶入各平台產生的 Post/Video ID） */
+  postId?: string;
+  /** 私訊內容（粉絲在 IG / FB 留言後機器人私訊回傳；Threads / YouTube 則作為公開留言回覆） */
+  replyText: string;
+  /** 留言公開回覆（選填，在 IG / FB 留言底下公開回覆一句） */
+  publicReply?: string;
+  /** 適用頻道：any | comment | ig_comment | fb_comment | threads_reply | yt_comment | dm，預設 comment */
+  channel?: "any" | "comment" | "ig_comment" | "fb_comment" | "threads_reply" | "yt_comment" | "dm";
+  /** 匹配模式：contains | exact | regex，預設 contains */
+  matchType?: "contains" | "exact" | "regex";
+  /** 標籤（命中時自動幫聯絡人貼上的標籤） */
+  tag?: string;
+  /** 快速回覆按鈕（逗號分隔） */
+  quickReplies?: string;
+};
+
+/** 發佈到各大社群平台（YouTube / Instagram / Facebook / Threads）用的文字與設定 */
+export type PublishPlatform = "youtube" | "instagram" | "facebook" | "threads";
+
 export type Publish = {
   title?: string;
   description?: string;
   tags?: string[];
   /** YouTube 公開程度，預設 private（先自己看過再公開） */
   privacy?: "private" | "unlisted" | "public";
+  /** 排程發佈時間（ISO 8601 或 YYYY-MM-DD HH:mm，如 "2026-10-27T10:00:00Z"） */
+  scheduleTime?: string;
+  /** 公開影片網址（Threads 限制必須提供外部公開 URL 供爬取） */
+  videoUrl?: string;
+  /** 預設要發布的平台清單 */
+  platforms?: PublishPlatform[];
+  /** 留言自動私訊規則（可自動同步至 like-manychat） */
+  autoReply?: AutoReply;
 };
 
 export type Project = {

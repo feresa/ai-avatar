@@ -17,6 +17,7 @@
     "images": "tsx scripts/images.ts",
     "render": "tsx scripts/render.ts",
     "publish": "tsx scripts/publish.ts",
+    "manychat": "tsx scripts/manychat.ts",
     "typecheck": "tsc --noEmit",
     "postinstall": "tsx scripts/sync.ts"
   },

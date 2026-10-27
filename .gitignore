@@ -8,6 +8,7 @@ public/projects/*/*.MOV
 public/projects/*/*.wav
 public/projects/*/*.mp3
 public/projects/*/*.m4a
+public/projects/*.zip
 # 自動產生的插圖
 public/projects/*/img-*
 !public/projects/example/**

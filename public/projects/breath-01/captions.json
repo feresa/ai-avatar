@@ -1,0 +1,968 @@
+[
+ {
+  "text": "每",
+  "startMs": 20,
+  "endMs": 553,
+  "timestampMs": 287,
+  "confidence": 1
+ },
+ {
+  "text": "天",
+  "startMs": 553,
+  "endMs": 1087,
+  "timestampMs": 820,
+  "confidence": 1
+ },
+ {
+  "text": "早",
+  "startMs": 1087,
+  "endMs": 1620,
+  "timestampMs": 1354,
+  "confidence": 1
+ },
+ {
+  "text": "上",
+  "startMs": 1620,
+  "endMs": 2153,
+  "timestampMs": 1887,
+  "confidence": 1
+ },
+ {
+  "text": "起",
+  "startMs": 2153,
+  "endMs": 2687,
+  "timestampMs": 2420,
+  "confidence": 1
+ },
+ {
+  "text": "床,",
+  "startMs": 2687,
+  "endMs": 3220,
+  "timestampMs": 2954,
+  "confidence": 1
+ },
+ {
+  "text": "我",
+  "startMs": 3220,
+  "endMs": 3433,
+  "timestampMs": 3327,
+  "confidence": 1
+ },
+ {
+  "text": "做",
+  "startMs": 3433,
+  "endMs": 3645,
+  "timestampMs": 3539,
+  "confidence": 1
+ },
+ {
+  "text": "的",
+  "startMs": 3645,
+  "endMs": 3858,
+  "timestampMs": 3752,
+  "confidence": 1
+ },
+ {
+  "text": "第",
+  "startMs": 3858,
+  "endMs": 4071,
+  "timestampMs": 3965,
+  "confidence": 1
+ },
+ {
+  "text": "一",
+  "startMs": 4071,
+  "endMs": 4284,
+  "timestampMs": 4178,
+  "confidence": 1
+ },
+ {
+  "text": "件",
+  "startMs": 4284,
+  "endMs": 4496,
+  "timestampMs": 4390,
+  "confidence": 1
+ },
+ {
+  "text": "事",
+  "startMs": 4496,
+  "endMs": 4709,
+  "timestampMs": 4603,
+  "confidence": 1
+ },
+ {
+  "text": "就",
+  "startMs": 4709,
+  "endMs": 4922,
+  "timestampMs": 4816,
+  "confidence": 1
+ },
+ {
+  "text": "是",
+  "startMs": 4922,
+  "endMs": 5135,
+  "timestampMs": 5029,
+  "confidence": 1
+ },
+ {
+  "text": "靜",
+  "startMs": 5135,
+  "endMs": 5347,
+  "timestampMs": 5241,
+  "confidence": 1
+ },
+ {
+  "text": "心,",
+  "startMs": 5347,
+  "endMs": 5560,
+  "timestampMs": 5454,
+  "confidence": 1
+ },
+ {
+  "text": "先",
+  "startMs": 5560,
+  "endMs": 5777,
+  "timestampMs": 5669,
+  "confidence": 1
+ },
+ {
+  "text": "找",
+  "startMs": 5777,
+  "endMs": 5995,
+  "timestampMs": 5886,
+  "confidence": 1
+ },
+ {
+  "text": "一",
+  "startMs": 5995,
+  "endMs": 6212,
+  "timestampMs": 6104,
+  "confidence": 1
+ },
+ {
+  "text": "個",
+  "startMs": 6212,
+  "endMs": 6429,
+  "timestampMs": 6321,
+  "confidence": 1
+ },
+ {
+  "text": "安",
+  "startMs": 6429,
+  "endMs": 6646,
+  "timestampMs": 6538,
+  "confidence": 1
+ },
+ {
+  "text": "靜",
+  "startMs": 6646,
+  "endMs": 6864,
+  "timestampMs": 6755,
+  "confidence": 1
+ },
+ {
+  "text": "的",
+  "startMs": 6864,
+  "endMs": 7081,
+  "timestampMs": 6973,
+  "confidence": 1
+ },
+ {
+  "text": "地",
+  "startMs": 7081,
+  "endMs": 7298,
+  "timestampMs": 7190,
+  "confidence": 1
+ },
+ {
+  "text": "方",
+  "startMs": 7298,
+  "endMs": 7515,
+  "timestampMs": 7407,
+  "confidence": 1
+ },
+ {
+  "text": "坐",
+  "startMs": 7515,
+  "endMs": 7733,
+  "timestampMs": 7624,
+  "confidence": 1
+ },
+ {
+  "text": "好,",
+  "startMs": 7733,
+  "endMs": 7950,
+  "timestampMs": 7842,
+  "confidence": 1
+ },
+ {
+  "text": "背",
+  "startMs": 7950,
+  "endMs": 8340,
+  "timestampMs": 8145,
+  "confidence": 1
+ },
+ {
+  "text": "打",
+  "startMs": 8340,
+  "endMs": 8730,
+  "timestampMs": 8535,
+  "confidence": 1
+ },
+ {
+  "text": "直,",
+  "startMs": 8730,
+  "endMs": 9120,
+  "timestampMs": 8925,
+  "confidence": 1
+ },
+ {
+  "text": "肩",
+  "startMs": 9120,
+  "endMs": 9405,
+  "timestampMs": 9263,
+  "confidence": 1
+ },
+ {
+  "text": "膀",
+  "startMs": 9405,
+  "endMs": 9690,
+  "timestampMs": 9548,
+  "confidence": 1
+ },
+ {
+  "text": "放",
+  "startMs": 9690,
+  "endMs": 9975,
+  "timestampMs": 9833,
+  "confidence": 1
+ },
+ {
+  "text": "鬆,",
+  "startMs": 9975,
+  "endMs": 10260,
+  "timestampMs": 10118,
+  "confidence": 1
+ },
+ {
+  "text": "眼",
+  "startMs": 10260,
+  "endMs": 10587,
+  "timestampMs": 10424,
+  "confidence": 1
+ },
+ {
+  "text": "睛",
+  "startMs": 10587,
+  "endMs": 10913,
+  "timestampMs": 10750,
+  "confidence": 1
+ },
+ {
+  "text": "輕",
+  "startMs": 10913,
+  "endMs": 11240,
+  "timestampMs": 11077,
+  "confidence": 1
+ },
+ {
+  "text": "輕",
+  "startMs": 11240,
+  "endMs": 11567,
+  "timestampMs": 11404,
+  "confidence": 1
+ },
+ {
+  "text": "閉",
+  "startMs": 11567,
+  "endMs": 11893,
+  "timestampMs": 11730,
+  "confidence": 1
+ },
+ {
+  "text": "上,",
+  "startMs": 11893,
+  "endMs": 12220,
+  "timestampMs": 12057,
+  "confidence": 1
+ },
+ {
+  "text": "接",
+  "startMs": 12220,
+  "endMs": 12300,
+  "timestampMs": 12360,
+  "confidence": 0.821839
+ },
+ {
+  "text": "著",
+  "startMs": 12300,
+  "endMs": 12480,
+  "timestampMs": 12480,
+  "confidence": 0.993608
+ },
+ {
+  "text": "慢慢",
+  "startMs": 12480,
+  "endMs": 12840,
+  "timestampMs": 12820,
+  "confidence": 0.98953
+ },
+ {
+  "text": "吸",
+  "startMs": 12840,
+  "endMs": 13020,
+  "timestampMs": 13100,
+  "confidence": 0.98802
+ },
+ {
+  "text": "氣",
+  "startMs": 13020,
+  "endMs": 13200,
+  "timestampMs": 13360,
+  "confidence": 0.995171
+ },
+ {
+  "text": ",",
+  "startMs": 13200,
+  "endMs": 13470,
+  "timestampMs": 13600,
+  "confidence": 0.796586
+ },
+ {
+  "text": "感",
+  "startMs": 13470,
+  "endMs": 13723,
+  "timestampMs": 13597,
+  "confidence": 1
+ },
+ {
+  "text": "覺",
+  "startMs": 13723,
+  "endMs": 13977,
+  "timestampMs": 13850,
+  "confidence": 1
+ },
+ {
+  "text": "空",
+  "startMs": 13977,
+  "endMs": 14230,
+  "timestampMs": 14104,
+  "confidence": 1
+ },
+ {
+  "text": "氣",
+  "startMs": 14230,
+  "endMs": 14483,
+  "timestampMs": 14357,
+  "confidence": 1
+ },
+ {
+  "text": "從",
+  "startMs": 14483,
+  "endMs": 14737,
+  "timestampMs": 14610,
+  "confidence": 1
+ },
+ {
+  "text": "鼻",
+  "startMs": 14737,
+  "endMs": 14990,
+  "timestampMs": 14864,
+  "confidence": 1
+ },
+ {
+  "text": "子",
+  "startMs": 14990,
+  "endMs": 15243,
+  "timestampMs": 15117,
+  "confidence": 1
+ },
+ {
+  "text": "進",
+  "startMs": 15243,
+  "endMs": 15497,
+  "timestampMs": 15370,
+  "confidence": 1
+ },
+ {
+  "text": "來,",
+  "startMs": 15497,
+  "endMs": 15750,
+  "timestampMs": 15624,
+  "confidence": 1
+ },
+ {
+  "text": "流",
+  "startMs": 15750,
+  "endMs": 16095,
+  "timestampMs": 15923,
+  "confidence": 1
+ },
+ {
+  "text": "到",
+  "startMs": 16095,
+  "endMs": 16440,
+  "timestampMs": 16268,
+  "confidence": 1
+ },
+ {
+  "text": "胸",
+  "startMs": 16440,
+  "endMs": 16785,
+  "timestampMs": 16613,
+  "confidence": 1
+ },
+ {
+  "text": "口,",
+  "startMs": 16785,
+  "endMs": 17130,
+  "timestampMs": 16958,
+  "confidence": 1
+ },
+ {
+  "text": "再",
+  "startMs": 17130,
+  "endMs": 17363,
+  "timestampMs": 17247,
+  "confidence": 1
+ },
+ {
+  "text": "到",
+  "startMs": 17363,
+  "endMs": 17595,
+  "timestampMs": 17479,
+  "confidence": 1
+ },
+ {
+  "text": "腹",
+  "startMs": 17595,
+  "endMs": 17828,
+  "timestampMs": 17712,
+  "confidence": 1
+ },
+ {
+  "text": "部,",
+  "startMs": 17828,
+  "endMs": 18060,
+  "timestampMs": 17944,
+  "confidence": 1
+ },
+ {
+  "text": "然",
+  "startMs": 18060,
+  "endMs": 18327,
+  "timestampMs": 18194,
+  "confidence": 1
+ },
+ {
+  "text": "後",
+  "startMs": 18327,
+  "endMs": 18593,
+  "timestampMs": 18460,
+  "confidence": 1
+ },
+ {
+  "text": "緩",
+  "startMs": 18593,
+  "endMs": 18860,
+  "timestampMs": 18727,
+  "confidence": 1
+ },
+ {
+  "text": "緩",
+  "startMs": 18860,
+  "endMs": 19127,
+  "timestampMs": 18994,
+  "confidence": 1
+ },
+ {
+  "text": "吐",
+  "startMs": 19127,
+  "endMs": 19393,
+  "timestampMs": 19260,
+  "confidence": 1
+ },
+ {
+  "text": "氣,",
+  "startMs": 19393,
+  "endMs": 19660,
+  "timestampMs": 19527,
+  "confidence": 1
+ },
+ {
+  "text": "把",
+  "startMs": 19660,
+  "endMs": 19886,
+  "timestampMs": 19773,
+  "confidence": 1
+ },
+ {
+  "text": "身",
+  "startMs": 19886,
+  "endMs": 20112,
+  "timestampMs": 19999,
+  "confidence": 1
+ },
+ {
+  "text": "體",
+  "startMs": 20112,
+  "endMs": 20338,
+  "timestampMs": 20225,
+  "confidence": 1
+ },
+ {
+  "text": "裡",
+  "startMs": 20338,
+  "endMs": 20564,
+  "timestampMs": 20451,
+  "confidence": 1
+ },
+ {
+  "text": "的",
+  "startMs": 20564,
+  "endMs": 20789,
+  "timestampMs": 20677,
+  "confidence": 1
+ },
+ {
+  "text": "緊",
+  "startMs": 20789,
+  "endMs": 21015,
+  "timestampMs": 20902,
+  "confidence": 1
+ },
+ {
+  "text": "繃",
+  "startMs": 21015,
+  "endMs": 21241,
+  "timestampMs": 21128,
+  "confidence": 1
+ },
+ {
+  "text": "和",
+  "startMs": 21241,
+  "endMs": 21467,
+  "timestampMs": 21354,
+  "confidence": 1
+ },
+ {
+  "text": "煩",
+  "startMs": 21467,
+  "endMs": 21693,
+  "timestampMs": 21580,
+  "confidence": 1
+ },
+ {
+  "text": "惱",
+  "startMs": 21693,
+  "endMs": 21919,
+  "timestampMs": 21806,
+  "confidence": 1
+ },
+ {
+  "text": "一",
+  "startMs": 21919,
+  "endMs": 22145,
+  "timestampMs": 22032,
+  "confidence": 1
+ },
+ {
+  "text": "點",
+  "startMs": 22145,
+  "endMs": 22371,
+  "timestampMs": 22258,
+  "confidence": 1
+ },
+ {
+  "text": "一",
+  "startMs": 22371,
+  "endMs": 22596,
+  "timestampMs": 22484,
+  "confidence": 1
+ },
+ {
+  "text": "點",
+  "startMs": 22596,
+  "endMs": 22822,
+  "timestampMs": 22709,
+  "confidence": 1
+ },
+ {
+  "text": "送",
+  "startMs": 22822,
+  "endMs": 23048,
+  "timestampMs": 22935,
+  "confidence": 1
+ },
+ {
+  "text": "出",
+  "startMs": 23048,
+  "endMs": 23274,
+  "timestampMs": 23161,
+  "confidence": 1
+ },
+ {
+  "text": "去。",
+  "startMs": 23274,
+  "endMs": 23500,
+  "timestampMs": 23387,
+  "confidence": 1
+ },
+ {
+  "text": "這樣的",
+  "startMs": 23670,
+  "endMs": 24220,
+  "timestampMs": 23920,
+  "confidence": 0.964742
+ },
+ {
+  "text": "呼",
+  "startMs": 24220,
+  "endMs": 24460,
+  "timestampMs": 24200,
+  "confidence": 0.989902
+ },
+ {
+  "text": "吸",
+  "startMs": 24460,
+  "endMs": 24690,
+  "timestampMs": 24280,
+  "confidence": 0.999121
+ },
+ {
+  "text": "練",
+  "startMs": 24690,
+  "endMs": 25030,
+  "timestampMs": 24620,
+  "confidence": 0.995908
+ },
+ {
+  "text": "習",
+  "startMs": 25030,
+  "endMs": 25180,
+  "timestampMs": 25000,
+  "confidence": 0.999813
+ },
+ {
+  "text": "只",
+  "startMs": 25180,
+  "endMs": 25420,
+  "timestampMs": 25260,
+  "confidence": 0.847917
+ },
+ {
+  "text": "要",
+  "startMs": 25420,
+  "endMs": 25660,
+  "timestampMs": 25340,
+  "confidence": 0.976239
+ },
+ {
+  "text": "十",
+  "startMs": 25660,
+  "endMs": 25900,
+  "timestampMs": 25560,
+  "confidence": 0.546612
+ },
+ {
+  "text": "分鐘",
+  "startMs": 25900,
+  "endMs": 26490,
+  "timestampMs": 26200,
+  "confidence": 0.997489
+ },
+ {
+  "text": ",",
+  "startMs": 26490,
+  "endMs": 26540,
+  "timestampMs": 26660,
+  "confidence": 0.975197
+ },
+ {
+  "text": "整",
+  "startMs": 26540,
+  "endMs": 26822,
+  "timestampMs": 26681,
+  "confidence": 1
+ },
+ {
+  "text": "個",
+  "startMs": 26822,
+  "endMs": 27104,
+  "timestampMs": 26963,
+  "confidence": 1
+ },
+ {
+  "text": "人",
+  "startMs": 27104,
+  "endMs": 27385,
+  "timestampMs": 27245,
+  "confidence": 1
+ },
+ {
+  "text": "就",
+  "startMs": 27385,
+  "endMs": 27667,
+  "timestampMs": 27526,
+  "confidence": 1
+ },
+ {
+  "text": "會",
+  "startMs": 27667,
+  "endMs": 27949,
+  "timestampMs": 27808,
+  "confidence": 1
+ },
+ {
+  "text": "變",
+  "startMs": 27949,
+  "endMs": 28231,
+  "timestampMs": 28090,
+  "confidence": 1
+ },
+ {
+  "text": "得",
+  "startMs": 28231,
+  "endMs": 28513,
+  "timestampMs": 28372,
+  "confidence": 1
+ },
+ {
+  "text": "清",
+  "startMs": 28513,
+  "endMs": 28795,
+  "timestampMs": 28654,
+  "confidence": 1
+ },
+ {
+  "text": "晰、",
+  "startMs": 28795,
+  "endMs": 29076,
+  "timestampMs": 28936,
+  "confidence": 1
+ },
+ {
+  "text": "安",
+  "startMs": 29076,
+  "endMs": 29358,
+  "timestampMs": 29217,
+  "confidence": 1
+ },
+ {
+  "text": "定。",
+  "startMs": 29358,
+  "endMs": 29640,
+  "timestampMs": 29499,
+  "confidence": 1
+ },
+ {
+  "text": "很多",
+  "startMs": 29640,
+  "endMs": 29930,
+  "timestampMs": 29880,
+  "confidence": 0.819452
+ },
+ {
+  "text": "朋友",
+  "startMs": 29930,
+  "endMs": 30260,
+  "timestampMs": 30140,
+  "confidence": 0.995972
+ },
+ {
+  "text": "問",
+  "startMs": 30260,
+  "endMs": 30450,
+  "timestampMs": 30380,
+  "confidence": 0.992525
+ },
+ {
+  "text": "我",
+  "startMs": 30450,
+  "endMs": 30640,
+  "timestampMs": 30980,
+  "confidence": 0.996812
+ },
+ {
+  "text": ",",
+  "startMs": 30640,
+  "endMs": 30950,
+  "timestampMs": 31000,
+  "confidence": 0.621016
+ },
+ {
+  "text": "忙",
+  "startMs": 30950,
+  "endMs": 31154,
+  "timestampMs": 31052,
+  "confidence": 1
+ },
+ {
+  "text": "碌",
+  "startMs": 31154,
+  "endMs": 31358,
+  "timestampMs": 31256,
+  "confidence": 1
+ },
+ {
+  "text": "的",
+  "startMs": 31358,
+  "endMs": 31561,
+  "timestampMs": 31460,
+  "confidence": 1
+ },
+ {
+  "text": "時",
+  "startMs": 31561,
+  "endMs": 31765,
+  "timestampMs": 31663,
+  "confidence": 1
+ },
+ {
+  "text": "候",
+  "startMs": 31765,
+  "endMs": 31969,
+  "timestampMs": 31867,
+  "confidence": 1
+ },
+ {
+  "text": "怎",
+  "startMs": 31969,
+  "endMs": 32173,
+  "timestampMs": 32071,
+  "confidence": 1
+ },
+ {
+  "text": "麼",
+  "startMs": 32173,
+  "endMs": 32376,
+  "timestampMs": 32275,
+  "confidence": 1
+ },
+ {
+  "text": "辦?",
+  "startMs": 32376,
+  "endMs": 32580,
+  "timestampMs": 32478,
+  "confidence": 1
+ },
+ {
+  "text": "我的",
+  "startMs": 32580,
+  "endMs": 33050,
+  "timestampMs": 32740,
+  "confidence": 0.925463
+ },
+ {
+  "text": "回",
+  "startMs": 33050,
+  "endMs": 33320,
+  "timestampMs": 32980,
+  "confidence": 0.955839
+ },
+ {
+  "text": "答",
+  "startMs": 33320,
+  "endMs": 33590,
+  "timestampMs": 33100,
+  "confidence": 0.998875
+ },
+ {
+  "text": "很",
+  "startMs": 33590,
+  "endMs": 34080,
+  "timestampMs": 33280,
+  "confidence": 0.979361
+ },
+ {
+  "text": "簡單",
+  "startMs": 34080,
+  "endMs": 34410,
+  "timestampMs": 33760,
+  "confidence": 0.994279
+ },
+ {
+  "text": ",",
+  "startMs": 34410,
+  "endMs": 34630,
+  "timestampMs": 34040,
+  "confidence": 0.779646
+ },
+ {
+  "text": "越",
+  "startMs": 34630,
+  "endMs": 34950,
+  "timestampMs": 34260,
+  "confidence": 0.711739
+ },
+ {
+  "text": "忙",
+  "startMs": 34950,
+  "endMs": 35130,
+  "timestampMs": 34740,
+  "confidence": 0.992373
+ },
+ {
+  "text": "越",
+  "startMs": 35130,
+  "endMs": 35400,
+  "timestampMs": 35100,
+  "confidence": 0.357129
+ },
+ {
+  "text": "要",
+  "startMs": 35400,
+  "endMs": 35680,
+  "timestampMs": 35240,
+  "confidence": 0.97991
+ },
+ {
+  "text": "留",
+  "startMs": 35680,
+  "endMs": 35940,
+  "timestampMs": 35480,
+  "confidence": 0.976403
+ },
+ {
+  "text": "時間",
+  "startMs": 35940,
+  "endMs": 36490,
+  "timestampMs": 36000,
+  "confidence": 0.973584
+ },
+ {
+  "text": "給",
+  "startMs": 36490,
+  "endMs": 36760,
+  "timestampMs": 36280,
+  "confidence": 0.966995
+ },
+ {
+  "text": "自己",
+  "startMs": 36760,
+  "endMs": 37310,
+  "timestampMs": 36500,
+  "confidence": 0.997337
+ },
+ {
+  "text": "呼",
+  "startMs": 37310,
+  "endMs": 37580,
+  "timestampMs": 36860,
+  "confidence": 0.995835
+ },
+ {
+  "text": "吸",
+  "startMs": 37580,
+  "endMs": 38000,
+  "timestampMs": 37180,
+  "confidence": 0.997071
+ },
+ {
+  "text": "。",
+  "startMs": 38000,
+  "endMs": 38000,
+  "timestampMs": 37660,
+  "confidence": 0.912807
+ }
+]

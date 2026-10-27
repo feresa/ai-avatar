@@ -118,7 +118,7 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `transitions` | 轉場：`[{ "at": 秒, "type": "flash" }]`，`type` 可選 `flash`（閃白）、`zoom`（推近）、`whip`（甩鏡）、`slide`（滑入）、`fade`（淡黑）、`glitch`（故障閃爍）；`dur` 長度、`sound: false` 不要咻聲 |
 | `cutTransition` | 每個剪接點（剪掉停頓的地方）都自動加的轉場，例如 `"zoom"`；`null` = 不加 |
 | `music` / `sfx` | 背景音樂、音效（音檔放在專案資料夾裡；`npm run music` 會自動產生）。內建音效：`sfx/whoosh.wav`（咻）、`sfx/pop.wav`（啵），貼圖加 `"sound": true` 會自動配「啵」 |
-| `publish` | 發佈用的文字：`title` 標題、`description` 說明、`tags` 標籤、`privacy`（YouTube：`private` 私人 / `unlisted` 不公開 / `public` 公開，預設 private） |
+| `publish` | 發佈用的文字：`title` 標題、`description` 說明、`tags` 標籤、`scheduleTime` 排程時間、`videoUrl` 公開網址（Threads 專用）、`privacy`（YouTube：`private` 私人 / `unlisted` 不公開 / `public` 公開，預設 private） |
 
 所有時間都用**原始影片的秒數**（跟 transcript.txt 一樣），剪掉的段落程式會自動換算。
 
@@ -147,12 +147,18 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 先在 `project.json` 的 `publish` 寫好標題、說明、標籤（可以請 Claude 照逐字稿幫你寫），然後：
 
 ```bash
-npm run publish -- breath-01            # YouTube＋IG 都發
-npm run publish -- breath-01 youtube    # 只發 YouTube
-npm run publish -- breath-01 instagram  # 只發 IG
+npm run publish -- breath-01            # 依 .env 有設定金鑰的平台全部發佈（YouTube/IG/FB/Threads）
+npm run publish -- breath-01 youtube    # 只發 YouTube (簡稱 yt)
+npm run publish -- breath-01 instagram  # 只發 IG (簡稱 ig)
+npm run publish -- breath-01 facebook   # 只發 Facebook Reels (簡稱 fb)
+npm run publish -- breath-01 threads    # 只發 Threads
 ```
 
-發佈前會列出標題、平台，問你「確定要發佈嗎？」，按 `y` 才會上傳。YouTube 預設是**私人**，到 YouTube Studio 看過再公開；IG 發佈後就是公開的。
+發佈前會列出標題、平台與排程時間，問你「確定要發佈嗎？」，按 `y` 才會上傳。
+- **YouTube**：支援 `scheduleTime` 排程公開（ISO 8601 或 `YYYY-MM-DDTHH:mm:ss`）；預設為 `private`，發布後可到 YouTube Studio 確認。
+- **Facebook Reels**：支援 `scheduleTime` 排程發布（需在 10 分鐘 ~ 75 天內）。
+- **Instagram Reels**：目前 API 發佈後即公開。
+- **Threads**：需要將影片上傳至公開 URL（可在 `publish.videoUrl` 或 `.env` 的 `PUBLIC_VIDEO_BASE_URL` 設定）。
 
 ### 第一次設定 YouTube（約 10 分鐘，只要做一次）
 
@@ -163,15 +169,49 @@ npm run publish -- breath-01 instagram  # 只發 IG
 5. 把用戶端 ID、用戶端密鑰填進 `.env` 的 `YOUTUBE_CLIENT_ID`、`YOUTUBE_CLIENT_SECRET`
 6. 第一次 `npm run publish` 會開瀏覽器請你登入、按允許（出現「Google 尚未驗證這個應用程式」按「繼續」），之後就不用再登入
 
-### 第一次設定 Instagram（約 20 分鐘，只要做一次）
+### 第一次設定 Instagram / Facebook（約 20 分鐘，只要做一次）
 
 1. IG 要是**專業帳號**（商業或創作者），並連結一個 Facebook 粉絲專頁
-2. 到 https://developers.facebook.com/ 建立應用程式（類型選「商業」），加入 **Instagram** 產品
-3. 用「Graph API 測試工具」取得權杖，勾選 `instagram_basic`、`instagram_content_publish`、`pages_show_list`、`pages_read_engagement`，再換成**長期權杖**（60 天）
-4. 查你的 IG 帳號 ID：在測試工具查 `me/accounts?fields=instagram_business_account`
-5. 填進 `.env` 的 `IG_ACCESS_TOKEN`、`IG_USER_ID`
+2. 到 https://developers.facebook.com/ 建立應用程式（類型選「商業」）
+3. 用「Graph API 測試工具」取得權杖：
+   - **Instagram** 勾選：`instagram_basic`、`instagram_content_publish`、`pages_show_list`、`pages_read_engagement`
+   - **Facebook** 勾選：`pages_show_list`、`pages_read_engagement`、`pages_manage_posts`
+   - 換成粉絲專頁的長期權杖（Page Access Token）
+4. 查詢 ID 並填入 `.env`：
+   - IG：查 `me/accounts?fields=instagram_business_account`，填進 `IG_USER_ID` 與 `IG_ACCESS_TOKEN`
+   - FB：粉絲專頁 ID 填進 `FB_PAGE_ID`，粉專權杖填進 `FB_PAGE_ACCESS_TOKEN`
 
-權杖 60 天會過期，到期再到測試工具換一個新的。
+### 第一次設定 Threads
+
+1. 到 Meta 開發者平台應用程式新增 **Threads** 使用案例
+2. 取得具備 `threads_basic` 與 `threads_content_publish` 權限的 User Token
+3. 填進 `.env` 的 `THREADS_USER_ID` 與 `THREADS_ACCESS_TOKEN`
+4. 因 Threads 官方限制必須由伺服器爬取公開網址，請在 `.env` 設定 `PUBLIC_VIDEO_BASE_URL` 或在 `project.json` 的 `publish.videoUrl` 填入影片下載連結。
+
+### 串接 like-manychat（留言自動私訊）
+
+1. 在 `.env` 填入你的 like-manychat 部署網址與管理員登入帳密：
+   ```env
+   LIKE_MANYCHAT_URL=https://your-like-manychat.vercel.app
+   LIKE_MANYCHAT_EMAIL=your-email@example.com
+   LIKE_MANYCHAT_PASSWORD=your-password
+   ```
+2. 在 `project.json` 的 `publish` 設定 `autoReply`：
+   ```json
+   "publish": {
+     "title": "深呼吸放鬆法",
+     "autoReply": {
+       "keyword": "呼吸",
+       "replyText": "哈囉！這是深呼吸放鬆指引：https://example.com/guide",
+       "publicReply": "已私訊你囉！請查看你的小盒子信箱～",
+       "tag": "呼吸短影音"
+     }
+   }
+   ```
+3. 發佈時（`npm run publish`）會自動同步到 like-manychat 建立或更新規則；也可以隨時手動同步：
+   ```bash
+   npm run manychat -- breath-01
+   ```
 
 ## 常見問題
 
