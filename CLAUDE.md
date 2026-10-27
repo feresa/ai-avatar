@@ -5,13 +5,13 @@
 ## 專案結構
 
 - `public/projects/<名稱>/project.json`：每支影片的剪輯腳本（型別定義在 `src/types.ts`，欄位說明在 README）
-- `public/projects/<名稱>/captions.json`：逐字字幕（`npm run transcribe` 產生），`transcript.txt` 是給人看的逐字稿
+- `public/projects/<名稱>/captions.json`：逐字字幕（`npm run transcribe` 產生），`transcript.txt` 是給人看的逐字稿；有 `script.txt`（講稿）時字幕用講稿的字，`captions.whisper.json` 是原始辨識結果
 - `src/Short.tsx`：組合影片（剪接、推近、加深、字幕、標題、音樂）
 - `src/components/Hook.tsx`：開場標題、圖示斜線、小膠囊
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `transcribe` / `fix-captions` / `cuts` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`new` / `transcribe` / `align` / `fix-captions` / `cuts` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
@@ -21,7 +21,7 @@
 
 1. **先改 project.json，不夠才改元件。** 「標題改字」「重點詞」「哪裡推近」「字幕位置」都是改剪輯腳本
 2. **時間一律用原始影片的秒數**（看 `transcript.txt` 的 `[mm:ss.s]`），不要自己扣掉剪掉的段落
-3. 字幕錯字：改 `transcript.txt`（行首時間不要動），再跑 `npm run fix-captions -- <名稱>` 套進 `captions.json`；render / studio 也會自動套用
+3. 字幕錯字：使用者有講稿就優先用 `npm run align -- <名稱> 講稿.txt`；沒有講稿才改 `transcript.txt`（行首時間不要動），再跑 `npm run fix-captions -- <名稱>` 套進 `captions.json`；render / studio 也會自動套用
 4. 使用者說「講到某句話的時候」：到 `captions.json` 找那幾個字的 `startMs`，換成秒填進去
 5. 開場標題每行最好 6 個字以內；第二行用黃色當重點
 6. 改元件樣式時，所有專案都會一起變；只想改某一支，就在 project.json 加欄位（並更新 `src/types.ts`）

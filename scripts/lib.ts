@@ -168,3 +168,95 @@ export const loadEnv = () => {
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
   }
 };
+
+// ---------- 講稿對齊：字幕用講稿的字（100% 正確），語音辨識只拿來對時間 ----------
+
+const SKIP = /[\s，。！？、；：,.!?;:「」『』（）()…—~～"'“”‘’《》〈〉\-]/;
+// 常見異體字、全形半形：比對時視為同一個字
+const SAME: Record<string, string> = { 臺: "台", 裏: "裡", 着: "著", 爲: "為", 綫: "線", 峯: "峰", 羣: "群", 衆: "眾" };
+const norm = (ch: string) => {
+  const c = ch.normalize("NFKC").toLowerCase();
+  return SAME[c] ?? c;
+};
+
+/**
+ * 講稿和語音辨識逐字對齊（最長共同子序列）。
+ * 對到的字用辨識的時間；沒對到的字（辨識聽錯、漏聽）在前後對到的字之間平均分配。
+ */
+export const alignScript = (whisper: Caption[], script: string) => {
+  // 辨識結果拆成一個一個字，每個字分到所屬詞的一段時間
+  const heard: { ch: string; start: number; end: number }[] = [];
+  for (const c of whisper) {
+    const chars = Array.from(c.text.trim()).filter((ch) => !SKIP.test(ch));
+    const step = (c.endMs - c.startMs) / Math.max(1, chars.length);
+    chars.forEach((ch, k) => heard.push({ ch: norm(ch), start: c.startMs + step * k, end: c.startMs + step * (k + 1) }));
+  }
+  // 講稿：每個字一個單位，標點黏在前一個字後面；英文、數字連在一起
+  const units: { text: string; key: string }[] = [];
+  for (const ch of Array.from(script.replace(/\r/g, ""))) {
+    if (SKIP.test(ch)) {
+      if (units.length && !/\s/.test(ch)) units[units.length - 1].text += ch;
+      continue;
+    }
+    units.push({ text: ch, key: norm(ch) });
+  }
+  const n = units.length;
+  const m = heard.length;
+  if (!n) return { captions: [] as Caption[], matched: 0, total: 0 };
+
+  // 最長共同子序列
+  const W = m + 1;
+  const dp = new Uint16Array((n + 1) * W);
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--)
+      dp[i * W + j] = units[i].key === heard[j].ch ? dp[(i + 1) * W + j + 1] + 1 : Math.max(dp[(i + 1) * W + j], dp[i * W + j + 1]);
+  const match = new Array<number>(n).fill(-1);
+  for (let i = 0, j = 0; i < n && j < m; ) {
+    if (units[i].key === heard[j].ch) match[i++] = j++;
+    else if (dp[(i + 1) * W + j] >= dp[i * W + j + 1]) i++;
+    else j++;
+  }
+
+  // 每個講稿字的時間
+  const times: { start: number; end: number }[] = new Array(n);
+  const first = heard[0]?.start ?? 0;
+  const last = heard[m - 1]?.end ?? n * 250;
+  for (let i = 0; i < n; ) {
+    if (match[i] >= 0) {
+      const h = heard[match[i]];
+      times[i++] = { start: h.start, end: h.end };
+      continue;
+    }
+    // 一段連續沒對到的字：夾在前後對到的字中間平均分
+    let k = i;
+    while (k < n && match[k] < 0) k++;
+    const from = i > 0 ? times[i - 1].end : k < n ? Math.min(first, heard[match[k]].start) : first;
+    const to = k < n ? heard[match[k]].start : last;
+    const span = Math.max(0, to - from);
+    const step = span / (k - i);
+    for (let x = i; x < k; x++) times[x] = { start: from + step * (x - i), end: from + step * (x - i + 1) };
+    i = k;
+  }
+
+  const captions: Caption[] = units.map((u, i) => ({
+    text: u.text,
+    startMs: Math.round(times[i].start),
+    endMs: Math.round(Math.max(times[i].end, times[i].start + 1)),
+    timestampMs: Math.round((times[i].start + times[i].end) / 2),
+    confidence: match[i] >= 0 ? 1 : 0.5,
+  }));
+  return { captions, matched: match.filter((x) => x >= 0).length, total: n };
+};
+
+/** 專案資料夾裡有講稿（script.txt）就用講稿當字幕；回傳對齊率，沒有講稿回傳 null */
+export const applyScript = (name: string) => {
+  const dir = projectDir(name);
+  const scriptFile = path.join(dir, "script.txt");
+  const raw = path.join(dir, "captions.whisper.json");
+  if (!fs.existsSync(scriptFile) || !fs.existsSync(raw)) return null;
+  const whisper = JSON.parse(fs.readFileSync(raw, "utf-8")) as Caption[];
+  const { captions, matched, total } = alignScript(whisper, fs.readFileSync(scriptFile, "utf-8"));
+  fs.writeFileSync(path.join(dir, "captions.json"), JSON.stringify(captions, null, 1));
+  writeTranscript(name, captions);
+  return { rate: total ? matched / total : 0, total };
+};

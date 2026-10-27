@@ -7,6 +7,7 @@
     "studio": "tsx scripts/studio.ts",
     "new": "tsx scripts/new.ts",
     "transcribe": "tsx scripts/transcribe.ts",
+    "align": "tsx scripts/align.ts",
     "fix-captions": "tsx scripts/fix-captions.ts",
     "cuts": "tsx scripts/cuts.ts",
     "music": "tsx scripts/music.ts",

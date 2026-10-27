@@ -5,8 +5,11 @@ import path from "node:path";
 import type { Project } from "../src/types";
 import { die, mediaDuration, projectDir, syncProjectList, writeProject } from "./lib";
 
-const [name, video] = process.argv.slice(2);
-if (!name || !video) die("用法：npm run new -- 專案名 影片檔\n   例如：npm run new -- breath-01 ~/Downloads/分身影片.mp4");
+const argv = process.argv.slice(2);
+const si = argv.indexOf("--script");
+const scriptFile = si >= 0 ? argv[si + 1] : undefined;
+const [name, video] = argv.filter((_, i) => si < 0 || (i !== si && i !== si + 1));
+if (!name || !video) die("用法：npm run new -- 專案名 影片檔 [--script 講稿.txt]\n   例如：npm run new -- breath-01 ~/Downloads/分身影片.mp4 --script ~/Downloads/講稿.txt");
 if (!/^[a-zA-Z0-9-]+$/.test(name)) die("專案名只能用英文、數字和 -（例如 breath-01），這是 Remotion 的限制");
 if (!fs.existsSync(video)) die(`找不到影片：${video}`);
 
@@ -15,6 +18,11 @@ fs.mkdirSync(dir, { recursive: true });
 const ext = path.extname(video).toLowerCase() || ".mp4";
 const dest = `source${ext}`;
 fs.copyFileSync(video, path.join(dir, dest));
+if (scriptFile) {
+  if (!fs.existsSync(scriptFile)) die(`找不到講稿：${scriptFile}`);
+  fs.copyFileSync(scriptFile, path.join(dir, "script.txt"));
+  console.log("📝 已存講稿 script.txt：上字幕時會直接用講稿的字");
+}
 const durationSec = Math.round(mediaDuration(path.join(dir, dest)) * 100) / 100;
 
 const file = path.join(dir, "project.json");

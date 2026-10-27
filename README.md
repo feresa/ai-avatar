@@ -33,7 +33,8 @@ npm run skills   # 安裝 Remotion 官方 skill：Claude 改特效時照官方�
 
 ```bash
 # 1. 建立專案（專案名只能用英文、數字和 -）
-npm run new -- breath-01 ~/Downloads/分身影片.mp4
+#    有講稿就加 --script：字幕直接用講稿的字，不會有錯字（強烈建議）
+npm run new -- breath-01 ~/Downloads/分身影片.mp4 --script ~/Downloads/講稿.txt
 
 # 2. 自動上字幕（第一次會下載語音模型，約 1.5GB）
 npm run transcribe -- breath-01
@@ -150,6 +151,7 @@ npm run publish -- breath-01 instagram  # 只發 IG
 
 ## 常見問題
 
+- **字幕用講稿**：AI分身工作室做的影片本來就有講稿，把講稿（`SCRIPT` 那段文字）存成 .txt，建專案時加 `--script 講稿.txt`，或事後跑 `npm run align -- 專案名 講稿.txt`。字用講稿的，語音辨識只拿來對時間
 - **字幕有錯字**：直接改 `transcript.txt`，存檔就好，**行首的 `[00:04.0]` 時間不要動**。
   - `npm run render` 會自動把改過的字套進字幕
   - `npm run studio` 開著的時候改也可以，終端機會顯示「已更新字幕」，預覽畫面按 F5 重新整理

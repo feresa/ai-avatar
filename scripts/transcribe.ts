@@ -5,7 +5,7 @@ import { downloadWhisperModel, installWhisperCpp, toCaptions, transcribe, type W
 import * as OpenCC from "opencc-js";
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, die, projectDir, readProject, remotionTool, writeTranscript } from "./lib";
+import { ROOT, applyScript, die, projectDir, readProject, remotionTool, writeTranscript } from "./lib";
 
 const name = process.argv[2] ?? die("用法：npm run transcribe -- 專案名");
 const p = readProject(name);
@@ -42,10 +42,19 @@ const toTW = OpenCC.Converter({ from: "cn", to: "twp" });
 const captions: Caption[] = toCaptions({ whisperCppOutput: out }).captions
   .map((c) => ({ ...c, text: toTW(c.text) }))
   .filter((c) => c.text.trim() && !/^\[.*\]$/.test(c.text.trim()));
-fs.writeFileSync(path.join(dir, "captions.json"), JSON.stringify(captions, null, 1));
+// 原始辨識結果另外存一份，之後換講稿可以重新對齊
+fs.writeFileSync(path.join(dir, "captions.whisper.json"), JSON.stringify(captions, null, 1));
 
-// 給人看的逐字稿：每句一行，前面是開始時間（原始影片的秒數，剪輯腳本就用這個時間）
-const lineCount = writeTranscript(name, captions);
-console.log(`✅ 字幕完成：${captions.length} 個字詞，逐字稿 ${lineCount} 句`);
+const aligned = applyScript(name);
+if (aligned) {
+  console.log(`✅ 字幕完成：用講稿 script.txt 當字幕（${aligned.total} 個字，${Math.round(aligned.rate * 100)}% 對到語音）`);
+  if (aligned.rate < 0.6) console.log("   ⚠️ 對到的比例偏低：講稿跟影片內容是同一份嗎？");
+} else {
+  fs.writeFileSync(path.join(dir, "captions.json"), JSON.stringify(captions, null, 1));
+  // 給人看的逐字稿：每句一行，前面是開始時間（原始影片的秒數，剪輯腳本就用這個時間）
+  const lineCount = writeTranscript(name, captions);
+  console.log(`✅ 字幕完成：${captions.length} 個字詞，逐字稿 ${lineCount} 句`);
+  console.log(`   有講稿的話：npm run align -- ${name} 講稿.txt（錯字會全部消失）`);
+}
 console.log(`   public/projects/${name}/transcript.txt（有錯字直接改這個檔，行首的時間不要動）`);
 console.log(`   下一步：npm run cuts -- ${name}（自動剪掉停頓，可略過）`);
