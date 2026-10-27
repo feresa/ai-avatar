@@ -123,10 +123,16 @@ export const syncManyChatRule = async (projectName: string, extraPostIds: string
 
   const ruleName = autoReply.name || `${p.publish?.title || projectName} - 留言自動私訊`;
 
-  // 檢查是否已有相同名稱或相同關鍵字的規則
-  const match = existingRules.find(
-    (r) => r.name === ruleName || r.keywords.split(",").some((k) => autoReply.keyword.split(",").includes(k.trim()))
+  // 只用規則名稱比對：同一支影片才更新，不同影片各自一條（關鍵字一樣也不會蓋掉別支影片的規則）
+  const match = existingRules.find((r) => r.name === ruleName);
+  const myKeywords = autoReply.keyword.split(/[,，]/).map((k) => k.trim()).filter(Boolean);
+  const sameKeyword = existingRules.filter(
+    (r) => r.id !== match?.id && r.keywords.split(/[,，]/).some((k) => myKeywords.includes(k.trim()))
   );
+  if (sameKeyword.length)
+    console.log(
+      `ℹ️ 其他規則也有相同關鍵字：${sameKeyword.map((r) => `「${r.name}」`).join("、")}（不會被蓋掉；有指定貼文 ID 的話各自只回自己的貼文）`
+    );
 
   // 合併 post_id（來自 project.json、既有規則、以及本次發佈新產生的貼文/影片 ID）
   const mergedPostIds = [
