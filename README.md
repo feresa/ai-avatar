@@ -63,6 +63,23 @@ npm run publish -- breath-01
 
 第 2 步做完後，`public/projects/breath-01/transcript.txt` 會有逐字稿和時間，可以直接請 Claude Code 照著逐字稿幫你寫標題、挑重點詞、決定哪裡推近。
 
+## 從長片剪短片
+
+一支 30 分鐘的課程或直播，可以挑出好幾支短片：
+
+```bash
+npm run new -- class-01 ~/Downloads/呼吸課.mp4
+npm run transcribe -- class-01
+```
+
+然後跟 Claude Code 說「**幫 class-01 挑幾段適合做短片的**」。Claude 會讀逐字稿，照「開頭勾不勾人、重點清不清楚、實不實用、有沒有情緒、結尾有不有力」打分數，列出候選給你挑。挑好之後它會用：
+
+```bash
+npm run clip -- class-01 class-01-a 3:12 3:58
+```
+
+剪成新的短片專案（開始、結束會自動對到停頓，不會切到半個字），字幕、找臉的設定都會一起帶過去。
+
 ## 用 Claude Code 改影片
 
 在專案資料夾裡開 Claude Code，直接講：

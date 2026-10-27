@@ -11,7 +11,7 @@
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
@@ -44,6 +44,22 @@
 10. `publish`：照內容寫標題（20 字內、有吸引力）、說明（2~3 句＋行動呼籲）、5~8 個中文 hashtag；`privacy` 保持 `private`。**不要自己跑 `npm run publish`**，發佈要使用者自己下指令
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
 12. 改完先跑 `npm run check -- <名稱>`，有警告就照建議修到沒有；再輸出 3~4 張關鍵時間的截圖檢查（可暫時加 `"debugFace": true` 看臉的框，檢查完拿掉），再跟使用者說明加了哪些效果、在第幾秒
+
+## 「從長片挑短片」怎麼做
+
+使用者給一支長影片（課程、直播、訪談），說「挑幾段做短片」時：
+
+1. 長片先照一般流程建專案、上字幕（`npm run new` → `npm run transcribe`，有講稿就 `align`）
+2. 讀整份 `transcript.txt`，挑 3~5 段候選，每段 **20~60 秒**、從一句話的開頭到結尾，不要從中間開始
+3. 每段照下面 5 項各打 1~5 分（滿分 25），列成表給使用者看：時間、開頭第一句、總分、一句話說為什麼
+   - **開頭勾人**：前 3 秒就有問題、反差、數字或痛點（「很多人以為⋯其實⋯」「我只做一件事」）
+   - **一段一重點**：只講一件事，不用前後文也聽得懂
+   - **實用**：觀眾看完馬上可以做（步驟、方法、口訣）
+   - **情緒**：有故事、有感受、有真心話
+   - **結尾有力**：最後一句是結論、金句或行動呼籲，不是講到一半
+4. **等使用者挑**（用 AskUserQuestion，可複選），不要自己全部剪
+5. 使用者挑好就用 `npm run clip -- <長片> <新名稱> <開始> <結束>` 一段一段剪（會自動對到停頓），新名稱用 `<長片>-a`、`-b`⋯
+6. 每段再照「照逐字稿規劃畫面」做；開場標題要能單獨看懂，不要寫「接著」「剛剛說的」
 
 ## 改完要檢查
 

@@ -1,6 +1,7 @@
 // 指令共用的小工具
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import type { Caption } from "@remotion/captions";
 import type { Project } from "../src/types";
@@ -259,4 +260,43 @@ export const applyScript = (name: string) => {
   fs.writeFileSync(path.join(dir, "captions.json"), JSON.stringify(captions, null, 1));
   writeTranscript(name, captions);
   return { rate: total ? matched / total : 0, total };
+};
+
+/** 找出影片裡的停頓：每 20ms 算一次音量，比說話音量（前 10% 大聲）低 20dB 以上、持續 minPause 秒以上 */
+export const findPauses = (video: string, minPause: number) => {
+  const wav = path.join(os.tmpdir(), `pauses-${process.pid}.wav`);
+  remotionTool("ffmpeg", ["-y", "-v", "error", "-i", video, "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
+  if (!fs.existsSync(wav)) die("讀不到影片的聲音");
+  const buf = fs.readFileSync(wav);
+  fs.rmSync(wav);
+  const dataAt = buf.indexOf("data") + 8; // 跳過 WAV 檔頭
+  const pcm = new Int16Array(buf.buffer.slice(buf.byteOffset + dataAt, buf.byteOffset + dataAt + Math.floor((buf.length - dataAt) / 2) * 2));
+  if (!pcm.length) die("讀不到影片的聲音");
+  const WIN = 320; // 20ms
+  const db: number[] = [];
+  for (let i = 0; i + WIN <= pcm.length; i += WIN) {
+    let sum = 0;
+    for (let k = i; k < i + WIN; k++) sum += pcm[k] * pcm[k];
+    db.push(10 * Math.log10(sum / WIN + 1e-9));
+  }
+  const loud = [...db].sort((a, b) => a - b)[Math.floor(db.length * 0.9)];
+  const quiet = db.map((d) => d < loud - 20);
+  const pauses: { start: number; end: number }[] = [];
+  let from = -1;
+  for (let i = 0; i <= quiet.length; i++) {
+    const q = quiet[i] ?? false;
+    if (q && from < 0) from = i;
+    if (!q && from >= 0) {
+      if ((i - from) * 0.02 >= minPause) pauses.push({ start: from * 0.02, end: i * 0.02 });
+      from = -1;
+    }
+  }
+  return pauses;
+};
+
+/** "1:23.5" 或 "83.5" → 秒 */
+export const parseTime = (s: string) => {
+  const m = s.match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);
+  if (!m) die(`看不懂的時間：${s}（用 83.5 或 1:23.5）`);
+  return Number(m![1] ?? 0) * 60 + Number(m![2]);
 };
