@@ -10,6 +10,8 @@
     "align": "tsx scripts/align.ts",
     "fix-captions": "tsx scripts/fix-captions.ts",
     "cuts": "tsx scripts/cuts.ts",
+    "face": "tsx scripts/face.ts",
+    "check": "tsx scripts/check.ts",
     "music": "tsx scripts/music.ts",
     "images": "tsx scripts/images.ts",
     "render": "tsx scripts/render.ts",

@@ -17,3 +17,4 @@ public/projects/*/img-*
 .secrets/
 # Remotion 官方 skill（npm run skills 安裝，不放進 git）
 .claude/skills/remotion-*/
+.venv-face/

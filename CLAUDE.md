@@ -11,7 +11,7 @@
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `transcribe` / `align` / `fix-captions` / `cuts` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`new` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
@@ -31,6 +31,7 @@
 
 使用者說「幫我規劃畫面」「照內容加效果」時：
 
+0. project.json 沒有 `face` 就先跑 `npm run face -- <名稱>`（找臉）；字卡、貼圖的 `y` 放在臉的下方（`face.y + face.h` 之後）、字幕上方，貼圖可以放臉的左右兩邊
 1. 讀 `transcript.txt` 抓重點，必要時到 `captions.json` 查精確的字的時間
 2. `hook`：開頭 2~3 秒，兩行、每行 6 字內，第二行是最勾人的一句（黃色）
 3. `captions.highlight`：3~6 個關鍵詞（主題詞、數字、反差詞）
@@ -42,7 +43,7 @@
 9. `music`：跑 `npm run music -- <名稱> <風格>`，靜心呼吸用 `calm`、生活分享用 `warm`、教學清單用 `upbeat`
 10. `publish`：照內容寫標題（20 字內、有吸引力）、說明（2~3 句＋行動呼籲）、5~8 個中文 hashtag；`privacy` 保持 `private`。**不要自己跑 `npm run publish`**，發佈要使用者自己下指令
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
-12. 改完輸出 3~4 張關鍵時間的截圖檢查，再跟使用者說明加了哪些效果、在第幾秒
+12. 改完先跑 `npm run check -- <名稱>`，有警告就照建議修到沒有；再輸出 3~4 張關鍵時間的截圖檢查（可暫時加 `"debugFace": true` 看臉的框，檢查完拿掉），再跟使用者說明加了哪些效果、在第幾秒
 
 ## 改完要檢查
 

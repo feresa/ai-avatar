@@ -42,7 +42,13 @@ npm run transcribe -- breath-01
 # 3. 自動剪掉停頓（可略過）
 npm run cuts -- breath-01
 
-# 4. 打開預覽畫面，邊看邊改
+# 3-1. 自動找臉：直式畫面自動對準臉、推近往臉放大，字卡貼圖可以避開臉（第一次會裝 OpenCV）
+npm run face -- breath-01
+
+# 4. 檢查字卡、貼圖有沒有擋到臉、會不會太擠
+npm run check -- breath-01
+
+# 4-1. 打開預覽畫面，邊看邊改
 npm run studio
 
 # 5. 加背景音樂（可略過；calm 平靜、warm 溫暖、upbeat 輕快）
@@ -87,7 +93,8 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `captions` | 字幕：`highlight`（重點詞）、`maxChars`（一行幾個字）、`y`（垂直位置 0~1）、`fontSize`、`lead`（提早幾秒出現，預設 0.15） |
 | `zooms` | 推近：`[{ "at": 秒, "dur": 秒, "scale": 1.15 }]` |
 | `keep` | 要保留的段落 `[[開始, 結束], ...]`，`null` = 整支保留 |
-| `focusX` / `focusY` / `baseZoom` | 直式裁切的焦點和整體放大 |
+| `focusX` / `focusY` / `baseZoom` | 直式裁切的焦點和整體放大（`npm run face` 會自動算） |
+| `face` | 臉在畫面的位置（`npm run face` 自動填）；`debugFace: true` 會畫出臉的框，檢查用 |
 | `cards` | 重點字卡：`[{ "at": 秒, "dur": 秒, "text": "① 腹式呼吸", "sub": "小字" }]` |
 | `inserts` | 插圖 / 插入影片：`[{ "at": 秒, "dur": 秒, "src": "photo.jpg", "mode": "full" }]`，`mode` 可選 `full`（蓋滿）、`pip`（上方小視窗）、`top`（上半部） |
 | `stickers` | 貼圖小動畫：`[{ "at": 秒, "dur": 秒, "kind": "check" }]`，`kind` 可選 `check` `cross` `arrow` `heart` `star` `fire`，或用 `"emoji": "🌿"`、`"src": "圖.png"`；`x` `y` 位置、`size` 大小、`rotate` 角度、`anim`（`pop` `bounce` `float`） |

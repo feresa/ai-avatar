@@ -38,6 +38,8 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   }));
   const scale = (p.baseZoom ?? 1) * zoomAt(t, zooms);
   const focus = `${(p.focusX ?? 0.5) * 100}% ${(p.focusY ?? 0.4) * 100}%`;
+  // 推近的中心：有臉的位置就往臉放大
+  const zoomOrigin = p.face ? `${(p.face.x + p.face.w / 2) * 100}% ${(p.face.y + p.face.h / 2) * 100}%` : focus;
   const hook = p.hook;
   const hookFrom = hook ? Math.round(srcToOut(segs, hook.from) * fps) : 0;
   const hookTo = hook ? Math.round(srcToOut(segs, hook.to) * fps) : 0;
@@ -58,7 +60,7 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       <AbsoluteFill
         style={{
           transform: `translateX(${(look.x + jitter) * 100}%) scale(${scale * look.scale})`,
-          transformOrigin: focus,
+          transformOrigin: zoomOrigin,
           filter:
             [look.blur > 0.3 ? `blur(${look.blur.toFixed(1)}px)` : "", look.glitch ? `hue-rotate(${Math.round(look.glitch * 40 * Math.sin(frame * 1.7))}deg) saturate(${1 + look.glitch * 0.6}) contrast(${1 + look.glitch * 0.3})` : ""]
               .filter(Boolean)
@@ -90,6 +92,23 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
           </Sequence>
         );
       })}
+
+      {p.debugFace && p.face && (
+        <AbsoluteFill>
+          <div
+            style={{
+              position: "absolute",
+              left: `${p.face.x * 100}%`,
+              top: `${p.face.y * 100}%`,
+              width: `${p.face.w * 100}%`,
+              height: `${p.face.h * 100}%`,
+              border: "6px solid #00E5FF",
+              transform: `scale(${scale})`,
+              transformOrigin: "center",
+            }}
+          />
+        </AbsoluteFill>
+      )}
 
       {look.overlay && look.overlayOpacity > 0.01 && (
         <AbsoluteFill style={{ backgroundColor: look.overlay, opacity: look.overlayOpacity }} />

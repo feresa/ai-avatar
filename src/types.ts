@@ -120,6 +120,10 @@ export type Project = {
   focusY?: number;
   /** 整支片的基本放大（臉太小時調大，例如 1.2） */
   baseZoom?: number;
+  /** 臉在成品畫面的位置（0~1，npm run face 自動填）；推近會往臉放大 */
+  face?: { x: number; y: number; w: number; h: number };
+  /** 畫出臉的框（檢查位置用，輸出前記得關掉） */
+  debugFace?: boolean;
   /** 要保留的段落 [開始秒, 結束秒]；沒填 = 整支保留。npm run cuts 會自動填（剪掉停頓） */
   keep?: [number, number][] | null;
   hook?: Hook | null;
