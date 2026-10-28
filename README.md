@@ -152,6 +152,7 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 
 - **綠幕拍的（最乾淨）**：`npm run green -- breath-02`，自動偵測綠布顏色，用 Remotion 官方 `colorKey` 去背。再在 project.json 加 `"background": "背景圖.jpg"`
 - **一般影片**：`npm run matte -- breath-01`，用 AI（RobustVideoMatting）去背，產生 `matte.webm`。第一次會裝 PyTorch（約 5 分鐘）。Mac 會用顯示卡，一支 40 秒的影片大約幾分鐘
+- **一般影片、想更快**：用雲端硬碟 `AI分身素材/AI去背.ipynb`（Colab GPU），做好的 `原檔名_去背.webm` 下載後跑 `npm run matte -- breath-01 --file ~/Downloads/原檔名_去背.webm` 放進專案（長度對不上會提醒）
 
 去背好之後，跟 Claude 說「講到呼吸的時候放景深大字」「開頭做成雜誌封面」就可以了。
 

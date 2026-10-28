@@ -54,7 +54,7 @@
    - `compares`：有前後差異的內容；**before 的圖要使用者提供**，不要亂填
    - `phones`：示範 App、網站、截圖；**手機裡的圖要使用者提供**
    - 轉場 `zoomblur`（穿越）適合換段落，`lightleak`（漏光）適合溫暖、靜心、戶外的氛圍
-10-2. 去背特效（要有 `greenScreen` 或 `matte`；都沒有就先問使用者是綠幕拍的嗎：是就跑 `npm run green`，不是就跑 `npm run matte`，matte 要跑幾分鐘先告訴使用者）：
+10-2. 去背特效（要有 `greenScreen` 或 `matte`；都沒有就先問使用者是綠幕拍的嗎：是就跑 `npm run green`，不是就跑 `npm run matte`，matte 要跑幾分鐘先告訴使用者；Mac 太慢可以改用雲端硬碟的 `AI去背.ipynb`（Colab），做好用 `npm run matte -- <名稱> --file <下載的_去背.webm>` 放進專案）：
    - `depthTexts`：主題詞（2~4 字），開場或講到核心概念時，1.5~2.5 秒
    - `magazines`：開場最吸睛，title 2~3 字、lines 2~3 句
    - `breakouts`：講到「突破」「走出去」或情緒高點

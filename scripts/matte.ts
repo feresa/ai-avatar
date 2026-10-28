@@ -7,8 +7,27 @@ import fs from "node:fs";
 import path from "node:path";
 import { ROOT, die, ensureSourceSize, projectDir, writeProject } from "./lib";
 
-const name = process.argv[2] ?? die("用法：npm run matte -- 專案名");
+const args = process.argv.slice(2);
+const fi = args.indexOf("--file");
+const importFile = fi >= 0 ? args[fi + 1] : undefined;
+const name = args.filter((_, i) => fi < 0 || (i !== fi && i !== fi + 1))[0] ?? die("用法：npm run matte -- 專案名 [--file Colab做好的_去背.webm]");
 const p = ensureSourceSize(name);
+
+// Colab 做好的去背檔：直接放進專案
+if (importFile) {
+  if (!fs.existsSync(importFile)) die(`找不到檔案：${importFile}`);
+  if (!/\.webm$/i.test(importFile)) die("去背檔要是 .webm（Colab「AI去背」筆記本做出來的 _去背.webm）");
+  const dur = Number(
+    spawnSync("npx", ["remotion", "ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", importFile], { cwd: ROOT, encoding: "utf-8" }).stdout.trim(),
+  );
+  if (dur && Math.abs(dur - p.durationSec) > 0.5)
+    die(`去背檔 ${dur.toFixed(1)} 秒，專案影片 ${p.durationSec} 秒，長度對不上：要用同一支影片去背`);
+  fs.copyFileSync(importFile, path.join(projectDir(name), "matte.webm"));
+  writeProject(name, { ...p, matte: "matte.webm" });
+  console.log(`✅ 已放進專案：public/projects/${name}/matte.webm`);
+  console.log("   現在可以用：景深大字 depthTexts、破框 breakouts、換背景 backgrounds、剪貼 cutouts、雜誌封面 magazines");
+  process.exit(0);
+}
 const W = p.sourceWidth ?? die("量不到影片大小");
 const H = p.sourceHeight ?? die("量不到影片大小");
 
