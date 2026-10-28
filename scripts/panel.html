@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>剪片控制台</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --card: #fff; --ink: #1f2328; --muted: #6b7280; --line: #e5e1d8;
+    --accent: #2f6f5e; --accent-ink: #fff; --ok: #2f855a; --warn: #b7791f; --bad: #c53030; --code: #1b1f24; --code-ink: #e6edf3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15181c; --card: #1f2329; --ink: #e6e6e6; --muted: #9aa3ad; --line: #30363d; --accent: #5fb39a; --accent-ink: #0d1512; --code: #0d1117; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 -apple-system, "PingFang TC", "Noto Sans TC", sans-serif; }
+  header { padding: 14px 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--line); background: var(--card); position: sticky; top: 0; z-index: 2; }
+  header h1 { font-size: 18px; margin: 0 8px 0 0; }
+  select, input, textarea, button { font: inherit; color: inherit; }
+  select, input[type=text], textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+  textarea { width: 100%; resize: vertical; }
+  button { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 7px 14px; cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  @media (min-width: 901px) { main > div:last-child { position: sticky; top: 76px; align-self: start; max-height: calc(100vh - 90px); overflow: auto; } }
+  main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; padding: 16px 20px 40px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 12px 16px 40px; } }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  section h2 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+  section h2 .n { background: var(--accent); color: var(--accent-ink); border-radius: 50%; width: 22px; height: 22px; display: inline-grid; place-items: center; font-size: 12px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-top: 1px dashed var(--line); }
+  .step:first-of-type { border-top: 0; }
+  .step label { flex: 1; cursor: pointer; }
+  .step .desc { color: var(--muted); font-size: 13px; }
+  .step .extra { margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .badge { font-size: 12px; padding: 1px 8px; border-radius: 99px; white-space: nowrap; border: 1px solid var(--line); color: var(--muted); }
+  .badge.ok { color: var(--ok); border-color: currentColor; }
+  .badge.warn { color: var(--warn); border-color: currentColor; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chips label { white-space: nowrap; border: 1px solid var(--line); border-radius: 99px; padding: 2px 10px; font-size: 13px; cursor: pointer; }
+  .chips input { margin-right: 4px; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  pre#log { background: var(--code); color: var(--code-ink); border-radius: 10px; padding: 12px; height: 340px; overflow: auto; font: 12.5px/1.5 ui-monospace, Menlo, monospace; white-space: pre-wrap; margin: 8px 0 0; }
+  #queue { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  #queue span { font-size: 12px; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); }
+  #queue .running { border-color: var(--warn); color: var(--warn); }
+  #queue .ok { border-color: var(--ok); color: var(--ok); }
+  #queue .fail { border-color: var(--bad); color: var(--bad); }
+  .outs a { display: block; margin: 4px 0; }
+  video { width: 100%; max-height: 520px; background: #000; border-radius: 10px; margin-top: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .hidden { display: none !important; }
+  #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎬 剪片控制台</h1>
+  <select id="project"></select>
+  <span id="summary" class="muted"></span>
+  <span style="flex:1"></span>
+  <button id="suggest">勾選建議的下一步</button>
+  <button id="studio">開預覽畫面</button>
+</header>
+
+<main>
+  <div>
+    <section id="newBox">
+      <h2><span class="n">0</span>新影片</h2>
+      <div class="bar">
+        <input type="text" id="newName" placeholder="專案名（英文數字，例如 breath-02）" style="width:230px">
+        <input type="text" id="newVideo" placeholder="影片路徑" style="flex:1;min-width:200px">
+        <label><input type="checkbox" id="newTranscribe" checked> 順便上字幕</label>
+        <button id="newBtn">建立</button>
+      </div>
+      <div class="muted" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來</div>
+    </section>
+
+    <section>
+      <h2><span class="n">1</span>字幕</h2>
+      <div class="step"><input type="checkbox" data-step="transcribe" id="s-transcribe"><label for="s-transcribe">上字幕 <span class="badge" data-done="transcribe"></span><div class="desc">語音轉文字，產生逐字字幕</div></label></div>
+      <div class="step"><input type="checkbox" data-step="align" id="s-align"><label for="s-align">用講稿當字幕 <span class="badge" data-done="align"></span><div class="desc">字用講稿的、時間用語音的，不會有錯字</div>
+        <div class="extra"><textarea id="script" rows="3" placeholder="有新講稿就貼在這裡（空白就用專案裡的 script.txt）"></textarea></div></label></div>
+      <div class="step"><input type="checkbox" data-step="lead" id="s-lead"><label for="s-lead">字幕對時 <span class="badge" data-done="lead"></span><div class="desc">量聲音和字幕差多少，自動調整字幕出現時間</div></label></div>
+    </section>
+
+    <section>
+      <h2><span class="n">2</span>剪輯素材</h2>
+      <div class="step"><input type="checkbox" data-step="cuts" id="s-cuts"><label for="s-cuts">剪掉停頓 <span class="badge" data-done="cuts"></span><div class="desc">停頓超過幾秒就剪掉</div>
+        <div class="extra">最短停頓 <input type="text" id="cutsMin" value="0.5" style="width:60px"> 秒</div></label></div>
+      <div class="step"><input type="checkbox" data-step="face" id="s-face"><label for="s-face">找臉 <span class="badge" data-done="face"></span><div class="desc">對準臉裁切，字卡、貼圖會避開臉</div></label></div>
+      <div class="step"><input type="checkbox" data-step="cutout" id="s-cutout"><label for="s-cutout">去背 <span class="badge" data-done="cutout"></span><div class="desc">景深大字、雜誌封面、破框、剪貼、換背景要用</div>
+        <div class="extra">
+          <select id="cutoutMode">
+            <option value="matte">AI 去背（Mac 上跑，約幾分鐘）</option>
+            <option value="green">綠幕去背</option>
+            <option value="matteFile">放入 Colab 做好的 _去背.webm</option>
+          </select>
+          <input type="text" id="matteFile" class="hidden" placeholder="_去背.webm 的路徑" style="flex:1;min-width:180px">
+        </div></label></div>
+      <div class="step"><input type="checkbox" data-step="music" id="s-music"><label for="s-music">背景音樂 <span class="badge" data-done="music"></span>
+        <div class="extra"><select id="musicStyle"><option value="calm">calm 靜心呼吸</option><option value="warm">warm 生活分享</option><option value="upbeat">upbeat 教學清單</option></select></div></label></div>
+    </section>
+
+    <section>
+      <h2><span class="n">3</span>畫面效果（交給 Claude）</h2>
+      <div class="step"><input type="checkbox" data-prompt="plan" id="p-plan"><label for="p-plan">照逐字稿規劃畫面 <span class="badge" data-done="plan"></span><div class="desc">開場標題、重點詞、推近、字卡、貼圖、轉場</div></label></div>
+      <div class="step"><input type="checkbox" data-prompt="fx" id="p-fx"><label for="p-fx">加進階特效<div class="desc">勾想要的，Claude 會挑適合的位置</div>
+        <div class="chips" id="fxChips"></div></label></div>
+      <div class="step"><input type="checkbox" data-prompt="cutfx" id="p-cutfx"><label for="p-cutfx">加去背特效<div class="desc">要先完成「去背」</div>
+        <div class="chips" id="cutChips"></div></label></div>
+      <div class="step"><input type="checkbox" data-prompt="variants" id="p-variants"><label for="p-variants">做 2~3 個開場版本<div class="desc">測試哪個開場比較多人看</div></label></div>
+      <div class="step"><input type="checkbox" data-prompt="publish" id="p-publish"><label for="p-publish">寫發佈標題、說明、hashtag <span class="badge" data-done="publishText"></span></label></div>
+      <div class="step"><input type="checkbox" data-prompt="shorts" id="p-shorts"><label for="p-shorts">從這支長片挑幾段做短片<div class="desc">Claude 會列候選段落和分數，讓你挑</div></label></div>
+      <div class="step"><input type="checkbox" data-step="images" id="s-images"><label for="s-images">產生插圖 <span class="badge" data-done="images"></span><div class="desc">畫面規劃裡有插圖時才需要</div></label></div>
+      <div style="margin-top:8px">
+        <textarea id="wish" rows="2" placeholder="還想改什麼？直接寫，例如：字幕放大一點、第 12 秒的字卡拿掉、開場標題改成⋯"></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="n">4</span>輸出與發佈</h2>
+      <div class="step"><input type="checkbox" data-step="check" id="s-check"><label for="s-check">檢查畫面<div class="desc">有沒有擋到臉、效果太擠</div></label></div>
+      <div class="step"><input type="checkbox" data-step="render" id="s-render"><label for="s-render">輸出成品 <span class="badge" data-done="render"></span></label></div>
+      <div class="step"><input type="checkbox" data-step="variants" id="s-variants"><label for="s-variants">輸出多版本<div class="chips" id="varChips"></div></label></div>
+      <div class="step"><input type="checkbox" data-step="publish" id="s-publish"><label for="s-publish">發佈到社群 <span class="badge" data-done="publishText"></span><div class="desc">會再跟你確認一次</div>
+        <div class="extra"><select id="platform"><option value="all">全部平台</option><option value="youtube">YouTube</option><option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="threads">Threads</option></select></div></label></div>
+    </section>
+  </div>
+
+  <div>
+    <section>
+      <h2>▶ 直接跑</h2>
+      <div class="bar">
+        <button class="primary" id="runBtn">執行勾選的步驟</button>
+        <button id="stopBtn" disabled>停止</button>
+        <span id="runInfo" class="muted"></span>
+      </div>
+      <div id="queue"></div>
+      <pre id="log"></pre>
+    </section>
+
+    <section>
+      <h2>🤖 交給 Claude 的提示詞</h2>
+      <div class="muted">勾第 3 區的項目或寫下想改的，提示詞會自動產生</div>
+      <textarea id="prompt" rows="7" style="margin-top:8px" placeholder="（還沒勾要交給 Claude 的項目）"></textarea>
+      <div class="bar" style="margin-top:8px">
+        <button id="copyBtn">複製提示詞</button>
+        <button class="primary" id="claudeBtn">交給 Claude 直接跑</button>
+        <span id="claudeInfo" class="muted"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>🎞 成品</h2>
+      <div class="outs" id="outs"><span class="muted">還沒有輸出</span></div>
+      <video id="player" controls class="hidden"></video>
+    </section>
+  </div>
+</main>
+<div id="toast"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+let S = null;
+let cur = localStorage.getItem("panel.project") || "";
+
+const FX = [["spotlights","聚光燈"],["reveals","拉遠揭曉"],["notes","便利貼"],["headlines","頭條牆"],["orbits","卡片環繞"],["zoomblur","穿越轉場"],["lightleak","漏光轉場"],["compares","前後對比"],["phones","手機示範"]];
+const CUT = [["depthTexts","景深大字"],["magazines","雜誌封面"],["breakouts","破框"],["cutouts","剪貼"],["backgrounds","換背景"]];
+const chips = (el, list, prefix) => { el.innerHTML = list.map(([k, t]) => `<label><input type="checkbox" data-${prefix}="${k}">${t}</label>`).join(""); };
+chips($("#fxChips"), FX, "fx");
+chips($("#cutChips"), CUT, "cut");
+
+const toast = (t) => { const e = $("#toast"); e.textContent = t; e.style.opacity = 1; clearTimeout(toast.t); toast.t = setTimeout(() => (e.style.opacity = 0), 2400); };
+const api = async (url, data) => {
+  const r = await fetch(url, data === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || "失敗");
+  return j;
+};
+const P = () => S?.projects.find((p) => p.name === cur);
+
+function render() {
+  const sel = $("#project");
+  sel.innerHTML = S.projects.map((p) => `<option ${p.name === cur ? "selected" : ""}>${p.name}</option>`).join("");
+  if (!P() && S.projects.length) { cur = S.projects[0].name; sel.value = cur; }
+  const p = P();
+  $("#claudeBtn").disabled = !S.claude;
+  $("#claudeInfo").textContent = S.claude ? "" : "這台電腦沒有 claude 指令，請複製提示詞貼給 Claude";
+  setRunning(!!S.running);
+  if (!p) return;
+  if (p.error) { $("#summary").textContent = "⚠️ " + p.error; return; }
+  const d = p.done;
+  const total = ["transcribe", "lead", "face", "plan", "render"];
+  $("#summary").textContent = `${Math.round(p.durationSec)} 秒 · 完成 ${total.filter((k) => d[k]).length}/${total.length} 個主要步驟`;
+  $$("[data-done]").forEach((b) => {
+    const k = b.dataset.done;
+    let ok = d[k], t = ok ? "✓ 做過了" : "還沒做", cls = ok ? "ok" : "";
+    if (k === "align" && !d.script && !ok) t = "沒有講稿";
+    if (k === "images" && p.missingImages) { t = `缺 ${p.missingImages} 張`; cls = "warn"; }
+    if (k === "render" && p.outs.some((o) => o.file === p.name + ".mp4" && o.stale)) { t = "改過了，要重新輸出"; cls = "warn"; }
+    b.textContent = t; b.className = "badge " + cls;
+  });
+  $("#varChips").innerHTML = p.variants.length
+    ? p.variants.map((v) => `<label><input type="checkbox" data-var="${v}" checked>${v}</label>`).join("")
+    : '<span class="muted">還沒有版本（可以勾第 3 區「做開場版本」）</span>';
+  $("#outs").innerHTML = p.outs.length
+    ? p.outs.sort((a, b) => b.at - a.at).map((o) => `<a href="#" data-out="${o.file}">▶ ${o.file}${o.stale ? "（剪輯腳本改過，舊的）" : ""} · ${new Date(o.at).toLocaleString()}</a>`).join("")
+    : '<span class="muted">還沒有輸出</span>';
+  makePrompt();
+}
+
+const clearBoxes = () => $$("[data-step],[data-prompt],[data-fx],[data-cut]").forEach((c) => (c.checked = false));
+
+function suggest() {
+  const p = P(); if (!p) return;
+  clearBoxes();
+  const d = p.done, pick = (sel) => ($(sel).checked = true);
+  if (!d.transcribe) pick("#s-transcribe");
+  if (d.script && !d.align) pick("#s-align");
+  if (!d.lead) pick("#s-lead");
+  if (!d.face) pick("#s-face");
+  if (!d.plan) pick("#p-plan");
+  else {
+    pick("#s-check");
+    if (!d.render || p.outs.some((o) => o.stale)) pick("#s-render");
+  }
+  makePrompt();
+  toast("已勾選建議的下一步，看一下再按執行");
+}
+
+function makePrompt() {
+  const p = P(); if (!p) return;
+  const n = p.name, parts = [];
+  if ($("#p-plan").checked) parts.push(`幫我規劃 ${n} 的畫面（照 CLAUDE.md「照逐字稿規劃畫面」）。`);
+  const fx = $$("[data-fx]:checked").map((c) => FX.find((f) => f[0] === c.dataset.fx)[1]);
+  if ($("#p-fx").checked) parts.push(fx.length ? `在 ${n} 加這些進階特效，放在最適合的地方：${fx.join("、")}。` : `幫 ${n} 挑 2~3 個適合的進階特效加上去。`);
+  const cut = $$("[data-cut]:checked").map((c) => CUT.find((f) => f[0] === c.dataset.cut)[1]);
+  if ($("#p-cutfx").checked) parts.push((p.done.cutout ? "" : `（${n} 還沒去背，先提醒我）`) + (cut.length ? `在 ${n} 加去背特效：${cut.join("、")}。` : `幫 ${n} 挑 1~2 個適合的去背特效。`));
+  if ($("#p-variants").checked) parts.push(`幫 ${n} 做 2~3 個開場版本（variants），只改開場標題或開場特效。`);
+  if ($("#p-publish").checked) parts.push(`幫 ${n} 寫發佈標題、說明和 hashtag，寫進 project.json 的 publish（privacy 保持 private）。`);
+  if ($("#p-shorts").checked) parts.push(`從 ${n} 這支長片挑 3~5 段做短片（照 CLAUDE.md「從長片挑短片」），先列候選讓我挑。`);
+  const wish = $("#wish").value.trim();
+  if (wish) parts.push(`${n} 我想改：${wish}`);
+  if (parts.length) parts.push(`改完跑 npm run check -- ${n}，有警告就修到沒有，再告訴我改了什麼、在第幾秒。不用輸出影片。`);
+  $("#prompt").value = parts.join("\n");
+}
+
+function collectSteps() {
+  const p = P(), steps = [];
+  const on = (id) => $("#s-" + id).checked;
+  for (const id of ["transcribe", "align", "lead", "cuts", "face"]) {
+    if (!on(id)) continue;
+    steps.push(id === "cuts" ? { id, args: { min: $("#cutsMin").value } } : { id });
+  }
+  if (on("cutout")) {
+    const m = $("#cutoutMode").value;
+    if (m === "matteFile") steps.push({ id: "matteFile", args: { file: $("#matteFile").value.trim().replace(/^['"]|['"]$/g, "") } });
+    else steps.push({ id: m });
+  }
+  if (on("music")) steps.push({ id: "music", args: { style: $("#musicStyle").value } });
+  for (const id of ["images", "check", "render"]) if (on(id)) steps.push({ id });
+  if (on("variants")) steps.push({ id: "variants", args: { names: $$("[data-var]:checked").map((c) => c.dataset.var) } });
+  if (on("publish")) {
+    if (!confirm(`確定要把 ${p.name} 發佈到 ${$("#platform").selectedOptions[0].text} 嗎？`)) return null;
+    steps.push({ id: "publish", args: { platform: $("#platform").value } });
+  }
+  return steps;
+}
+
+function setRunning(r) {
+  $("#runBtn").disabled = r; $("#stopBtn").disabled = !r; $("#claudeBtn").disabled = r || !S?.claude; $("#newBtn").disabled = r;
+  $("#runInfo").textContent = r ? "執行中⋯" + (S?.running?.label ? "（" + S.running.label + "）" : "") : "";
+}
+
+// ---------- 即時輸出 ----------
+const log = $("#log");
+function appendLog(t) {
+  t = t.replace(/\x1b\[[0-9;]*[A-Za-z]/g, "");
+  const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 30;
+  let s = log.textContent;
+  for (const ch of t.split(/(\r\n|\r|\n)/)) {
+    if (ch === "\r") s = s.slice(0, s.lastIndexOf("\n") + 1);
+    else s += ch === "\r\n" ? "\n" : ch;
+  }
+  log.textContent = s.slice(-150000);
+  if (atBottom) log.scrollTop = log.scrollHeight;
+}
+const es = new EventSource("/api/events");
+es.addEventListener("log", (e) => appendLog(JSON.parse(e.data)));
+es.addEventListener("state", (e) => { S = JSON.parse(e.data); render(); });
+es.addEventListener("step", (e) => {
+  const d = JSON.parse(e.data);
+  let el = $("#queue").children[d.i];
+  if (!el) { el = document.createElement("span"); $("#queue").appendChild(el); }
+  el.textContent = { running: "⏳ ", ok: "✅ ", fail: "❌ " }[d.status] + d.label;
+  el.className = d.status;
+});
+es.addEventListener("done", () => toast("跑完了"));
+
+// ---------- 事件 ----------
+$("#project").onchange = (e) => { cur = e.target.value; localStorage.setItem("panel.project", cur); clearBoxes(); render(); };
+$("#suggest").onclick = suggest;
+$("#cutoutMode").onchange = (e) => $("#matteFile").classList.toggle("hidden", e.target.value !== "matteFile");
+document.addEventListener("input", (e) => { if (e.target.closest("section")) makePrompt(); });
+document.addEventListener("change", (e) => {
+  const chip = e.target.closest(".chips");
+  if (chip && e.target.checked) { const box = chip.closest(".step").querySelector(":scope > input"); if (box) box.checked = true; }
+  makePrompt();
+});
+$("#runBtn").onclick = async () => {
+  const steps = collectSteps();
+  if (!steps) return;
+  if (!steps.length) return toast("左邊第 1、2、4 區還沒勾要跑的步驟");
+  $("#queue").innerHTML = "";
+  try { await api("/api/run", { name: cur, steps, script: $("#s-align").checked ? $("#script").value : "" }); }
+  catch (e) { toast(e.message); }
+};
+$("#stopBtn").onclick = () => api("/api/stop", {});
+$("#copyBtn").onclick = async () => {
+  const t = $("#prompt").value.trim(); if (!t) return toast("提示詞是空的");
+  await navigator.clipboard.writeText(t); toast("已複製，貼給 Claude 就可以");
+};
+$("#claudeBtn").onclick = async () => {
+  const t = $("#prompt").value.trim(); if (!t) return toast("提示詞是空的");
+  $("#queue").innerHTML = "";
+  try { await api("/api/claude", { prompt: t }); toast("Claude 開始處理，進度看右上方"); }
+  catch (e) { toast(e.message); }
+};
+$("#newBtn").onclick = async () => {
+  try { await api("/api/new", { name: $("#newName").value.trim(), video: $("#newVideo").value, transcribe: $("#newTranscribe").checked }); cur = $("#newName").value.trim(); localStorage.setItem("panel.project", cur); $("#queue").innerHTML = ""; }
+  catch (e) { toast(e.message); }
+};
+$("#studio").onclick = async () => { await api("/api/studio", {}); toast("預覽畫面開啟中，約 10 秒"); setTimeout(() => window.open("http://localhost:3000"), 6000); };
+$("#outs").onclick = (e) => {
+  const a = e.target.closest("[data-out]"); if (!a) return;
+  e.preventDefault();
+  const v = $("#player"); v.classList.remove("hidden"); v.src = "/out/" + encodeURIComponent(a.dataset.out) + "?t=" + Date.now(); v.play();
+};
+
+api("/api/state").then((s) => { S = s; render(); });
+</script>
+</body>
+</html>

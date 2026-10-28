@@ -14,7 +14,7 @@
 - 去背：`Backdrop.tsx` 背景、`DepthText.tsx` 景深大字、`Magazine.tsx` 雜誌封面；破框、剪貼、人像層在 `Short.tsx`（綠幕用 `colorKey`，AI 去背用 `matte.webm`）
 - 影片用 `@remotion/media` 的 `<Video>`（才能套官方特效）；裁切位置靠 `sourceWidth` / `sourceHeight` / `focusX` / `focusY` 算，這些會自動填
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `lead` / `cuts` / `face` / `check` / `green` / `matte` / `music` / `images` / `render` / `variants` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`panel`（瀏覽器控制台：`panel.ts` + `panel.html`，勾步驟直接跑或產生提示詞）/ `new` / `clip` / `transcribe` / `align` / `fix-captions` / `lead` / `cuts` / `face` / `check` / `green` / `matte` / `music` / `images` / `render` / `variants` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
