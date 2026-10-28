@@ -333,3 +333,7 @@ export const freePort = () =>
       srv.close(() => resolve(port));
     });
   });
+
+// 渲染參數：同時處理的畫面少一點、等待時間長一點（去背、多段剪接時影片解碼比較慢，Mac 太多同時解碼會卡住逾時）
+// 想改：RENDER_CONCURRENCY=4 npm run render -- 名稱
+export const RENDER_FLAGS = [`--concurrency=${process.env.RENDER_CONCURRENCY ?? 2}`, "--timeout=120000"];

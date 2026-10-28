@@ -141,6 +141,11 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   const depthNow = now(p.depthTexts);
   const magNow = now(p.magazines);
   const needPerson = canCut && !!(bgNow || breakNow || cutNow || depthNow || magNow);
+  // 人像層提早 1 秒載入（影片解碼器要暖機，突然掛上去容易卡住逾時），還沒輪到時先隱藏
+  const soon = (list?: { at: number; dur: number }[]) =>
+    (list ?? []).some((x) => t >= srcToOut(segs, x.at) - 1 && t < srcToOut(segs, x.at + x.dur));
+  const breakSoon = (p.breakouts ?? []).find((x) => soon([x]));
+  const mountPerson = canCut && [p.backgrounds, p.breakouts, p.cutouts, p.depthTexts, p.magazines].some(soon);
   // 綠幕去背後要墊的背景
   const bgSrc = bgNow?.src ?? p.background;
 
@@ -202,9 +207,9 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       {!gs && bgNow && canCut && <Backdrop src={bgNow.src} dir={dir} />}
 
       {/* 破框：框外換成背景，框裡是原畫面，人像層疊在最上面（頭衝出框外） */}
-      {breakNow && canCut && (
-        <AbsoluteFill>
-          <Backdrop src={breakNow.backdrop ?? "#EFE8DC"} dir={dir} />
+      {breakSoon && canCut && (
+        <AbsoluteFill style={{ opacity: breakNow ? 1 : 0 }}>
+          <Backdrop src={breakSoon.backdrop ?? "#EFE8DC"} dir={dir} />
           <AbsoluteFill
             style={{
               clipPath: `inset(${frameTop * 100}% 7% ${(1 - 0.74) * 100}% 7% round ${W * 0.04}px)`,
@@ -249,7 +254,7 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       })}
 
       {/* 人像層（只在需要的時候出現） */}
-      {needPerson && person()}
+      {mountPerson && <AbsoluteFill style={{ opacity: needPerson ? 1 : 0 }}>{person()}</AbsoluteFill>}
 
       {(p.magazines ?? []).map((m, i) => {
         const sp = span(m.at, m.dur);

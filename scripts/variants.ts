@@ -4,7 +4,7 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, applyTranscript, die, ensureSourceSize, freePort, readProject, syncProjectList } from "./lib";
+import { RENDER_FLAGS, ROOT, applyTranscript, die, ensureSourceSize, freePort, readProject, syncProjectList } from "./lib";
 
 const [name, ...only] = process.argv.slice(2);
 if (!name) die("用法：npm run variants -- 專案名 [版本名...]");
@@ -20,7 +20,7 @@ fs.mkdirSync(path.join(ROOT, "out"), { recursive: true });
 const jobs = [...(only.length ? [] : [{ name: "", file: `${name}.mp4` }]), ...list.map((v) => ({ name: v.name, file: `${name}-${v.name}.mp4` }))];
 for (const [i, j] of jobs.entries()) {
   console.log(`🎬 (${i + 1}/${jobs.length}) ${j.name ? `版本 ${j.name}` : "原版"} → out/${j.file}`);
-  const r = spawnSync("npx", ["remotion", "render", name, path.join("out", j.file), "--codec=h264", "--crf=18", `--port=${await freePort()}`, `--props=${JSON.stringify({ variant: j.name || undefined })}`], {
+  const r = spawnSync("npx", ["remotion", "render", name, path.join("out", j.file), "--codec=h264", "--crf=18", ...RENDER_FLAGS, `--port=${await freePort()}`, `--props=${JSON.stringify({ variant: j.name || undefined })}`], {
     cwd: ROOT,
     stdio: "inherit",
   });
