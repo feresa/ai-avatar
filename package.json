@@ -10,6 +10,7 @@
     "transcribe": "tsx scripts/transcribe.ts",
     "align": "tsx scripts/align.ts",
     "fix-captions": "tsx scripts/fix-captions.ts",
+    "lead": "tsx scripts/lead.ts",
     "cuts": "tsx scripts/cuts.ts",
     "green": "tsx scripts/green.ts",
     "matte": "tsx scripts/matte.ts",

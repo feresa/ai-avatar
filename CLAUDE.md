@@ -14,7 +14,7 @@
 - 去背：`Backdrop.tsx` 背景、`DepthText.tsx` 景深大字、`Magazine.tsx` 雜誌封面；破框、剪貼、人像層在 `Short.tsx`（綠幕用 `colorKey`，AI 去背用 `matte.webm`）
 - 影片用 `@remotion/media` 的 `<Video>`（才能套官方特效）；裁切位置靠 `sourceWidth` / `sourceHeight` / `focusX` / `focusY` 算，這些會自動填
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `green` / `matte` / `music` / `images` / `render` / `variants` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `lead` / `cuts` / `face` / `check` / `green` / `matte` / `music` / `images` / `render` / `variants` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
@@ -25,6 +25,7 @@
 1. **先改 project.json，不夠才改元件。** 「標題改字」「重點詞」「哪裡推近」「字幕位置」都是改剪輯腳本
 2. **時間一律用原始影片的秒數**（看 `transcript.txt` 的 `[mm:ss.s]`），不要自己扣掉剪掉的段落
 3. 字幕錯字：使用者有講稿就優先用 `npm run align -- <名稱> 講稿.txt`；沒有講稿才改 `transcript.txt`（行首時間不要動），再跑 `npm run fix-captions -- <名稱>` 套進 `captions.json`；render / studio 也會自動套用
+3-1. 字幕比說話慢 / 快：先跑 `npm run lead -- <名稱>`（量聲音和字幕的差距，自動寫進 `captions.lead`），還不對再手動微調
 4. 使用者說「講到某句話的時候」：到 `captions.json` 找那幾個字的 `startMs`，換成秒填進去
 5. 開場標題每行最好 6 個字以內；第二行用黃色當重點
 6. 改元件樣式時，所有專案都會一起變；只想改某一支，就在 project.json 加欄位（並更新 `src/types.ts`）
