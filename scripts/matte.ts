@@ -5,6 +5,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { RenderInternals } from "@remotion/renderer";
 import { ROOT, die, ensureSourceSize, projectDir, writeProject } from "./lib";
 
 const args = process.argv.slice(2);
@@ -31,14 +32,33 @@ if (importFile) {
 const W = p.sourceWidth ?? die("量不到影片大小");
 const H = p.sourceHeight ?? die("量不到影片大小");
 
-// 用 Remotion 內建的 ffmpeg（找本機這個平台的那一包）
-const ffmpeg = (() => {
-  const base = path.join(ROOT, "node_modules", "@remotion");
-  for (const d of fs.readdirSync(base).filter((d) => d.startsWith("compositor-"))) {
-    const bin = path.join(base, d, process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
-    if (fs.existsSync(bin) && spawnSync(bin, ["-version"]).status === 0) return bin;
-  }
-  return die("找不到 Remotion 內建的 ffmpeg，先跑 npm install");
+// 用 Remotion 內建的 ffmpeg：照 Remotion 自己的方式找檔案、補執行權限、設函式庫路徑（Mac 少了 DYLD_LIBRARY_PATH 會開不起來）
+const { ffmpeg, ffprobe, ffEnv } = (() => {
+  const get = (type: "ffmpeg" | "ffprobe" | "compositor") =>
+    RenderInternals.getExecutablePath({ type, indent: false, logLevel: "error", binariesDirectory: null });
+  const lib = path.dirname(get("compositor"));
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...(process.platform === "darwin"
+      ? { DYLD_LIBRARY_PATH: lib }
+      : process.platform === "win32"
+        ? { PATH: `${lib};${process.env.PATH}` }
+        : { LD_LIBRARY_PATH: lib }),
+  };
+  const bin = get("ffmpeg");
+  const probe = get("ffprobe");
+  for (const b of [bin, probe]) if (fs.existsSync(b)) RenderInternals.makeFileExecutableIfItIsNot(b);
+  const r = spawnSync(bin, ["-version"], { env, encoding: "utf-8" });
+  if (r.status === 0) return { ffmpeg: bin, ffprobe: probe, ffEnv: env };
+  console.error(`Remotion 內建 ffmpeg 開不起來：${bin}\n${r.error?.message ?? r.stderr ?? ""}`);
+  // 退而求其次：電腦裡裝的 ffmpeg（Mac：brew install ffmpeg）
+  for (const sys of ["ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg"])
+    if (spawnSync(sys, ["-version"]).status === 0) {
+      console.log(`改用電腦裡的 ffmpeg：${sys}`);
+      const sp = sys.replace(/ffmpeg$/, "ffprobe");
+      return { ffmpeg: sys, ffprobe: spawnSync(sp, ["-version"]).status === 0 ? sp : probe, ffEnv: process.env };
+    }
+  return die("找不到能用的 ffmpeg：把上面的錯誤訊息貼給 Claude，或先 brew install ffmpeg");
 })();
 
 // Python 環境（第一次安裝）
@@ -65,22 +85,22 @@ if (!fs.existsSync(MODEL)) {
 
 const src = path.join(projectDir(name), p.video);
 const out = path.join(projectDir(name), "matte.webm");
-const fpsProbe = spawnSync(path.join(path.dirname(ffmpeg), process.platform === "win32" ? "ffprobe.exe" : "ffprobe"), [
+const fpsProbe = spawnSync(ffprobe, [
   "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=r_frame_rate", "-of", "csv=p=0", src,
-], { encoding: "utf-8" });
+], { encoding: "utf-8", env: ffEnv });
 const fps = fpsProbe.stdout.trim() || "30";
 const [fn, fd] = fps.split("/").map(Number);
 const total = Math.round(p.durationSec * (fd ? fn / fd : fn || 30));
 
 console.log(`✂️ AI 去背中（${W}×${H}，約 ${total} 格）...`);
 const t0 = Date.now();
-const dec = spawn(ffmpeg, ["-v", "error", "-i", src, "-an", "-f", "image2pipe", "-c:v", "png", "-pix_fmt", "rgb24", "-compression_level", "1", "-s", `${W}x${H}`, "-"]);
+const dec = spawn(ffmpeg, ["-v", "error", "-i", src, "-an", "-f", "image2pipe", "-c:v", "png", "-pix_fmt", "rgb24", "-compression_level", "1", "-s", `${W}x${H}`, "-"], { env: ffEnv });
 const mat = spawn(py, [path.join(ROOT, "scripts", "matte.py"), String(W), String(H), MODEL, process.env.MATTE_DEVICE ?? "auto"]);
 const enc = spawn(ffmpeg, [
   "-v", "error", "-y", "-f", "image2pipe", "-c:v", "png", "-framerate", fps, "-i", "-",
   "-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "6M", "-auto-alt-ref", "0", "-deadline", "realtime", "-cpu-used", "8", "-row-mt", "1",
   out,
-]);
+], { env: ffEnv });
 dec.stdout.pipe(mat.stdin);
 mat.stdout.pipe(enc.stdin);
 let device = "";
