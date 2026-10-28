@@ -4,6 +4,7 @@
 # 用法：python matte.py 寬 高 模型檔 [裝置 auto|mps|cuda|cpu]
 import io
 import sys
+import warnings
 
 import numpy as np
 import torch
@@ -23,6 +24,8 @@ if want == "auto":
 else:
     device = want
 
+# Python 3.14 會警告 jit.load 之後可能不支援；目前能正常用，先不顯示
+warnings.filterwarnings("ignore", message=".*torch.jit.load.*")
 model = torch.jit.load(model_path, map_location="cpu").eval()
 try:
     model = model.to(device)
