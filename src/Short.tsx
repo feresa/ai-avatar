@@ -2,6 +2,9 @@
 // 影片用 @remotion/media 的 <Video>，特效用 Remotion 官方特效庫 @remotion/effects
 import React from "react";
 import { chromaticAberration } from "@remotion/effects/chromatic-aberration";
+import { colorKey } from "@remotion/effects/color-key";
+import { dropShadow } from "@remotion/effects/drop-shadow";
+import { outline } from "@remotion/effects/outline";
 import { lightLeak } from "@remotion/effects/light-leak";
 import { vignette } from "@remotion/effects/vignette";
 import { zoomBlur } from "@remotion/effects/zoom-blur";
@@ -9,10 +12,13 @@ import { Video } from "@remotion/media";
 import { AbsoluteFill, Audio, Sequence, Solid, interpolate, staticFile, useCurrentFrame, useVideoConfig, Easing, type EffectDescriptor } from "remotion";
 import { Captions } from "./components/Captions";
 import { Card } from "./components/Card";
+import { Backdrop } from "./components/Backdrop";
 import { Compare } from "./components/Compare";
+import { DepthText } from "./components/DepthText";
 import { Headlines } from "./components/Headlines";
 import { Hook } from "./components/Hook";
 import { Insert } from "./components/Insert";
+import { MagazineBack, MagazineFront } from "./components/Magazine";
 import { Note } from "./components/Note";
 import { Orbit } from "./components/Orbit";
 import { Phone } from "./components/Phone";
@@ -120,34 +126,139 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
     return { from, durationInFrames: Math.max(1, Math.round(srcToOut(segs, at + dur) * fps) - from) };
   };
 
+  // ---------- 去背（綠幕 colorKey 或 AI 去背 matte.webm）----------
+  const gs = p.greenScreen;
+  const keyFx = gs
+    ? [colorKey({ keyColor: gs.color ?? "#00ff00", similarity: gs.similarity ?? 0.2, smoothness: gs.smoothness ?? 0.08, spillSuppression: gs.spill ?? 0.35 })]
+    : [];
+  const canCut = !!gs || !!p.matte;
+  // 現在這一刻正在進行的那一個（原始秒數換成成品秒數）
+  const now = <T extends { at: number; dur: number }>(list?: T[]) =>
+    (list ?? []).find((x) => t >= srcToOut(segs, x.at) && t < srcToOut(segs, x.at + x.dur));
+  const bgNow = now(p.backgrounds);
+  const breakNow = now(p.breakouts);
+  const cutNow = now(p.cutouts);
+  const depthNow = now(p.depthTexts);
+  const magNow = now(p.magazines);
+  const needPerson = canCut && !!(bgNow || breakNow || cutNow || depthNow || magNow);
+  // 綠幕去背後要墊的背景
+  const bgSrc = bgNow?.src ?? p.background;
+
+  // 一層影片：跟主畫面同樣的剪接、裁切、推近（人像層也用這個，才會完全對齊）
+  const videoLayer = (src: string, fx: EffectDescriptor<unknown>[], opts: { muted?: boolean } = {}) => (
+    <AbsoluteFill
+      style={{
+        transform: `translateX(${(look.x + jitter) * 100}%) scale(${scale * look.scale})`,
+        transformOrigin: zoomOrigin,
+        filter: look.blur > 0.3 ? `blur(${look.blur.toFixed(1)}px)` : undefined,
+      }}
+    >
+      {segs.map((sg, i) => (
+        <Sequence
+          key={i}
+          from={Math.round(sg.outStart * fps)}
+          durationInFrames={Math.max(1, Math.round((sg.srcEnd - sg.srcStart) * fps))}
+          premountFor={fps}
+        >
+          <Video
+            src={staticFile(`${dir}/${src}`)}
+            trimBefore={Math.round(sg.srcStart * fps)}
+            volume={opts.muted ? 0 : (p.videoVolume ?? 1)}
+            muted={opts.muted}
+            objectFit={p.sourceWidth ? "fill" : "cover"}
+            style={{ position: "absolute", left: box.left, top: box.top, width: box.w, height: box.h }}
+            effects={fx}
+          />
+        </Sequence>
+      ))}
+    </AbsoluteFill>
+  );
+  // 主畫面：綠幕的話先墊背景、影片去掉綠色
+  const scene = (opts: { muted?: boolean } = {}) => (
+    <>
+      {gs && <Backdrop src={bgSrc} dir={dir} />}
+      {videoLayer(p.video, [...keyFx, ...effects], opts)}
+    </>
+  );
+  // 人像層：綠幕用原影片＋colorKey，AI 去背用 matte.webm；剪貼時加白邊和陰影
+  const person = () =>
+    videoLayer(
+      gs ? p.video : (p.matte as string),
+      [
+        ...(gs ? keyFx : []),
+        ...(cutNow ? [outline({ width: 18, color: cutNow.outline ?? "#ffffff" }), dropShadow({ radius: 22, offsetX: 10, offsetY: 18, opacity: 0.45 })] : []),
+      ],
+      { muted: true },
+    );
+  // 破框的框：上緣在臉的中間，頭會衝出框外
+  const frameTop = Math.max(0.12, faceC[1]);
+
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       {/* 影片：每一段保留的內容接起來 */}
-      <AbsoluteFill
-        style={{
-          transform: `translateX(${(look.x + jitter) * 100}%) scale(${scale * look.scale})`,
-          transformOrigin: zoomOrigin,
-          filter: look.blur > 0.3 ? `blur(${look.blur.toFixed(1)}px)` : undefined,
-        }}
-      >
-        {segs.map((s, i) => (
-          <Sequence
-            key={i}
-            from={Math.round(s.outStart * fps)}
-            durationInFrames={Math.max(1, Math.round((s.srcEnd - s.srcStart) * fps))}
-            premountFor={fps}
+      {scene()}
+
+      {/* AI 去背時換背景：背景蓋在原畫面上，人像層再疊回來 */}
+      {!gs && bgNow && canCut && <Backdrop src={bgNow.src} dir={dir} />}
+
+      {/* 破框：框外換成背景，框裡是原畫面，人像層疊在最上面（頭衝出框外） */}
+      {breakNow && canCut && (
+        <AbsoluteFill>
+          <Backdrop src={breakNow.backdrop ?? "#EFE8DC"} dir={dir} />
+          <AbsoluteFill
+            style={{
+              clipPath: `inset(${frameTop * 100}% 7% ${(1 - 0.74) * 100}% 7% round ${W * 0.04}px)`,
+            }}
           >
-            <Video
-              src={staticFile(`${dir}/${p.video}`)}
-              trimBefore={Math.round(s.srcStart * fps)}
-              volume={p.videoVolume ?? 1}
-              objectFit={p.sourceWidth ? "fill" : "cover"}
-              style={{ position: "absolute", left: box.left, top: box.top, width: box.w, height: box.h }}
-              effects={effects}
-            />
+            {scene({ muted: true })}
+          </AbsoluteFill>
+          <div
+            style={{
+              position: "absolute",
+              left: W * 0.07,
+              right: W * 0.07,
+              top: frameTop * H,
+              bottom: (1 - 0.74) * H,
+              borderRadius: W * 0.04,
+              border: `${W * 0.014}px solid white`,
+              boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
+            }}
+          />
+        </AbsoluteFill>
+      )}
+
+      {/* 剪貼：背景換成紙，人像加白邊陰影 */}
+      {cutNow && canCut && <Backdrop src={cutNow.backdrop ?? "#F6D98B"} dir={dir} paper />}
+
+      {/* 人的後面：景深大字、雜誌大標題 */}
+      {(p.depthTexts ?? []).map((d, i) => {
+        const sp = span(d.at, d.dur);
+        return (
+          <Sequence key={`dt${i}`} {...sp}>
+            <DepthText depth={d} face={p.face} durationInFrames={sp.durationInFrames} />
           </Sequence>
-        ))}
-      </AbsoluteFill>
+        );
+      })}
+      {(p.magazines ?? []).map((m, i) => {
+        const sp = span(m.at, m.dur);
+        return (
+          <Sequence key={`mgb${i}`} {...sp}>
+            <MagazineBack magazine={m} face={p.face} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+
+      {/* 人像層（只在需要的時候出現） */}
+      {needPerson && person()}
+
+      {(p.magazines ?? []).map((m, i) => {
+        const sp = span(m.at, m.dur);
+        return (
+          <Sequence key={`mgf${i}`} {...sp}>
+            <MagazineFront magazine={m} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
 
       {(p.compares ?? []).map((c, i) => {
         const sp = span(c.at, c.dur);

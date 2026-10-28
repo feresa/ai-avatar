@@ -27,7 +27,12 @@ export const RemotionRoot: React.FC = () => (
         durationInFrames={300}
         defaultProps={{ name, project: { video: "", durationSec: 10 }, captions: [] } as ShortProps}
         calculateMetadata={async ({ props }) => {
-          const { project, captions } = await load(props.name);
+          const loaded = await load(props.name);
+          // 指定版本：把那個版本寫的欄位蓋過原版
+          const v = props.variant ? loaded.project.variants?.find((x) => x.name === props.variant) : undefined;
+          if (props.variant && !v) throw new Error(`project.json 裡沒有版本「${props.variant}」`);
+          const project: Project = v ? { ...loaded.project, ...v } : loaded.project;
+          const captions = loaded.captions;
           const fps = project.fps ?? 30;
           return {
             fps,

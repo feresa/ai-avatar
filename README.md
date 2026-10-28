@@ -10,6 +10,8 @@
 - 直式 9:16（1080×1920）、下半部加深讓字更清楚
 - 轉場特效：閃白、推近、甩鏡、滑入、淡黑、故障閃爍、穿越、漏光（附「咻」音效）
 - 聚光燈、拉遠揭曉、便利貼字、前後對比、手機示範、頭條牆、卡片環繞（用 Remotion 官方特效庫 `@remotion/effects`）
+- 去背特效：景深大字、破框、剪貼、換背景、雜誌封面（綠幕或 AI 去背）
+- 一支變多支：同一支片輸出好幾個版本，測哪個比較紅
 - 自動配樂（程式合成，沒有版權問題）、貼圖「啵」音效
 - 自動產生插圖（AI 畫圖或免費圖庫照片）
 - 一個指令發佈到 YouTube Shorts、Instagram Reels
@@ -127,6 +129,15 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `phones` | 手機示範：`[{ "at": 秒, "dur": 秒, "src": "app.png" }]`，螢幕裡放圖片或影片 |
 | `headlines` | 頭條牆（剪報一張張貼上）：`[{ "at": 秒, "dur": 秒, "items": [{ "text": "每天呼吸五分鐘", "tag": "頭條", "date": "2026.10.28" }] }]`，最多 6 張 |
 | `orbits` | 卡片環繞（頭上一圈卡片在轉）：`[{ "at": 秒, "dur": 秒, "items": ["腹式呼吸", "photo.jpg", "長吐氣"] }]`，可以放文字或圖片 |
+| `greenScreen` | 綠幕去背（官方 `colorKey`）：`npm run green` 自動偵測綠布顏色並開啟；可調 `similarity`（去多少）、`spill`（去綠光） |
+| `matte` | AI 去背的影片（`npm run matte` 自動產生 `matte.webm`）；不是綠幕拍的影片用這個 |
+| `background` | 綠幕去背後的背景：圖片／影片檔名，或顏色 `"#F2E8D5"` |
+| `backgrounds` | 某段時間換背景：`[{ "at": 秒, "dur": 秒, "src": "beach.jpg" }]` |
+| `depthTexts` | 景深大字（字在人的後面）：`[{ "at": 秒, "dur": 秒, "text": "呼吸", "color": "yellow" }]` |
+| `breakouts` | 破框（頭衝出框外）：`[{ "at": 秒, "dur": 秒, "backdrop": "#EFE8DC" }]` |
+| `cutouts` | 剪貼（人像變貼紙、白邊陰影、紙背景）：`[{ "at": 秒, "dur": 秒, "backdrop": "#F6D98B" }]` |
+| `magazines` | 雜誌封面：`[{ "at": 秒, "dur": 秒, "title": "靜心", "issue": "ISSUE 01 · 2026", "lines": ["5 天挑戰", "每天 5 分鐘"] }]` |
+| `variants` | 一支變多支：`[{ "name": "b", "hook": { ...另一個開場標題... } }]`，每個版本只寫不一樣的地方，`npm run variants` 全部輸出 |
 | `cutTransition` | 每個剪接點（剪掉停頓的地方）都自動加的轉場，例如 `"zoom"`；`null` = 不加 |
 | `music` / `sfx` | 背景音樂、音效（音檔放在專案資料夾裡；`npm run music` 會自動產生）。內建音效：`sfx/whoosh.wav`（咻）、`sfx/pop.wav`（啵），貼圖加 `"sound": true` 會自動配「啵」 |
 | `publish` | 發佈用的文字：`title` 標題、`description` 說明、`tags` 標籤、`scheduleTime` 排程時間、`videoUrl` 公開網址（Threads 專用）、`privacy`（YouTube：`private` 私人 / `unlisted` 不公開 / `public` 公開，預設 private） |
@@ -134,6 +145,28 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 所有時間都用**原始影片的秒數**（跟 transcript.txt 一樣），剪掉的段落程式會自動換算。
 
 圖示想用真的 App 圖案：把 PNG 放到 `public/icons/`，`icons` 裡寫 `{ "src": "icons/xxx.png" }`。
+
+## 去背：景深大字、破框、剪貼、換背景、雜誌封面
+
+這 5 個特效要先把人從背景切出來，兩種方法：
+
+- **綠幕拍的（最乾淨）**：`npm run green -- breath-02`，自動偵測綠布顏色，用 Remotion 官方 `colorKey` 去背。再在 project.json 加 `"background": "背景圖.jpg"`
+- **一般影片**：`npm run matte -- breath-01`，用 AI（RobustVideoMatting）去背，產生 `matte.webm`。第一次會裝 PyTorch（約 5 分鐘）。Mac 會用顯示卡，一支 40 秒的影片大約幾分鐘
+
+去背好之後，跟 Claude 說「講到呼吸的時候放景深大字」「開頭做成雜誌封面」就可以了。
+
+## 一支變多支（測試哪個版本比較紅）
+
+在 project.json 加 `variants`，每個版本只寫跟原版不一樣的地方：
+
+```json
+"variants": [
+  { "name": "b", "hook": { "from": 0, "to": 3, "lines": [{ "text": "睡不著？" }, { "text": "試試這招", "color": "yellow" }] } },
+  { "name": "c", "magazines": [{ "at": 0, "dur": 3, "title": "靜心" }] }
+]
+```
+
+`npm run variants -- breath-01` 會輸出 `out/breath-01.mp4`（原版）、`out/breath-01-b.mp4`、`out/breath-01-c.mp4`。分幾天發，看哪個觀看數高，之後就用那種開場。
 
 ## 自動產生插圖
 

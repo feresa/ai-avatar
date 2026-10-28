@@ -11,9 +11,10 @@
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
 - `Note.tsx` 便利貼、`Compare.tsx` 前後對比、`Phone.tsx` 手機示範、`Headlines.tsx` 頭條牆、`Orbit.tsx` 卡片環繞；聚光燈、拉遠揭曉、穿越、漏光、故障在 `Short.tsx` / `transitions.ts`（用 `@remotion/effects`）
+- 去背：`Backdrop.tsx` 背景、`DepthText.tsx` 景深大字、`Magazine.tsx` 雜誌封面；破框、剪貼、人像層在 `Short.tsx`（綠幕用 `colorKey`，AI 去背用 `matte.webm`）
 - 影片用 `@remotion/media` 的 `<Video>`（才能套官方特效）；裁切位置靠 `sourceWidth` / `sourceHeight` / `focusX` / `focusY` 算，這些會自動填
 - `src/timeline.ts`：剪掉段落後的時間換算；`src/transitions.ts`：轉場特效
-- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `music` / `images` / `render` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
+- `scripts/`：`new` / `clip` / `transcribe` / `align` / `fix-captions` / `cuts` / `face` / `check` / `green` / `matte` / `music` / `images` / `render` / `variants` / `publish` / `studio` 指令；`synth.ts` 合成音樂和音效
 
 ## Remotion 官方 skill
 
@@ -53,6 +54,14 @@
    - `compares`：有前後差異的內容；**before 的圖要使用者提供**，不要亂填
    - `phones`：示範 App、網站、截圖；**手機裡的圖要使用者提供**
    - 轉場 `zoomblur`（穿越）適合換段落，`lightleak`（漏光）適合溫暖、靜心、戶外的氛圍
+10-2. 去背特效（要有 `greenScreen` 或 `matte`；都沒有就先問使用者是綠幕拍的嗎：是就跑 `npm run green`，不是就跑 `npm run matte`，matte 要跑幾分鐘先告訴使用者）：
+   - `depthTexts`：主題詞（2~4 字），開場或講到核心概念時，1.5~2.5 秒
+   - `magazines`：開場最吸睛，title 2~3 字、lines 2~3 句
+   - `breakouts`：講到「突破」「走出去」或情緒高點
+   - `cutouts`：輕鬆、可愛、分享的段落
+   - `backgrounds`：講到某個地方或情境時換背景，圖要使用者提供或用 `npm run images` 產生
+   - 一支片去背特效 1~2 個就好，和第 10-1 的進階特效加起來不超過 4 個
+10-3. 使用者想「測試哪個開場比較好」：在 `variants` 寫 2~3 個版本（只改 hook 或開場特效），請使用者跑 `npm run variants`
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
 12. 改完先跑 `npm run check -- <名稱>`，有警告就照建議修到沒有；再輸出 3~4 張關鍵時間的截圖檢查（可暫時加 `"debugFace": true` 看臉的框，檢查完拿掉），再跟使用者說明加了哪些效果、在第幾秒
 

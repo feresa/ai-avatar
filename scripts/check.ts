@@ -56,6 +56,19 @@ for (const ins of p.inserts ?? []) {
 }
 
 let problems = 0;
+
+// 景深大字、破框、剪貼、換背景、雜誌封面要先把人切出來
+const needCut = [
+  ["景深大字", p.depthTexts],
+  ["破框", p.breakouts],
+  ["剪貼", p.cutouts],
+  ["換背景", p.backgrounds],
+  ["雜誌封面", p.magazines],
+].filter(([, l]) => (l as unknown[] | undefined)?.length).map(([n]) => n);
+if (needCut.length && !p.greenScreen && !p.matte) {
+  problems++;
+  console.log(`⚠️ ${needCut.join("、")} 要先去背：綠幕拍的跑 npm run green -- ${name}，一般影片跑 npm run matte -- ${name}`);
+}
 if (!face) console.log(`ℹ️ 還沒有臉的位置，先跑 npm run face -- ${name}，才能檢查有沒有擋到臉`);
 else {
   const capY = p.captions?.y ?? 0.76;

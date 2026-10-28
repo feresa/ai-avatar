@@ -201,6 +201,68 @@ export type Orbit = {
   turns?: number;
 };
 
+/** 景深大字：超大的字放在人的後面（要有去背：greenScreen 或 matte） */
+export type DepthText = {
+  at: number;
+  dur: number;
+  text: string;
+  color?: "white" | "yellow" | string;
+  /** 字的垂直位置（0~1），預設在頭的高度 */
+  y?: number;
+  /** 字的大小（佔畫面寬度），預設依字數自動 */
+  size?: number;
+};
+
+/** 破框：畫面縮成一張卡片，人的頭和肩膀衝出框外（要有去背） */
+export type Breakout = {
+  at: number;
+  dur: number;
+  /** 框外面的背景：圖片／影片檔名，或顏色（預設米白） */
+  backdrop?: string;
+};
+
+/** 剪貼：人像變成剪下來的貼紙（白邊＋陰影），背景換成紙（要有去背） */
+export type Cutout = {
+  at: number;
+  dur: number;
+  /** 背景顏色（預設奶油黃）或圖片 */
+  backdrop?: string;
+  /** 白邊顏色，預設白色 */
+  outline?: string;
+};
+
+/** 換背景：某段時間把背景換成圖片或影片（要有去背） */
+export type Background = {
+  at: number;
+  dur: number;
+  src: string;
+};
+
+/** 雜誌封面：大標題在頭的後面，封面小標在前面（要有去背） */
+export type Magazine = {
+  at: number;
+  dur: number;
+  /** 雜誌大標題（2~4 字最好看） */
+  title: string;
+  /** 上方小字，例如 "ISSUE 01 · 2026" */
+  issue?: string;
+  /** 封面小標（2~3 句），第一句放左邊、其他放右邊 */
+  lines?: string[];
+  color?: string;
+};
+
+/** 綠幕去背的設定（官方 colorKey） */
+export type GreenScreen = {
+  /** 綠幕的顏色（npm run green 會自動偵測） */
+  color?: string;
+  /** 相似度：越大去掉越多，預設 0.2 */
+  similarity?: number;
+  /** 邊緣柔化，預設 0.08 */
+  smoothness?: number;
+  /** 去掉頭髮、皮膚邊緣反射的綠光，預設 0.35 */
+  spill?: number;
+};
+
 /** 發佈到各大社群平台（YouTube / Instagram / Facebook / Threads）用的文字與設定 */
 export type PublishPlatform = "youtube" | "instagram" | "facebook" | "threads";
 
@@ -266,6 +328,19 @@ export type Project = {
   phones?: Phone[];
   headlines?: Headline[];
   orbits?: Orbit[];
+  /** 綠幕：整支片去掉綠色背景（npm run green 自動設定） */
+  greenScreen?: GreenScreen | null;
+  /** AI 去背的影片（npm run matte 自動產生 matte.webm） */
+  matte?: string | null;
+  /** 綠幕去背後的預設背景：圖片／影片檔名，或顏色 */
+  background?: string;
+  backgrounds?: Background[];
+  depthTexts?: DepthText[];
+  breakouts?: Breakout[];
+  cutouts?: Cutout[];
+  magazines?: Magazine[];
+  /** 一支變多支：npm run variants 會把每個版本都輸出 */
+  variants?: Variant[];
   /** 原始影片的寬高（自動填，用來對準裁切位置） */
   sourceWidth?: number;
   sourceHeight?: number;
@@ -284,6 +359,14 @@ export type ShortProps = {
   name: string;
   project: Project;
   captions: Caption[];
+  /** 要輸出哪個版本（project.variants 裡的 name），沒填就是原版 */
+  variant?: string;
+};
+
+/** 一支變多支：每個版本只寫跟原版不一樣的地方（開場標題、音樂、特效⋯） */
+export type Variant = Partial<Omit<Project, "variants">> & {
+  /** 版本名稱（英文或數字），輸出檔名會是 專案名-版本名.mp4 */
+  name: string;
 };
 
 export const COLORS = {
