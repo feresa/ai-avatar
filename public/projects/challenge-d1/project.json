@@ -7,34 +7,151 @@
   "keep": null,
   "hook": {
     "from": 0,
-    "to": 3,
+    "to": 3.0,
     "lines": [
       {
-        "text": "第一行標題",
+        "text": "起床第一件事",
         "color": "white"
       },
       {
-        "text": "第二行重點",
+        "text": "先別滑手機",
         "color": "yellow"
       }
     ],
-    "badge": "每個特效都是 Claude 剪的",
-    "icons": [],
+    "badge": "靜心呼吸 5 天挑戰 · DAY 1",
+    "icons": [
+      {
+        "label": "📱",
+        "bg": "#3B82F6"
+      },
+      {
+        "label": "💬",
+        "bg": "#22C55E"
+      },
+      {
+        "label": "📧",
+        "bg": "#F59E0B"
+      }
+    ],
     "strike": true
   },
   "captions": {
     "enabled": true,
-    "highlight": [],
+    "highlight": [
+      "拿手機",
+      "靜心呼吸",
+      "肚子",
+      "十次",
+      "兩分鐘",
+      "安靜"
+    ],
     "maxChars": 9,
     "y": 0.76,
     "hideDuringHook": true,
     "lead": 0.01
   },
-  "zooms": [],
-  "cards": [],
+  "zooms": [
+    {
+      "at": 2.6,
+      "dur": 1.6,
+      "scale": 1.12
+    },
+    {
+      "at": 29.7,
+      "dur": 1.6,
+      "scale": 1.15
+    },
+    {
+      "at": 32.3,
+      "dur": 2.2,
+      "scale": 1.18
+    }
+  ],
+  "cards": [
+    {
+      "at": 11.5,
+      "dur": 2.6,
+      "text": "① 坐床邊",
+      "sub": "雙腳踩地",
+      "y": 0.64
+    },
+    {
+      "at": 14.2,
+      "dur": 3.8,
+      "text": "② 一手胸口",
+      "sub": "一手肚子",
+      "y": 0.64
+    },
+    {
+      "at": 18.0,
+      "dur": 3.9,
+      "text": "③ 鼻子慢慢吸氣",
+      "sub": "肚子鼓起來",
+      "y": 0.64
+    },
+    {
+      "at": 22.0,
+      "dur": 2.9,
+      "text": "④ 慢慢吐氣",
+      "sub": "肚子縮回去",
+      "y": 0.64
+    },
+    {
+      "at": 25.0,
+      "dur": 1.5,
+      "text": "⑤ 做 10 次",
+      "color": "yellow",
+      "y": 0.64
+    },
+    {
+      "at": 32.3,
+      "dur": 2.2,
+      "text": "留言「第一天」",
+      "sub": "私訊你練習步驟",
+      "color": "yellow",
+      "y": 0.64
+    }
+  ],
   "inserts": [],
-  "stickers": [],
-  "transitions": [],
+  "stickers": [
+    {
+      "at": 5.0,
+      "dur": 2.6,
+      "emoji": "🧘",
+      "anim": "float",
+      "x": 0.85,
+      "y": 0.62
+    },
+    {
+      "at": 26.7,
+      "dur": 1.6,
+      "kind": "check",
+      "x": 0.85,
+      "y": 0.64
+    },
+    {
+      "at": 29.8,
+      "dur": 1.6,
+      "kind": "heart",
+      "anim": "bounce",
+      "x": 0.85,
+      "y": 0.64
+    }
+  ],
+  "transitions": [
+    {
+      "at": 4.0,
+      "type": "flash"
+    },
+    {
+      "at": 8.0,
+      "type": "whip"
+    },
+    {
+      "at": 26.3,
+      "type": "lightleak"
+    }
+  ],
   "cutTransition": null,
   "music": {
     "src": "music-calm.wav",
@@ -44,10 +161,28 @@
   "gradient": true,
   "videoVolume": 1,
   "publish": {
-    "title": "",
-    "description": "",
-    "tags": [],
-    "privacy": "private"
+    "title": "起床第一件事，先別滑手機｜呼吸挑戰 Day 1",
+    "description": "早上醒來先給自己 2 分鐘，用腹式呼吸開啟安靜的一天。\n靜心呼吸 5 天挑戰今天開始，每天一個簡單練習。\n想一起挑戰，留言「第一天」，我私訊練習步驟給你 🌿",
+    "tags": [
+      "靜心呼吸5天挑戰",
+      "腹式呼吸",
+      "晨間習慣",
+      "呼吸法",
+      "靜心",
+      "自我照顧",
+      "早晨儀式"
+    ],
+    "privacy": "private",
+    "autoReply": {
+      "name": "呼吸挑戰 Day1 - 留言自動私訊",
+      "keyword": "第一天",
+      "channel": "comment",
+      "matchType": "contains",
+      "replyText": "嗨，歡迎加入靜心呼吸 5 天挑戰 🌿\n\n今天的練習（約 2 分鐘）：\n1. 起床後坐在床邊，雙腳踩地\n2. 一手放胸口，一手放肚子\n3. 鼻子慢慢吸氣，讓肚子鼓起來\n4. 慢慢吐氣，肚子縮回去\n5. 做 10 次\n\n小提醒：胸口那隻手盡量不動，只讓肚子起伏，這就是腹式呼吸。\n\n明天教你睡前怎麼呼吸，睡不好的朋友一定要看。\n— 明智",
+      "publicReply": "歡迎加入挑戰！練習步驟私訊給你了 🙏",
+      "quickReplies": "我做完了,明天提醒我",
+      "tag": "呼吸挑戰-D1"
+    }
   },
   "sourceWidth": 1080,
   "sourceHeight": 1920,
@@ -56,5 +191,11 @@
     "y": 0.334,
     "w": 0.417,
     "h": 0.234
-  }
+  },
+  "spotlights": [
+    {
+      "at": 29.7,
+      "dur": 1.4
+    }
+  ]
 }
