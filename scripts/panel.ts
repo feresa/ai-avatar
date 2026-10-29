@@ -6,7 +6,7 @@ import fs from "node:fs";
 import http from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { PROJECTS_DIR, ROOT, readProject } from "./lib";
+import { PROJECTS_DIR, ROOT, claudeLine, readProject } from "./lib";
 
 const PORT = Number(process.env.PANEL_PORT ?? 3210);
 const OUT = path.join(ROOT, "out");
@@ -133,28 +133,6 @@ const emit = (type: string, data: unknown) => {
   for (const c of clients) c.write(msg);
 };
 
-// Claude 的輸出（stream-json，一行一個事件）→ 看得懂的進度
-const claudeLine = (line: string) => {
-  let e: any;
-  try {
-    e = JSON.parse(line);
-  } catch {
-    return line + "\n";
-  }
-  if (e.type === "assistant")
-    return (e.message?.content ?? [])
-      .map((c: any) => {
-        if (c.type === "text" && c.text.trim()) return `💬 ${c.text.trim()}\n`;
-        if (c.type !== "tool_use") return "";
-        const i = c.input ?? {};
-        const what = i.command ?? i.file_path ?? i.pattern ?? "";
-        return `🔧 ${c.name} ${String(what).replace(ROOT + "/", "")}\n`;
-      })
-      .join("");
-  if (e.type === "result") return e.is_error ? `\n❌ ${e.result ?? "Claude 失敗"}\n` : `\n✅ Claude 做完了（${Math.round((e.duration_ms ?? 0) / 1000)} 秒）\n`;
-  return "";
-};
-
 const runOne = (cmd: string, args: string[], format?: (line: string) => string) =>
   new Promise<number>((resolve) => {
     const child = spawn(cmd, args, { cwd: ROOT, env: { ...process.env, FORCE_COLOR: "0" }, stdio: ["ignore", "pipe", "pipe"] });
@@ -278,24 +256,22 @@ const server = http.createServer(async (req, res) => {
       runQueue(`${name}：${list.map((l) => l.label).join(" → ")}`, list);
       return json(res, 200, { ok: true });
     }
-    if (url.pathname === "/api/new") {
+    if (url.pathname === "/api/make") {
+      // 一鍵做片：交給 npm run make（做過的步驟會自動跳過）
       const name = str(b.name, NAME);
-      const video = String(b.video ?? "").trim().replace(/^['"]|['"]$/g, "").replace(/^~(?=\/)/, process.env.HOME ?? "~");
-      if (!fs.existsSync(video)) throw new Error(`找不到影片：${video}`);
-      // 講稿：貼內容或講稿檔路徑都可以；沒填就找影片旁邊同名的 .txt（Colab 做分身時會一起存）
-      const unquote = (x: string) => x.trim().replace(/^['"]|['"]$/g, "").replace(/^~(?=\/)/, process.env.HOME ?? "~");
-      const given = String(b.script ?? "").trim();
-      let script = "";
-      if (given && !given.includes("\n") && fs.existsSync(unquote(given))) script = unquote(given);
-      else if (given) {
-        script = path.join(os.tmpdir(), `panel-script-${Date.now()}.txt`);
-        fs.writeFileSync(script, given + "\n");
-      } else if (fs.existsSync(video.replace(/\.[^.\/]+$/, ".txt"))) script = video.replace(/\.[^.\/]+$/, ".txt");
-      if (script) emit("log", `📝 講稿：${given && script.startsWith(os.tmpdir()) ? "用貼上的內容" : script}\n`);
-      const args = ["run", "-s", "new", "--", name, video, ...(script ? ["--script", script] : [])];
-      const then = [{ label: "建立專案", cmd: "npm", args }];
-      if (b.transcribe) then.push({ label: "上字幕", cmd: "npm", args: ["run", "-s", "transcribe", "--", name] });
-      runQueue(`${name}：建立專案`, then);
+      const unq = (x: unknown) => String(x ?? "").trim().replace(/^['"]|['"]$/g, "").replace(/^~(?=\/)/, process.env.HOME ?? "~");
+      const video = unq(b.video);
+      if (video && !fs.existsSync(video)) throw new Error(`找不到影片：${video}`);
+      if (!video && !exists(PROJECTS_DIR, name, "project.json")) throw new Error("新影片要填影片路徑");
+      let script = unq(b.script);
+      if (script && (script.includes("\n") || !fs.existsSync(script))) {
+        const tmp = path.join(os.tmpdir(), `panel-script-${Date.now()}.txt`);
+        fs.writeFileSync(tmp, String(b.script).trim() + "\n");
+        script = tmp;
+      }
+      const music = str(b.music ?? "calm", /^(calm|warm|upbeat)$/);
+      const args = ["run", "-s", "make", "--", name, ...(video ? [video] : []), ...(script ? [script] : []), "--music", music];
+      runQueue(`${name}：一鍵做片`, [{ label: "一鍵做片", cmd: "npm", args }]);
       return json(res, 200, { ok: true });
     }
     if (url.pathname === "/api/studio") {

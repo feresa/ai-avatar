@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "skills": "npx -y skills@latest add remotion-dev/skills -a claude-code -s remotion-best-practices remotion-captions remotion-render remotion-studio remotion-markup remotion-multimedia remotion-docs remotion-upgrade -y --copy",
+    "make": "tsx scripts/make.ts",
     "panel": "tsx scripts/panel.ts",
     "studio": "tsx scripts/studio.ts",
     "new": "tsx scripts/new.ts",

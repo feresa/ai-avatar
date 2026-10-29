@@ -45,7 +45,7 @@ if (fs.existsSync(file)) {
         { text: "第一行標題", color: "white" },
         { text: "第二行重點", color: "yellow" },
       ],
-      badge: "每個特效都是 Claude 剪的",
+      badge: "",
       icons: [],
       strike: true,
     },

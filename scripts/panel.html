@@ -66,15 +66,20 @@
 <main>
   <div>
     <section id="newBox">
-      <h2><span class="n">0</span>新影片</h2>
-      <div class="bar">
-        <input type="text" id="newName" placeholder="專案名（英文數字，例如 breath-02）" style="width:230px">
-        <input type="text" id="newVideo" placeholder="影片路徑" style="flex:1;min-width:200px">
-        <label><input type="checkbox" id="newTranscribe" checked> 順便上字幕</label>
-        <button id="newBtn">建立</button>
+      <h2>🚀 一鍵做片</h2>
+      <div class="muted">建專案 → 字幕（用講稿的字）→ 字幕對時 → 找臉 → 背景音樂 → Claude 規劃畫面 → 檢查 → 輸出。做過的會跳過，中途卡住修好再按一次就會接著做</div>
+      <div class="bar" style="margin-top:8px">
+        <input type="text" id="newName" placeholder="專案名（英文數字，例如 challenge-d2）" style="width:250px">
+        <input type="text" id="newVideo" placeholder="影片路徑（新影片才要填）" style="flex:1;min-width:200px">
       </div>
-      <textarea id="newScript" rows="2" style="margin-top:8px" placeholder="講稿（選填）：貼內容，或貼講稿檔的路徑。有講稿字幕就不會有錯字；留空會自動找影片旁邊同名的 .txt"></textarea>
-      <div class="muted" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來</div>
+      <textarea id="newScript" rows="2" style="margin-top:8px" placeholder="講稿（選填）：貼內容或講稿檔路徑。留空會自動找影片旁邊同名的 .txt（Colab 做分身時會一起存）"></textarea>
+      <div class="bar" style="margin-top:8px">
+        背景音樂 <select id="makeMusic"><option value="calm">calm 靜心呼吸</option><option value="warm">warm 生活分享</option><option value="upbeat">upbeat 教學清單</option></select>
+        <span style="flex:1"></span>
+        <button class="primary" id="makeBtn">一鍵做片</button>
+        <button id="makeCurBtn">一鍵完成目前這支</button>
+      </div>
+      <div class="muted" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來。下面 1~4 區是進階：只想重做某一步時用</div>
     </section>
 
     <section>
@@ -271,7 +276,7 @@ function collectSteps() {
 }
 
 function setRunning(r) {
-  $("#runBtn").disabled = r; $("#stopBtn").disabled = !r; $("#claudeBtn").disabled = r || !S?.claude; $("#newBtn").disabled = r;
+  $("#runBtn").disabled = r; $("#stopBtn").disabled = !r; $("#claudeBtn").disabled = r || !S?.claude; $("#makeBtn").disabled = r; $("#makeCurBtn").disabled = r;
   $("#runInfo").textContent = r ? "執行中⋯" + (S?.running?.label ? "（" + S.running.label + "）" : "") : "";
 }
 
@@ -329,10 +334,17 @@ $("#claudeBtn").onclick = async () => {
   try { await api("/api/claude", { prompt: t }); toast("Claude 開始處理，進度看右上方"); }
   catch (e) { toast(e.message); }
 };
-$("#newBtn").onclick = async () => {
-  try { await api("/api/new", { name: $("#newName").value.trim(), video: $("#newVideo").value, script: $("#newScript").value, transcribe: $("#newTranscribe").checked }); cur = $("#newName").value.trim(); localStorage.setItem("panel.project", cur); $("#queue").innerHTML = ""; }
-  catch (e) { toast(e.message); }
+const make = async (name, video) => {
+  if (!name) return toast("先填專案名");
+  $("#queue").innerHTML = "";
+  try {
+    await api("/api/make", { name, video, script: $("#newScript").value, music: $("#makeMusic").value });
+    cur = name; localStorage.setItem("panel.project", cur);
+    toast("開始一鍵做片，進度看右邊");
+  } catch (e) { toast(e.message); }
 };
+$("#makeBtn").onclick = () => make($("#newName").value.trim(), $("#newVideo").value);
+$("#makeCurBtn").onclick = () => make(cur, "");
 $("#studio").onclick = async () => { await api("/api/studio", {}); toast("預覽畫面開啟中，約 10 秒"); setTimeout(() => window.open("http://localhost:3000"), 6000); };
 $("#outs").onclick = (e) => {
   const a = e.target.closest("[data-out]"); if (!a) return;

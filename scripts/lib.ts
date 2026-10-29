@@ -337,3 +337,25 @@ export const freePort = () =>
 // 渲染參數：同時處理的畫面少一點、等待時間長一點（去背、多段剪接時影片解碼比較慢，Mac 太多同時解碼會卡住逾時）
 // 想改：RENDER_CONCURRENCY=4 npm run render -- 名稱
 export const RENDER_FLAGS = [`--concurrency=${process.env.RENDER_CONCURRENCY ?? 2}`, "--timeout=120000"];
+
+// Claude 的輸出（stream-json，一行一個事件）→ 看得懂的進度
+export const claudeLine = (line: string) => {
+  let e: any;
+  try {
+    e = JSON.parse(line);
+  } catch {
+    return line + "\n";
+  }
+  if (e.type === "assistant")
+    return (e.message?.content ?? [])
+      .map((c: any) => {
+        if (c.type === "text" && c.text.trim()) return `💬 ${c.text.trim()}\n`;
+        if (c.type !== "tool_use") return "";
+        const i = c.input ?? {};
+        const what = i.command ?? i.file_path ?? i.pattern ?? "";
+        return `🔧 ${c.name} ${String(what).replace(ROOT + "/", "")}\n`;
+      })
+      .join("");
+  if (e.type === "result") return e.is_error ? `\n❌ ${e.result ?? "Claude 失敗"}\n` : `\n✅ Claude 做完了（${Math.round((e.duration_ms ?? 0) / 1000)} 秒）\n`;
+  return "";
+};

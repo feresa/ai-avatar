@@ -32,6 +32,20 @@ npm install
 npm run skills   # 安裝 Remotion 官方 skill：Claude 改特效時照官方寫法，比較不會出錯
 ```
 
+## 最快：一鍵做片
+
+```bash
+npm run panel          # 控制台 → 🚀 一鍵做片：填專案名、貼影片路徑 → 按「一鍵做片」
+# 或
+npm run make -- challenge-d2 ~/路徑/分身影片_1030_0900_第2000步.mp4 [講稿檔] [--music calm|warm|upbeat]
+```
+
+自動做完：建專案 → 字幕（有講稿用講稿的字）→ 字幕對時 → 找臉 → 背景音樂 → Claude 規劃畫面 → 檢查 → 輸出 `out/專案名.mp4`。
+- 講稿沒給會找影片旁邊同名的 `.txt`（Colab「AI分身工作室」做影片時會自動存）
+- 中途失敗，修好再跑同一行，做過的步驟會跳過
+- 電腦沒有 Claude Code 時，會印出提示詞，貼給 Claude 規劃好再跑一次就會接著輸出
+- 遇到問題先看 [docs/踩坑紀錄.md](docs/踩坑紀錄.md)
+
 ## 剪片控制台（不想打指令就用這個）
 
 ```bash
