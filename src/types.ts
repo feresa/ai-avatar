@@ -236,6 +236,9 @@ export type Background = {
   at: number;
   dur: number;
   src: string;
+  /** 圖還不存在時，npm run images 用這段描述 AI 畫圖，或用 stock 找圖庫照片 */
+  prompt?: string;
+  stock?: string;
 };
 
 /** 雜誌封面：大標題在頭的後面，封面小標在前面（要有去背） */
@@ -433,6 +436,9 @@ export type Project = {
   matte?: string | null;
   /** 綠幕去背後的預設背景：圖片／影片檔名，或顏色 */
   background?: string;
+  /** 整支背景的圖還不存在時，npm run images 用這段描述 AI 畫圖（或用 backgroundStock 找圖庫照片） */
+  backgroundPrompt?: string;
+  backgroundStock?: string;
   backgrounds?: Background[];
   depthTexts?: DepthText[];
   breakouts?: Breakout[];

@@ -68,6 +68,7 @@ const needCut = [
   ["破框", p.breakouts],
   ["剪貼", p.cutouts],
   ["換背景", p.backgrounds],
+  ["整支換背景", p.background ? [p.background] : []],
   ["雜誌封面", p.magazines],
 ].filter(([, l]) => (l as unknown[] | undefined)?.length).map(([n]) => n);
 if (needCut.length && !p.greenScreen && !p.matte) {

@@ -5,6 +5,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { pendingImages } from "./images";
 import { ROOT, claudeLine, die, projectDir, readProject } from "./lib";
 
 const argv = process.argv.slice(2);
@@ -72,6 +73,15 @@ if (!planned && (!hasClaude || flag("--no-claude"))) {
 }
 
 // 7~8. 檢查、輸出
+// 背景圖、插圖（有 prompt / stock 但圖還沒有）、去背（用到換背景、景深大字等但還沒去背）
+p = readProject(name);
+const pending = pendingImages(name).length;
+await step("產生插圖和背景", pending ? false : "沒有要產生的圖", () => npm("images", name));
+const cutFx = [p.background, p.backgrounds?.length, p.depthTexts?.length, p.breakouts?.length, p.cutouts?.length, p.magazines?.length].some(Boolean);
+await step("去背", !cutFx ? "沒有用到去背特效" : p.matte || p.greenScreen ? "已經去背過" : false, () => {
+  console.log("   （AI 去背，40 秒影片在 Mac 上約 5 分鐘）");
+  return npm("matte", name);
+});
 await step("檢查畫面", false, () => npm("check", name));
 await step("輸出成品", flag("--no-render") ? "加了 --no-render" : false, () => npm("render", name));
 const min = Math.round((Date.now() - t0) / 60000);

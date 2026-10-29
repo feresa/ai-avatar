@@ -49,10 +49,14 @@ const fromPexels = async (query: string, file: string) => {
 };
 
 /** 需要產生、但還不存在的插圖 */
-export const pendingImages = (name: string) =>
-  (readProject(name).inserts ?? []).filter(
-    (ins) => (ins.prompt || ins.stock) && !fs.existsSync(path.join(projectDir(name), ins.src)),
+export const pendingImages = (name: string) => {
+  const p = readProject(name);
+  // 插圖、換背景（backgrounds 每一段、整支的 background）都可以用 prompt / stock 自動產生
+  const bg = p.background && (p.backgroundPrompt || p.backgroundStock) ? [{ src: p.background, prompt: p.backgroundPrompt, stock: p.backgroundStock }] : [];
+  return [...(p.inserts ?? []), ...(p.backgrounds ?? []), ...bg].filter(
+    (ins) => (ins.prompt || ins.stock) && !/^#/.test(ins.src) && !fs.existsSync(path.join(projectDir(name), ins.src)),
   );
+};
 
 export const generateImages = async (name: string) => {
   loadEnv();
@@ -82,7 +86,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   readProject(name);
   const todo = pendingImages(name);
   if (!todo.length) {
-    console.log("沒有要產生的插圖（inserts 裡要有 prompt 或 stock，而且圖還不存在）");
+    console.log("沒有要產生的插圖（inserts / backgrounds / background 要有 prompt 或 stock，而且圖還不存在）");
     console.log("   想重新產生某張：把那張圖刪掉再跑一次");
   } else {
     const ok = await generateImages(name);

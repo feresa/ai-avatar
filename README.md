@@ -165,7 +165,7 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `pip` | 教學版型時分身小頭像的位置：`{ "x": 0.8, "y": 0.6, "size": 0.32 }`；某一段不要小頭像就在那一項加 `"pip": false` |
 | `greenScreen` | 綠幕去背（官方 `colorKey`）：`npm run green` 自動偵測綠布顏色並開啟；可調 `similarity`（去多少）、`spill`（去綠光） |
 | `matte` | AI 去背的影片（`npm run matte` 自動產生 `matte.webm`）；不是綠幕拍的影片用這個 |
-| `background` | 整支影片換背景（綠幕或 AI 去背都可以）：圖片／影片檔名，或顏色 `"#F2E8D5"` |
+| `background` | 整支影片換背景（綠幕或 AI 去背都可以）：圖片／影片檔名，或顏色 `"#F2E8D5"`；圖還沒有就加 `backgroundPrompt`（中文描述）或 `backgroundStock`（圖庫關鍵字），`npm run images` 會自動產生（檔名用 `img-` 開頭就不會進 git）。`backgrounds` 每一段也可以加 `prompt` / `stock` |
 | `backgrounds` | 某段時間換背景：`[{ "at": 秒, "dur": 秒, "src": "beach.jpg" }]` |
 | `depthTexts` | 景深大字（字在人的後面）：`[{ "at": 秒, "dur": 秒, "text": "呼吸", "color": "yellow" }]` |
 | `breakouts` | 破框（頭衝出框外）：`[{ "at": 秒, "dur": 秒, "backdrop": "#EFE8DC" }]` |

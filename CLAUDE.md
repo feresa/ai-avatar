@@ -69,7 +69,7 @@
    - `breakouts`：講到「突破」「走出去」或情緒高點
    - `cutouts`：輕鬆、可愛、分享的段落
    - `backgrounds`：講到某個地方或情境時換背景，圖要使用者提供或用 `npm run images` 產生
-   - `background`：整支換背景（例如靜心片換成清晨森林、教學片換成簡約書房），一樣要有 `matte` 或 `greenScreen`
+   - `background`：整支換背景（例如靜心片換成清晨森林、教學片換成簡約書房），一樣要有 `matte` 或 `greenScreen`；沒有圖就填 `background: "img-bg.jpg"` 加 `backgroundPrompt`（描述畫面，中央留給人物、背景柔和），一鍵做片會自動產生圖並去背
    - 一支片去背特效 1~2 個就好，和第 10-1 的進階特效加起來不超過 4 個
 10-3. 使用者想「測試哪個開場比較好」：在 `variants` 寫 2~3 個版本（只改 hook 或開場特效），請使用者跑 `npm run variants`
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的

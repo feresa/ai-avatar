@@ -203,5 +203,7 @@
     }
   ],
   "grade": "warm",
-  "progress": true
+  "progress": true,
+  "background": "img-forest.jpg",
+  "backgroundPrompt": "清晨的森林，柔和的金色陽光從樹葉間灑下，淡淡的薄霧，綠色和暖金色調，背景柔和略微模糊，畫面中央留給人物，寧靜平和的氛圍"
 }
