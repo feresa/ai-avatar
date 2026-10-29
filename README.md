@@ -150,6 +150,9 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `stickers` | 貼圖小動畫：`[{ "at": 秒, "dur": 秒, "kind": "check" }]`，`kind` 可選 `check` `cross` `arrow` `heart` `star` `fire`，或用 `"emoji": "🌿"`、`"src": "圖.png"`；`x` `y` 位置、`size` 大小、`rotate` 角度、`anim`（`pop` `bounce` `float`） |
 | `transitions` | 轉場：`[{ "at": 秒, "type": "flash" }]`，`type` 可選 `flash`（閃白）、`zoom`（推近）、`whip`（甩鏡）、`slide`（滑入）、`fade`（淡黑）、`glitch`（故障閃爍）、`zoomblur`（穿越）、`lightleak`（漏光）；`dur` 長度、`sound: false` 不要咻聲 |
 | `spotlights` | 聚光燈（四周變暗、亮在臉上）：`[{ "at": 秒, "dur": 秒 }]`，可加 `strength`（0~1）、`radius`、`x` `y` |
+| `breaths` | 呼吸引導圈（吸氣變大、吐氣縮小，中間有倒數）：`[{ "at": 秒, "dur": 秒, "pattern": [["吸氣", 4], ["吐氣", 6]] }]`，有「吸」變大、「吐／呼」縮小、其他（例如「停」）維持；`x` `y` `size` `color` |
+| `grade` | 調色：`"warm"`（溫暖，預設）、`"fresh"`（清爽，適合教學、科技）、`"bright"`（提亮）、`"film"`（電影感）、`"none"`；也可以 `{ "preset": "warm", "exposure": 0.1, "temperature": 0.2 }` 微調 |
+| `progress` | 進度條（畫面上緣一條線跑到底）：`true`，或 `{ "color": "#F7E27C", "height": 0.006, "position": "top" }` |
 | `reveals` | 拉遠揭曉（從特寫拉遠到全景）：`[{ "at": 秒, "dur": 秒, "from": 2.2 }]` |
 | `notes` | 便利貼字：`[{ "at": 秒, "dur": 秒, "text": "每天\n5 分鐘", "color": "yellow" }]`，`color` 可選 `yellow` `pink` `blue` `green` |
 | `compares` | 前後對比：`[{ "at": 秒, "dur": 秒, "before": "before.jpg", "beforeLabel": "練習前", "afterLabel": "練習後" }]`，左邊放 before 圖片／影片，右邊是現在的畫面 |

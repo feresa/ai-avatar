@@ -2,6 +2,7 @@
 // 影片用 @remotion/media 的 <Video>，特效用 Remotion 官方特效庫 @remotion/effects
 import React from "react";
 import { chromaticAberration } from "@remotion/effects/chromatic-aberration";
+import { colorCorrection } from "@remotion/effects/color-correction";
 import { colorKey } from "@remotion/effects/color-key";
 import { dropShadow } from "@remotion/effects/drop-shadow";
 import { outline } from "@remotion/effects/outline";
@@ -13,6 +14,7 @@ import { AbsoluteFill, Audio, Sequence, Solid, interpolate, staticFile, useCurre
 import { Captions } from "./components/Captions";
 import { Card } from "./components/Card";
 import { Backdrop } from "./components/Backdrop";
+import { BreathGuide } from "./components/BreathGuide";
 import { Compare } from "./components/Compare";
 import { DepthText } from "./components/DepthText";
 import { Headlines } from "./components/Headlines";
@@ -25,7 +27,7 @@ import { Phone } from "./components/Phone";
 import { Sticker } from "./components/Sticker";
 import { mapCaptions, segmentsOf, shiftCaptions, srcToOut } from "./timeline";
 import { transitionLook, transitionsOf } from "./transitions";
-import type { ShortProps } from "./types";
+import { COLORS, type Grade, type GradePreset, type ShortProps } from "./types";
 
 const zoomAt = (t: number, zooms: { start: number; end: number; scale: number }[]) => {
   let z = 1;
@@ -44,9 +46,23 @@ const zoomAt = (t: number, zooms: { start: number; end: number; scale: number }[
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
+// 調色預設值（官方 colorCorrection）：AI 分身影片常偏灰偏冷，warm 讓膚色比較自然
+const GRADES: Record<GradePreset, Parameters<typeof colorCorrection>[0]> = {
+  none: {},
+  warm: { temperature: 0.12, vibrance: 0.15, contrast: 1.05, shadows: 0.05 },
+  fresh: { temperature: -0.04, exposure: 0.1, vibrance: 0.2, contrast: 1.04, highlights: -0.08 },
+  bright: { exposure: 0.25, shadows: 0.15, vibrance: 0.1 },
+  film: { temperature: 0.08, contrast: 1.1, saturation: 0.85, blacks: 0.06, highlights: -0.1 },
+};
+const gradeFx = (g?: Grade): EffectDescriptor<unknown>[] => {
+  if (!g || g === "none") return [];
+  const { preset = "warm", ...custom } = typeof g === "string" ? { preset: g } : g;
+  return [colorCorrection({ ...GRADES[preset], ...custom })];
+};
+
 export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   const frame = useCurrentFrame();
-  const { fps, width: W, height: H } = useVideoConfig();
+  const { fps, width: W, height: H, durationInFrames } = useVideoConfig();
   const segs = segmentsOf(p);
   const t = frame / fps;
   const dir = `projects/${name}`;
@@ -107,7 +123,8 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       spot = { k, strength: sp.strength ?? 0.8, radius: sp.radius ?? 0.32, x: sp.x ?? faceC[0], y: sp.y ?? faceC[1] };
   }
 
-  const effects: EffectDescriptor<unknown>[] = [];
+  const grade = gradeFx(p.grade);
+  const effects: EffectDescriptor<unknown>[] = [...grade];
   if (spot && spot.k > 0.01)
     effects.push(
       vignette({
@@ -191,6 +208,7 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       gs ? p.video : (p.matte as string),
       [
         ...(gs ? keyFx : []),
+        ...grade,
         ...(cutNow ? [outline({ width: 18, color: cutNow.outline ?? "#ffffff" }), dropShadow({ radius: 22, offsetX: 10, offsetY: 18, opacity: 0.45 })] : []),
       ],
       { muted: true },
@@ -332,6 +350,15 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
         );
       })}
 
+      {(p.breaths ?? []).map((b, i) => {
+        const sp = span(b.at, b.dur);
+        return (
+          <Sequence key={`br${i}`} {...sp}>
+            <BreathGuide breath={b} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+
       {(p.headlines ?? []).map((h, i) => {
         const sp = span(h.at, h.dur);
         return (
@@ -382,6 +409,25 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
           <Hook hook={hook} durationInFrames={hookTo - hookFrom} />
         </Sequence>
       )}
+
+      {/* 進度條：整支影片跑完剛好到底 */}
+      {p.progress && (() => {
+        const pr = typeof p.progress === "object" ? p.progress : {};
+        const h = (pr.height ?? 0.006) * H;
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              [pr.position === "bottom" ? "bottom" : "top"]: 0,
+              height: h,
+              width: `${(frame / Math.max(1, durationInFrames - 1)) * 100}%`,
+              background: pr.color ?? COLORS.yellow,
+              boxShadow: `0 0 ${h * 2}px rgba(0,0,0,0.35)`,
+            }}
+          />
+        );
+      })()}
 
       {p.music && <Audio src={staticFile(`${dir}/${p.music.src}`)} volume={p.music.volume ?? 0.12} loop />}
       {transitions

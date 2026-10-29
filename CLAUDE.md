@@ -10,6 +10,7 @@
 - `src/components/Hook.tsx`：開場標題、圖示斜線、小膠囊
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
+- `BreathGuide.tsx` 呼吸引導圈；調色（`grade`）、進度條（`progress`）在 `Short.tsx`
 - `Note.tsx` 便利貼、`Compare.tsx` 前後對比、`Phone.tsx` 手機示範、`Headlines.tsx` 頭條牆、`Orbit.tsx` 卡片環繞；聚光燈、拉遠揭曉、穿越、漏光、故障在 `Short.tsx` / `transitions.ts`（用 `@remotion/effects`）
 - 去背：`Backdrop.tsx` 背景、`DepthText.tsx` 景深大字、`Magazine.tsx` 雜誌封面；破框、剪貼、人像層在 `Short.tsx`（綠幕用 `colorKey`，AI 去背用 `matte.webm`）
 - 影片用 `@remotion/media` 的 `<Video>`（才能套官方特效）；裁切位置靠 `sourceWidth` / `sourceHeight` / `focusX` / `focusY` 算，這些會自動填
@@ -50,6 +51,8 @@
 8. `transitions`：換話題、段落轉折（「接著」「很多朋友問我」「我的回答」）放 1~3 個，`whip` 或 `flash` 最常用；開場標題結束時可放一個 `flash`。不要每句都放
 9. `music`：跑 `npm run music -- <名稱> <風格>`，靜心呼吸用 `calm`、生活分享用 `warm`、教學清單用 `upbeat`
 10. `publish`：照內容寫標題（20 字內、有吸引力）、說明（2~3 句＋行動呼籲）、5~8 個中文 hashtag；`privacy` 保持 `private`。**不要自己跑 `npm run publish`**，發佈要使用者自己下指令
+9-1. 每支片都要有：`grade`（調色：靜心、生活用 `warm`，教學、科技用 `fresh`，畫面偏暗用 `bright`）、`progress: true`（進度條）
+9-2. `breaths`（呼吸引導圈）：講到吸氣、吐氣、呼吸練習時放，`pattern` 照講的節奏對齊（例如從「吸氣」開始到「吐氣」之前是吸幾秒）；同一時間不要再放字卡，圓在臉下方、字幕上方（預設 y 0.64，check 有警告就照建議調 `y`、`size`）
 10-1. 進階特效（用 Remotion 官方特效庫，一支片挑 2~4 個，不要全部塞）：
    - `spotlights`：最重要、最有情緒的一句，0.8~2 秒
    - `reveals`：開場或轉換場景時，從特寫拉遠

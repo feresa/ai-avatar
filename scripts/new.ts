@@ -59,6 +59,8 @@ if (fs.existsSync(file)) {
     music: null,
     sfx: [],
     gradient: true,
+    grade: "warm",
+    progress: true,
     videoVolume: 1,
     publish: { title: "", description: "", tags: [], privacy: "private" },
   };

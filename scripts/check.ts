@@ -39,6 +39,11 @@ for (const n of p.notes ?? []) {
   const hh = (size * 1080) / 1920;
   items.push({ kind: "便利貼", at: n.at, dur: n.dur, box: { x: (n.x ?? 0.74) - size / 2, y: (n.y ?? 0.52) - hh / 2, w: size, h: hh }, label: n.text });
 }
+for (const b of p.breaths ?? []) {
+  const w = b.size ?? 0.3;
+  const h = (w * 1080) / 1920;
+  items.push({ kind: "呼吸引導圈", at: b.at, dur: b.dur, box: { x: (b.x ?? 0.5) - w / 2, y: (b.y ?? 0.64) - h / 2, w, h }, label: (b.pattern ?? [["吸氣", 4], ["吐氣", 4]]).map(([l, d]) => `${l}${d}`).join("") });
+}
 for (const ph of p.phones ?? []) {
   const w = ph.size ?? 0.34;
   const h = (w * 2.05 * 1080) / 1920;

@@ -172,7 +172,7 @@ const $$ = (s) => [...document.querySelectorAll(s)];
 let S = null;
 let cur = localStorage.getItem("panel.project") || "";
 
-const FX = [["spotlights","聚光燈"],["reveals","拉遠揭曉"],["notes","便利貼"],["headlines","頭條牆"],["orbits","卡片環繞"],["zoomblur","穿越轉場"],["lightleak","漏光轉場"],["compares","前後對比"],["phones","手機示範"]];
+const FX = [["breaths","呼吸引導圈"],["spotlights","聚光燈"],["reveals","拉遠揭曉"],["notes","便利貼"],["headlines","頭條牆"],["orbits","卡片環繞"],["zoomblur","穿越轉場"],["lightleak","漏光轉場"],["compares","前後對比"],["phones","手機示範"]];
 const CUT = [["depthTexts","景深大字"],["magazines","雜誌封面"],["breakouts","破框"],["cutouts","剪貼"],["backgrounds","換背景"]];
 const chips = (el, list, prefix) => { el.innerHTML = list.map(([k, t]) => `<label><input type="checkbox" data-${prefix}="${k}">${t}</label>`).join(""); };
 chips($("#fxChips"), FX, "fx");

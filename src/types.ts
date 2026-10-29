@@ -282,6 +282,41 @@ export type Publish = {
   autoReply?: AutoReply;
 };
 
+/** 呼吸引導圈：吸氣變大、吐氣縮小，觀眾可以跟著練 */
+export type Breath = {
+  at: number;
+  dur: number;
+  /** 一個循環的節奏，重複到結束：[["吸氣", 4], ["停", 1], ["吐氣", 6]]；有「吸」變大、有「吐」或「呼」縮小、其他維持。預設吸 4 吐 4 */
+  pattern?: [string, number][];
+  /** 圓心位置（0~1），預設 x 0.5、y 0.64（臉的下方、字幕上方） */
+  x?: number;
+  y?: number;
+  /** 圓的最大直徑（畫面寬度的比例），預設 0.3 */
+  size?: number;
+  /** 顏色，預設薄荷綠 */
+  color?: string;
+};
+
+/** 調色預設：warm 溫暖（生活、靜心）、fresh 清爽（教學、科技）、bright 提亮（畫面偏暗）、film 電影感、none 不調 */
+export type GradePreset = "warm" | "fresh" | "bright" | "film" | "none";
+export type Grade =
+  | GradePreset
+  | {
+      preset?: GradePreset;
+      /** 以下會蓋過預設值：exposure 亮度（-1~1）、contrast 對比（1 = 不變）、saturation 飽和（1 = 不變）、temperature 冷暖（-1 冷 ~ 1 暖）、tint 偏綠／偏紫、shadows 暗部、highlights 亮部、vibrance 自然飽和 */
+      exposure?: number;
+      contrast?: number;
+      saturation?: number;
+      temperature?: number;
+      tint?: number;
+      shadows?: number;
+      highlights?: number;
+      vibrance?: number;
+    };
+
+/** 進度條：畫面上緣一條細線跑到底，提高看完率；true 用預設值 */
+export type Progress = boolean | { color?: string; height?: number; position?: "top" | "bottom" };
+
 export type Project = {
   /** 影片檔名（放在同一個專案資料夾） */
   video: string;
@@ -322,6 +357,12 @@ export type Project = {
   stickers?: Sticker[];
   transitions?: Transition[];
   spotlights?: Spotlight[];
+  /** 呼吸引導圈 */
+  breaths?: Breath[];
+  /** 調色（整支影片，包含去背的人像層） */
+  grade?: Grade;
+  /** 進度條 */
+  progress?: Progress;
   reveals?: Reveal[];
   notes?: Note[];
   compares?: Compare[];
