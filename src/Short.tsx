@@ -153,7 +153,8 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   // 現在這一刻正在進行的那一個（原始秒數換成成品秒數）
   const now = <T extends { at: number; dur: number }>(list?: T[]) =>
     (list ?? []).find((x) => t >= srcToOut(segs, x.at) && t < srcToOut(segs, x.at + x.dur));
-  const bgNow = now(p.backgrounds);
+  // 換背景：某一段（backgrounds）優先，沒有就用整支的 background（綠幕、AI 去背都可以）
+  const bgNow = now(p.backgrounds) ?? (p.background ? { src: p.background } : undefined);
   const breakNow = now(p.breakouts);
   const cutNow = now(p.cutouts);
   const depthNow = now(p.depthTexts);
@@ -163,9 +164,9 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
   const soon = (list?: { at: number; dur: number }[]) =>
     (list ?? []).some((x) => t >= srcToOut(segs, x.at) - 1 && t < srcToOut(segs, x.at + x.dur));
   const breakSoon = (p.breakouts ?? []).find((x) => soon([x]));
-  const mountPerson = canCut && [p.backgrounds, p.breakouts, p.cutouts, p.depthTexts, p.magazines].some(soon);
+  const mountPerson = canCut && (!!p.background || [p.backgrounds, p.breakouts, p.cutouts, p.depthTexts, p.magazines].some(soon));
   // 綠幕去背後要墊的背景
-  const bgSrc = bgNow?.src ?? p.background;
+  const bgSrc = bgNow?.src;
 
   // 一層影片：跟主畫面同樣的剪接、裁切、推近（人像層也用這個，才會完全對齊）
   const videoLayer = (src: string, fx: EffectDescriptor<unknown>[], opts: { muted?: boolean } = {}) => (
