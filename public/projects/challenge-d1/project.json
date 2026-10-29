@@ -1,0 +1,60 @@
+{
+  "video": "source.mp4",
+  "durationSec": 34.52,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "baseZoom": 1,
+  "keep": null,
+  "hook": {
+    "from": 0,
+    "to": 3,
+    "lines": [
+      {
+        "text": "第一行標題",
+        "color": "white"
+      },
+      {
+        "text": "第二行重點",
+        "color": "yellow"
+      }
+    ],
+    "badge": "每個特效都是 Claude 剪的",
+    "icons": [],
+    "strike": true
+  },
+  "captions": {
+    "enabled": true,
+    "highlight": [],
+    "maxChars": 9,
+    "y": 0.76,
+    "hideDuringHook": true,
+    "lead": 0.01
+  },
+  "zooms": [],
+  "cards": [],
+  "inserts": [],
+  "stickers": [],
+  "transitions": [],
+  "cutTransition": null,
+  "music": {
+    "src": "music-calm.wav",
+    "volume": 0.12
+  },
+  "sfx": [],
+  "gradient": true,
+  "videoVolume": 1,
+  "publish": {
+    "title": "",
+    "description": "",
+    "tags": [],
+    "privacy": "private"
+  },
+  "sourceWidth": 1080,
+  "sourceHeight": 1920,
+  "face": {
+    "x": 0.332,
+    "y": 0.334,
+    "w": 0.417,
+    "h": 0.234
+  }
+}

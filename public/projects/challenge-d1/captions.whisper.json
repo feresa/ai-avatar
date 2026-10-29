@@ -1,0 +1,912 @@
+[
+ {
+  "text": "你",
+  "startMs": 170,
+  "endMs": 640,
+  "timestampMs": 720,
+  "confidence": 0.850535
+ },
+ {
+  "text": "早",
+  "startMs": 640,
+  "endMs": 700,
+  "timestampMs": 940,
+  "confidence": 0.960488
+ },
+ {
+  "text": "上",
+  "startMs": 700,
+  "endMs": 1050,
+  "timestampMs": 1180,
+  "confidence": 0.997181
+ },
+ {
+  "text": "醒",
+  "startMs": 1050,
+  "endMs": 1400,
+  "timestampMs": 1420,
+  "confidence": 0.996595
+ },
+ {
+  "text": "來",
+  "startMs": 1400,
+  "endMs": 1810,
+  "timestampMs": 1780,
+  "confidence": 0.988757
+ },
+ {
+  "text": ",",
+  "startMs": 1810,
+  "endMs": 2000,
+  "timestampMs": 1860,
+  "confidence": 0.514579
+ },
+ {
+  "text": "第一",
+  "startMs": 2000,
+  "endMs": 2220,
+  "timestampMs": 2000,
+  "confidence": 0.925699
+ },
+ {
+  "text": "件",
+  "startMs": 2220,
+  "endMs": 2330,
+  "timestampMs": 2280,
+  "confidence": 0.988859
+ },
+ {
+  "text": "事",
+  "startMs": 2330,
+  "endMs": 2610,
+  "timestampMs": 2640,
+  "confidence": 0.998449
+ },
+ {
+  "text": "是不是",
+  "startMs": 2610,
+  "endMs": 3140,
+  "timestampMs": 2900,
+  "confidence": 0.402057
+ },
+ {
+  "text": "拿",
+  "startMs": 3140,
+  "endMs": 3370,
+  "timestampMs": 3140,
+  "confidence": 0.982598
+ },
+ {
+  "text": "手",
+  "startMs": 3370,
+  "endMs": 3600,
+  "timestampMs": 3480,
+  "confidence": 0.996845
+ },
+ {
+  "text": "機",
+  "startMs": 3600,
+  "endMs": 3830,
+  "timestampMs": 4200,
+  "confidence": 0.99795
+ },
+ {
+  "text": "。",
+  "startMs": 3830,
+  "endMs": 4000,
+  "timestampMs": 4420,
+  "confidence": 0.370436
+ },
+ {
+  "text": "今天",
+  "startMs": 4000,
+  "endMs": 4420,
+  "timestampMs": 4640,
+  "confidence": 0.991159
+ },
+ {
+  "text": "開始",
+  "startMs": 4420,
+  "endMs": 4840,
+  "timestampMs": 5140,
+  "confidence": 0.994002
+ },
+ {
+  "text": ",",
+  "startMs": 4840,
+  "endMs": 5000,
+  "timestampMs": 5500,
+  "confidence": 0.750002
+ },
+ {
+  "text": "我們",
+  "startMs": 5000,
+  "endMs": 5470,
+  "timestampMs": 5700,
+  "confidence": 0.975532
+ },
+ {
+  "text": "做",
+  "startMs": 5470,
+  "endMs": 5520,
+  "timestampMs": 5900,
+  "confidence": 0.988942
+ },
+ {
+  "text": "一個",
+  "startMs": 5520,
+  "endMs": 5870,
+  "timestampMs": 6120,
+  "confidence": 0.97529
+ },
+ {
+  "text": "無",
+  "startMs": 5870,
+  "endMs": 6040,
+  "timestampMs": 6360,
+  "confidence": 0.748843
+ },
+ {
+  "text": "天",
+  "startMs": 6040,
+  "endMs": 6210,
+  "timestampMs": 6540,
+  "confidence": 0.996523
+ },
+ {
+  "text": "的",
+  "startMs": 6210,
+  "endMs": 6400,
+  "timestampMs": 6840,
+  "confidence": 0.953584
+ },
+ {
+  "text": "進",
+  "startMs": 6400,
+  "endMs": 6780,
+  "timestampMs": 7040,
+  "confidence": 0.548641
+ },
+ {
+  "text": "行",
+  "startMs": 6780,
+  "endMs": 6920,
+  "timestampMs": 7180,
+  "confidence": 0.996668
+ },
+ {
+  "text": "呼",
+  "startMs": 6920,
+  "endMs": 7220,
+  "timestampMs": 7420,
+  "confidence": 0.996934
+ },
+ {
+  "text": "吸",
+  "startMs": 7220,
+  "endMs": 7440,
+  "timestampMs": 7500,
+  "confidence": 0.996607
+ },
+ {
+  "text": "挑",
+  "startMs": 7440,
+  "endMs": 7710,
+  "timestampMs": 7820,
+  "confidence": 0.98798
+ },
+ {
+  "text": "戰",
+  "startMs": 7710,
+  "endMs": 8000,
+  "timestampMs": 8000,
+  "confidence": 0.999093
+ },
+ {
+  "text": "。",
+  "startMs": 8000,
+  "endMs": 8000,
+  "timestampMs": 8260,
+  "confidence": 0.441657
+ },
+ {
+  "text": "第一",
+  "startMs": 8000,
+  "endMs": 8530,
+  "timestampMs": 8340,
+  "confidence": 0.981925
+ },
+ {
+  "text": "天",
+  "startMs": 8530,
+  "endMs": 8780,
+  "timestampMs": 9020,
+  "confidence": 0.992971
+ },
+ {
+  "text": ",",
+  "startMs": 8780,
+  "endMs": 8990,
+  "timestampMs": 9480,
+  "confidence": 0.776957
+ },
+ {
+  "text": "很",
+  "startMs": 8990,
+  "endMs": 9410,
+  "timestampMs": 9560,
+  "confidence": 0.974154
+ },
+ {
+  "text": "簡單",
+  "startMs": 9410,
+  "endMs": 9800,
+  "timestampMs": 10180,
+  "confidence": 0.995133
+ },
+ {
+  "text": ",",
+  "startMs": 9800,
+  "endMs": 9970,
+  "timestampMs": 10500,
+  "confidence": 0.595378
+ },
+ {
+  "text": "起",
+  "startMs": 9970,
+  "endMs": 10390,
+  "timestampMs": 10620,
+  "confidence": 0.923101
+ },
+ {
+  "text": "�",
+  "startMs": 10390,
+  "endMs": 10550,
+  "timestampMs": 10820,
+  "confidence": 0.999931
+ },
+ {
+  "text": "�",
+  "startMs": 10550,
+  "endMs": 10660,
+  "timestampMs": 10820,
+  "confidence": 0.999998
+ },
+ {
+  "text": "後",
+  "startMs": 10660,
+  "endMs": 10990,
+  "timestampMs": 11340,
+  "confidence": 0.995015
+ },
+ {
+  "text": ",",
+  "startMs": 10990,
+  "endMs": 11470,
+  "timestampMs": 11540,
+  "confidence": 0.796807
+ },
+ {
+  "text": "先",
+  "startMs": 11470,
+  "endMs": 11550,
+  "timestampMs": 11720,
+  "confidence": 0.856921
+ },
+ {
+  "text": "坐",
+  "startMs": 11550,
+  "endMs": 11830,
+  "timestampMs": 11860,
+  "confidence": 0.981571
+ },
+ {
+  "text": "在",
+  "startMs": 11830,
+  "endMs": 12140,
+  "timestampMs": 12040,
+  "confidence": 0.996132
+ },
+ {
+  "text": "�",
+  "startMs": 12140,
+  "endMs": 12350,
+  "timestampMs": 12260,
+  "confidence": 0.995401
+ },
+ {
+  "text": "�",
+  "startMs": 12350,
+  "endMs": 12450,
+  "timestampMs": 12260,
+  "confidence": 0.999966
+ },
+ {
+  "text": "邊",
+  "startMs": 12450,
+  "endMs": 12990,
+  "timestampMs": 12800,
+  "confidence": 0.996288
+ },
+ {
+  "text": ",",
+  "startMs": 12990,
+  "endMs": 13000,
+  "timestampMs": 13100,
+  "confidence": 0.852399
+ },
+ {
+  "text": "�",
+  "startMs": 13000,
+  "endMs": 13160,
+  "timestampMs": 13260,
+  "confidence": 0.885407
+ },
+ {
+  "text": "�",
+  "startMs": 13160,
+  "endMs": 13240,
+  "timestampMs": 13260,
+  "confidence": 1
+ },
+ {
+  "text": "腳",
+  "startMs": 13240,
+  "endMs": 13490,
+  "timestampMs": 13440,
+  "confidence": 0.997147
+ },
+ {
+  "text": "�",
+  "startMs": 13490,
+  "endMs": 13700,
+  "timestampMs": 13680,
+  "confidence": 0.996947
+ },
+ {
+  "text": "�",
+  "startMs": 13700,
+  "endMs": 13730,
+  "timestampMs": 13680,
+  "confidence": 0.997763
+ },
+ {
+  "text": "地",
+  "startMs": 13730,
+  "endMs": 14070,
+  "timestampMs": 14040,
+  "confidence": 0.996137
+ },
+ {
+  "text": ",",
+  "startMs": 14070,
+  "endMs": 14210,
+  "timestampMs": 15060,
+  "confidence": 0.450223
+ },
+ {
+  "text": "一",
+  "startMs": 14210,
+  "endMs": 14520,
+  "timestampMs": 15220,
+  "confidence": 0.613821
+ },
+ {
+  "text": "手",
+  "startMs": 14520,
+  "endMs": 15020,
+  "timestampMs": 15420,
+  "confidence": 0.985319
+ },
+ {
+  "text": "放",
+  "startMs": 15020,
+  "endMs": 15140,
+  "timestampMs": 15620,
+  "confidence": 0.981755
+ },
+ {
+  "text": "�",
+  "startMs": 15140,
+  "endMs": 15370,
+  "timestampMs": 15920,
+  "confidence": 0.996738
+ },
+ {
+  "text": "�",
+  "startMs": 15370,
+  "endMs": 15450,
+  "timestampMs": 15920,
+  "confidence": 0.999931
+ },
+ {
+  "text": "口",
+  "startMs": 15450,
+  "endMs": 15760,
+  "timestampMs": 16400,
+  "confidence": 0.99779
+ },
+ {
+  "text": ",",
+  "startMs": 15760,
+  "endMs": 16000,
+  "timestampMs": 16760,
+  "confidence": 0.882426
+ },
+ {
+  "text": "一",
+  "startMs": 16000,
+  "endMs": 16760,
+  "timestampMs": 16940,
+  "confidence": 0.890116
+ },
+ {
+  "text": "手",
+  "startMs": 16760,
+  "endMs": 16800,
+  "timestampMs": 17100,
+  "confidence": 0.99601
+ },
+ {
+  "text": "放",
+  "startMs": 16800,
+  "endMs": 17200,
+  "timestampMs": 17280,
+  "confidence": 0.998338
+ },
+ {
+  "text": "�",
+  "startMs": 17200,
+  "endMs": 17460,
+  "timestampMs": 17600,
+  "confidence": 0.995911
+ },
+ {
+  "text": "�",
+  "startMs": 17460,
+  "endMs": 17590,
+  "timestampMs": 17600,
+  "confidence": 0.999823
+ },
+ {
+  "text": "子",
+  "startMs": 17590,
+  "endMs": 18000,
+  "timestampMs": 17900,
+  "confidence": 0.998361
+ },
+ {
+  "text": "。",
+  "startMs": 18000,
+  "endMs": 18000,
+  "timestampMs": 18280,
+  "confidence": 0.648394
+ },
+ {
+  "text": "用",
+  "startMs": 18000,
+  "endMs": 18280,
+  "timestampMs": 18460,
+  "confidence": 0.97513
+ },
+ {
+  "text": "�",
+  "startMs": 18280,
+  "endMs": 18480,
+  "timestampMs": 18660,
+  "confidence": 0.998513
+ },
+ {
+  "text": "�",
+  "startMs": 18480,
+  "endMs": 18500,
+  "timestampMs": 18660,
+  "confidence": 0.999929
+ },
+ {
+  "text": "子",
+  "startMs": 18500,
+  "endMs": 18750,
+  "timestampMs": 18760,
+  "confidence": 0.998574
+ },
+ {
+  "text": "慢慢",
+  "startMs": 18750,
+  "endMs": 19260,
+  "timestampMs": 19140,
+  "confidence": 0.993718
+ },
+ {
+  "text": "吸",
+  "startMs": 19260,
+  "endMs": 19510,
+  "timestampMs": 19460,
+  "confidence": 0.995222
+ },
+ {
+  "text": "氣",
+  "startMs": 19510,
+  "endMs": 19670,
+  "timestampMs": 19920,
+  "confidence": 0.987189
+ },
+ {
+  "text": ",",
+  "startMs": 19670,
+  "endMs": 20070,
+  "timestampMs": 20080,
+  "confidence": 0.954298
+ },
+ {
+  "text": "感覺",
+  "startMs": 20070,
+  "endMs": 20440,
+  "timestampMs": 20360,
+  "confidence": 0.970843
+ },
+ {
+  "text": "�",
+  "startMs": 20440,
+  "endMs": 20610,
+  "timestampMs": 20560,
+  "confidence": 0.997052
+ },
+ {
+  "text": "�",
+  "startMs": 20610,
+  "endMs": 20700,
+  "timestampMs": 20560,
+  "confidence": 0.999905
+ },
+ {
+  "text": "子",
+  "startMs": 20700,
+  "endMs": 20950,
+  "timestampMs": 20680,
+  "confidence": 0.998578
+ },
+ {
+  "text": "�",
+  "startMs": 20950,
+  "endMs": 21110,
+  "timestampMs": 20880,
+  "confidence": 0.993739
+ },
+ {
+  "text": "�",
+  "startMs": 21110,
+  "endMs": 21170,
+  "timestampMs": 20880,
+  "confidence": 0.999935
+ },
+ {
+  "text": "起來",
+  "startMs": 21170,
+  "endMs": 21870,
+  "timestampMs": 21340,
+  "confidence": 0.997683
+ },
+ {
+  "text": ",",
+  "startMs": 21870,
+  "endMs": 21970,
+  "timestampMs": 21960,
+  "confidence": 0.694867
+ },
+ {
+  "text": "再",
+  "startMs": 21970,
+  "endMs": 22120,
+  "timestampMs": 22120,
+  "confidence": 0.972051
+ },
+ {
+  "text": "慢慢",
+  "startMs": 22120,
+  "endMs": 22640,
+  "timestampMs": 22440,
+  "confidence": 0.996436
+ },
+ {
+  "text": "�",
+  "startMs": 22640,
+  "endMs": 22800,
+  "timestampMs": 22700,
+  "confidence": 0.998784
+ },
+ {
+  "text": "�",
+  "startMs": 22800,
+  "endMs": 22880,
+  "timestampMs": 22700,
+  "confidence": 0.99996
+ },
+ {
+  "text": "氣",
+  "startMs": 22880,
+  "endMs": 23300,
+  "timestampMs": 23260,
+  "confidence": 0.998247
+ },
+ {
+  "text": ",",
+  "startMs": 23300,
+  "endMs": 23380,
+  "timestampMs": 23400,
+  "confidence": 0.949119
+ },
+ {
+  "text": "�",
+  "startMs": 23380,
+  "endMs": 23470,
+  "timestampMs": 23600,
+  "confidence": 0.996993
+ },
+ {
+  "text": "�",
+  "startMs": 23470,
+  "endMs": 23590,
+  "timestampMs": 23600,
+  "confidence": 0.999949
+ },
+ {
+  "text": "子",
+  "startMs": 23590,
+  "endMs": 23800,
+  "timestampMs": 23740,
+  "confidence": 0.998567
+ },
+ {
+  "text": "�",
+  "startMs": 23800,
+  "endMs": 23990,
+  "timestampMs": 23960,
+  "confidence": 0.960433
+ },
+ {
+  "text": "�",
+  "startMs": 23990,
+  "endMs": 24050,
+  "timestampMs": 23960,
+  "confidence": 0.999996
+ },
+ {
+  "text": "回去",
+  "startMs": 24050,
+  "endMs": 24600,
+  "timestampMs": 24420,
+  "confidence": 0.992256
+ },
+ {
+  "text": "。",
+  "startMs": 24600,
+  "endMs": 25000,
+  "timestampMs": 24980,
+  "confidence": 0.990822
+ },
+ {
+  "text": "就",
+  "startMs": 25000,
+  "endMs": 25530,
+  "timestampMs": 25640,
+  "confidence": 0.940177
+ },
+ {
+  "text": "這樣",
+  "startMs": 25530,
+  "endMs": 25680,
+  "timestampMs": 25920,
+  "confidence": 0.992748
+ },
+ {
+  "text": "十",
+  "startMs": 25680,
+  "endMs": 25890,
+  "timestampMs": 26220,
+  "confidence": 0.643605
+ },
+ {
+  "text": "次",
+  "startMs": 25890,
+  "endMs": 26160,
+  "timestampMs": 26600,
+  "confidence": 0.99625
+ },
+ {
+  "text": ",",
+  "startMs": 26160,
+  "endMs": 26260,
+  "timestampMs": 26880,
+  "confidence": 0.881794
+ },
+ {
+  "text": "不到",
+  "startMs": 26260,
+  "endMs": 26750,
+  "timestampMs": 27020,
+  "confidence": 0.994996
+ },
+ {
+  "text": "兩",
+  "startMs": 26750,
+  "endMs": 26930,
+  "timestampMs": 27260,
+  "confidence": 0.881067
+ },
+ {
+  "text": "分鐘",
+  "startMs": 26930,
+  "endMs": 27380,
+  "timestampMs": 27660,
+  "confidence": 0.996185
+ },
+ {
+  "text": ",",
+  "startMs": 27380,
+  "endMs": 27530,
+  "timestampMs": 27880,
+  "confidence": 0.922842
+ },
+ {
+  "text": "你",
+  "startMs": 27530,
+  "endMs": 27770,
+  "timestampMs": 27960,
+  "confidence": 0.98417
+ },
+ {
+  "text": "會",
+  "startMs": 27770,
+  "endMs": 27970,
+  "timestampMs": 28060,
+  "confidence": 0.996003
+ },
+ {
+  "text": "發現",
+  "startMs": 27970,
+  "endMs": 28460,
+  "timestampMs": 28380,
+  "confidence": 0.989738
+ },
+ {
+  "text": "這一",
+  "startMs": 28460,
+  "endMs": 28870,
+  "timestampMs": 28720,
+  "confidence": 0.920172
+ },
+ {
+  "text": "天",
+  "startMs": 28870,
+  "endMs": 29090,
+  "timestampMs": 28880,
+  "confidence": 0.996295
+ },
+ {
+  "text": "的",
+  "startMs": 29090,
+  "endMs": 29310,
+  "timestampMs": 29080,
+  "confidence": 0.91906
+ },
+ {
+  "text": "開始",
+  "startMs": 29310,
+  "endMs": 29760,
+  "timestampMs": 29460,
+  "confidence": 0.996729
+ },
+ {
+  "text": "安",
+  "startMs": 29760,
+  "endMs": 29980,
+  "timestampMs": 29780,
+  "confidence": 0.925521
+ },
+ {
+  "text": "�",
+  "startMs": 29980,
+  "endMs": 30190,
+  "timestampMs": 29960,
+  "confidence": 0.999882
+ },
+ {
+  "text": "�",
+  "startMs": 30190,
+  "endMs": 30200,
+  "timestampMs": 29960,
+  "confidence": 0.998504
+ },
+ {
+  "text": "很多",
+  "startMs": 30200,
+  "endMs": 30870,
+  "timestampMs": 30560,
+  "confidence": 0.964461
+ },
+ {
+  "text": "。",
+  "startMs": 30870,
+  "endMs": 31000,
+  "timestampMs": 31180,
+  "confidence": 0.812614
+ },
+ {
+  "text": "想",
+  "startMs": 31000,
+  "endMs": 31240,
+  "timestampMs": 31360,
+  "confidence": 0.98423
+ },
+ {
+  "text": "要",
+  "startMs": 31240,
+  "endMs": 31440,
+  "timestampMs": 31500,
+  "confidence": 0.874654
+ },
+ {
+  "text": "跟我",
+  "startMs": 31440,
+  "endMs": 31870,
+  "timestampMs": 31720,
+  "confidence": 0.994689
+ },
+ {
+  "text": "一起",
+  "startMs": 31870,
+  "endMs": 32320,
+  "timestampMs": 32020,
+  "confidence": 0.994419
+ },
+ {
+  "text": "挑",
+  "startMs": 32320,
+  "endMs": 32760,
+  "timestampMs": 32340,
+  "confidence": 0.99865
+ },
+ {
+  "text": "戰",
+  "startMs": 32760,
+  "endMs": 32830,
+  "timestampMs": 33080,
+  "confidence": 0.9996
+ },
+ {
+  "text": "?",
+  "startMs": 32830,
+  "endMs": 33370,
+  "timestampMs": 33420,
+  "confidence": 0.40685
+ },
+ {
+  "text": "留言",
+  "startMs": 33370,
+  "endMs": 33800,
+  "timestampMs": 33740,
+  "confidence": 0.697848
+ },
+ {
+  "text": "第一",
+  "startMs": 33800,
+  "endMs": 34510,
+  "timestampMs": 34120,
+  "confidence": 0.770366
+ },
+ {
+  "text": "天",
+  "startMs": 34510,
+  "endMs": 34510,
+  "timestampMs": 34480,
+  "confidence": 0.998898
+ },
+ {
+  "text": "。",
+  "startMs": 34510,
+  "endMs": 35000,
+  "timestampMs": 34480,
+  "confidence": 0.395396
+ }
+]
