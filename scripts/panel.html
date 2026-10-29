@@ -73,6 +73,7 @@
         <label><input type="checkbox" id="newTranscribe" checked> 順便上字幕</label>
         <button id="newBtn">建立</button>
       </div>
+      <textarea id="newScript" rows="2" style="margin-top:8px" placeholder="講稿（選填）：貼內容，或貼講稿檔的路徑。有講稿字幕就不會有錯字；留空會自動找影片旁邊同名的 .txt"></textarea>
       <div class="muted" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來</div>
     </section>
 
@@ -329,7 +330,7 @@ $("#claudeBtn").onclick = async () => {
   catch (e) { toast(e.message); }
 };
 $("#newBtn").onclick = async () => {
-  try { await api("/api/new", { name: $("#newName").value.trim(), video: $("#newVideo").value, transcribe: $("#newTranscribe").checked }); cur = $("#newName").value.trim(); localStorage.setItem("panel.project", cur); $("#queue").innerHTML = ""; }
+  try { await api("/api/new", { name: $("#newName").value.trim(), video: $("#newVideo").value, script: $("#newScript").value, transcribe: $("#newTranscribe").checked }); cur = $("#newName").value.trim(); localStorage.setItem("panel.project", cur); $("#queue").innerHTML = ""; }
   catch (e) { toast(e.message); }
 };
 $("#studio").onclick = async () => { await api("/api/studio", {}); toast("預覽畫面開啟中，約 10 秒"); setTimeout(() => window.open("http://localhost:3000"), 6000); };

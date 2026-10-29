@@ -4,6 +4,7 @@
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import http from "node:http";
+import os from "node:os";
 import path from "node:path";
 import { PROJECTS_DIR, ROOT, readProject } from "./lib";
 
@@ -281,7 +282,17 @@ const server = http.createServer(async (req, res) => {
       const name = str(b.name, NAME);
       const video = String(b.video ?? "").trim().replace(/^['"]|['"]$/g, "").replace(/^~(?=\/)/, process.env.HOME ?? "~");
       if (!fs.existsSync(video)) throw new Error(`找不到影片：${video}`);
-      const args = ["run", "-s", "new", "--", name, video];
+      // 講稿：貼內容或講稿檔路徑都可以；沒填就找影片旁邊同名的 .txt（Colab 做分身時會一起存）
+      const unquote = (x: string) => x.trim().replace(/^['"]|['"]$/g, "").replace(/^~(?=\/)/, process.env.HOME ?? "~");
+      const given = String(b.script ?? "").trim();
+      let script = "";
+      if (given && !given.includes("\n") && fs.existsSync(unquote(given))) script = unquote(given);
+      else if (given) {
+        script = path.join(os.tmpdir(), `panel-script-${Date.now()}.txt`);
+        fs.writeFileSync(script, given + "\n");
+      } else if (fs.existsSync(video.replace(/\.[^.\/]+$/, ".txt"))) script = video.replace(/\.[^.\/]+$/, ".txt");
+      if (script) emit("log", `📝 講稿：${given && script.startsWith(os.tmpdir()) ? "用貼上的內容" : script}\n`);
+      const args = ["run", "-s", "new", "--", name, video, ...(script ? ["--script", script] : [])];
       const then = [{ label: "建立專案", cmd: "npm", args }];
       if (b.transcribe) then.push({ label: "上字幕", cmd: "npm", args: ["run", "-s", "transcribe", "--", name] });
       runQueue(`${name}：建立專案`, then);
