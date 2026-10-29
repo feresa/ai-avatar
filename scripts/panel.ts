@@ -132,24 +132,54 @@ const emit = (type: string, data: unknown) => {
   for (const c of clients) c.write(msg);
 };
 
-const runOne = (cmd: string, args: string[]) =>
+// Claude 的輸出（stream-json，一行一個事件）→ 看得懂的進度
+const claudeLine = (line: string) => {
+  let e: any;
+  try {
+    e = JSON.parse(line);
+  } catch {
+    return line + "\n";
+  }
+  if (e.type === "assistant")
+    return (e.message?.content ?? [])
+      .map((c: any) => {
+        if (c.type === "text" && c.text.trim()) return `💬 ${c.text.trim()}\n`;
+        if (c.type !== "tool_use") return "";
+        const i = c.input ?? {};
+        const what = i.command ?? i.file_path ?? i.pattern ?? "";
+        return `🔧 ${c.name} ${String(what).replace(ROOT + "/", "")}\n`;
+      })
+      .join("");
+  if (e.type === "result") return e.is_error ? `\n❌ ${e.result ?? "Claude 失敗"}\n` : `\n✅ Claude 做完了（${Math.round((e.duration_ms ?? 0) / 1000)} 秒）\n`;
+  return "";
+};
+
+const runOne = (cmd: string, args: string[], format?: (line: string) => string) =>
   new Promise<number>((resolve) => {
-    const child = spawn(cmd, args, { cwd: ROOT, env: { ...process.env, FORCE_COLOR: "0" } });
+    const child = spawn(cmd, args, { cwd: ROOT, env: { ...process.env, FORCE_COLOR: "0" }, stdio: ["ignore", "pipe", "pipe"] });
     if (job) job.child = child;
-    child.stdout.on("data", (d: Buffer) => emit("log", d.toString()));
+    let buf = "";
+    child.stdout.on("data", (d: Buffer) => {
+      if (!format) return emit("log", d.toString());
+      buf += d.toString();
+      const lines = buf.split("\n");
+      buf = lines.pop() ?? "";
+      const out = lines.filter((l) => l.trim()).map(format).join("");
+      if (out) emit("log", out);
+    });
     child.stderr.on("data", (d: Buffer) => emit("log", d.toString()));
     child.on("error", (e) => emit("log", `❌ ${e.message}\n`));
     child.on("close", (code) => resolve(code ?? 1));
   });
 
-const runQueue = async (label: string, list: { label: string; cmd: string; args: string[] }[]) => {
+const runQueue = async (label: string, list: { label: string; cmd: string; args: string[]; format?: (line: string) => string }[]) => {
   job = { label };
   emit("state", state());
   for (const [i, it] of list.entries()) {
     if (job.stopped) break;
     emit("step", { i, label: it.label, status: "running" });
     emit("log", `\n━━━ ${it.label} ━━━\n`);
-    const code = await runOne(it.cmd, it.args);
+    const code = await runOne(it.cmd, it.args, it.format);
     emit("step", { i, label: it.label, status: code === 0 ? "ok" : "fail" });
     if (code !== 0) {
       emit("log", job.stopped ? "\n⏹ 已停止\n" : `\n❌ ${it.label} 失敗，後面的步驟先不跑\n`);
@@ -270,7 +300,8 @@ const server = http.createServer(async (req, res) => {
         {
           label: "Claude 處理",
           cmd: "claude",
-          args: ["-p", prompt, "--permission-mode", "acceptEdits", "--disallowedTools", "Bash(npm run publish*)", "--allowedTools", "Read", "Edit", "Write", "Glob", "Grep", "Bash(npm run *)", "Bash(npx remotion *)"],
+          format: claudeLine,
+          args: ["-p", prompt, "--output-format", "stream-json", "--verbose", "--permission-mode", "acceptEdits", "--disallowedTools", "Bash(npm run publish*)", "--allowedTools", "Read", "Edit", "Write", "Glob", "Grep", "Bash(npm run *)", "Bash(npx remotion *)"],
         },
       ]);
       return json(res, 200, { ok: true });
