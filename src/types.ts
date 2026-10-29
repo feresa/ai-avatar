@@ -317,6 +317,58 @@ export type Grade =
 /** 進度條：畫面上緣一條細線跑到底，提高看完率；true 用預設值 */
 export type Progress = boolean | { color?: string; height?: number; position?: "top" | "bottom" };
 
+/** 教學版型共用：分身縮成圓形小頭像（pip），畫面讓給螢幕錄影、對話、提示詞 */
+export type Pip = {
+  /** 小頭像圓心位置（0~1），預設 x 0.8、y 0.6（右側、字幕上方） */
+  x?: number;
+  y?: number;
+  /** 直徑（畫面寬度的比例），預設 0.32 */
+  size?: number;
+};
+
+/** 螢幕錄影 / 截圖：放大在畫面上方，分身縮成小頭像 */
+export type Screen = {
+  at: number;
+  dur: number;
+  /** 專案資料夾裡的影片或圖片（橫式、直式都可以） */
+  src: string;
+  /** 影片從第幾秒開始播 */
+  start?: number;
+  /** 放大局部（標註「點這裡」）：時間用原始影片秒數，x y 是畫面上的位置（0~1） */
+  focus?: { at: number; dur: number; x: number; y: number; scale?: number }[];
+  /** 小標題（例如「打開 ChatGPT」） */
+  label?: string;
+  /** false = 不縮小分身（螢幕蓋滿，看不到人） */
+  pip?: boolean;
+};
+
+/** AI 對話泡泡：一句一句跳出來，AI 的回答會先出現「打字中…」再打字 */
+export type Chat = {
+  at: number;
+  dur: number;
+  /** 上方的名稱，例如 ChatGPT、Claude、Gemini */
+  title?: string;
+  messages: {
+    role: "user" | "ai";
+    text: string;
+    /** 這句出現的時間（原始影片秒數）；沒填就一句接一句 */
+    at?: number;
+  }[];
+  pip?: boolean;
+};
+
+/** 提示詞打字機：一個字一個字打出來，有「複製」按鈕 */
+export type Prompt = {
+  at: number;
+  dur: number;
+  text: string;
+  /** 上方標題，預設「提示詞」 */
+  title?: string;
+  /** 打完要幾秒（預設用掉 6 成的時間） */
+  typeSec?: number;
+  pip?: boolean;
+};
+
 export type Project = {
   /** 影片檔名（放在同一個專案資料夾） */
   video: string;
@@ -363,6 +415,12 @@ export type Project = {
   grade?: Grade;
   /** 進度條 */
   progress?: Progress;
+  /** 教學版型：螢幕錄影、AI 對話、提示詞（分身會縮成小頭像） */
+  screens?: Screen[];
+  chats?: Chat[];
+  prompts?: Prompt[];
+  /** 小頭像的位置和大小 */
+  pip?: Pip;
   reveals?: Reveal[];
   notes?: Note[];
   compares?: Compare[];

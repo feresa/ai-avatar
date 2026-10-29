@@ -25,6 +25,7 @@ import { Note } from "./components/Note";
 import { Orbit } from "./components/Orbit";
 import { Phone } from "./components/Phone";
 import { Sticker } from "./components/Sticker";
+import { Chat, PromptBox, Screen, TeachBackdrop } from "./components/Teach";
 import { mapCaptions, segmentsOf, shiftCaptions, srcToOut } from "./timeline";
 import { transitionLook, transitionsOf } from "./transitions";
 import { COLORS, type Grade, type GradePreset, type ShortProps } from "./types";
@@ -213,6 +214,16 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
       ],
       { muted: true },
     );
+  // 教學版型（螢幕錄影、AI 對話、提示詞）：畫面讓給內容，分身縮成圓形小頭像
+  const teach = [...(p.screens ?? []), ...(p.chats ?? []), ...(p.prompts ?? [])];
+  const teachNow = now(teach);
+  const pipItems = teach.filter((x) => x.pip !== false);
+  const pipNow = !!now(pipItems);
+  const pipSoon = soon(pipItems); // 提早 1 秒載入小頭像的影片
+  const pipC = (p.pip?.size ?? 0.32) * W;
+  const pipX = (p.pip?.x ?? 0.8) * W;
+  const pipY = (p.pip?.y ?? 0.6) * H;
+  const pipS = (0.62 * pipC) / ((p.face?.w ?? 0.4) * W); // 臉大約佔小頭像的 6 成寬
   // 破框的框：上緣在臉的中間，頭會衝出框外
   const frameTop = Math.max(0.12, faceC[1]);
 
@@ -316,6 +327,62 @@ export const Short: React.FC<ShortProps> = ({ name, project: p, captions }) => {
             }}
           />
         </AbsoluteFill>
+      )}
+
+      {/* 教學版型：深色背景 → 內容 → 分身小頭像 */}
+      {teachNow && <TeachBackdrop />}
+      {(p.screens ?? []).map((sc, i) => {
+        const sp = span(sc.at, sc.dur);
+        return (
+          <Sequence key={`scr${i}`} {...sp} premountFor={fps}>
+            <Screen screen={sc} dir={dir} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+      {(p.chats ?? []).map((c, i) => {
+        const sp = span(c.at, c.dur);
+        return (
+          <Sequence key={`chat${i}`} {...sp}>
+            <Chat chat={c} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+      {(p.prompts ?? []).map((pr, i) => {
+        const sp = span(pr.at, pr.dur);
+        return (
+          <Sequence key={`pr${i}`} {...sp}>
+            <PromptBox prompt={pr} durationInFrames={sp.durationInFrames} />
+          </Sequence>
+        );
+      })}
+      {pipSoon && (
+        <div
+          style={{
+            position: "absolute",
+            left: pipX - pipC / 2,
+            top: pipY - pipC / 2,
+            width: pipC,
+            height: pipC,
+            borderRadius: "50%",
+            overflow: "hidden",
+            border: `${W * 0.008}px solid white`,
+            boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
+            opacity: pipNow ? 1 : 0,
+            backgroundColor: "black",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              width: W,
+              height: H,
+              transformOrigin: "0 0",
+              transform: `translate(${pipC / 2 - faceC[0] * W * pipS}px, ${pipC / 2 - faceC[1] * H * pipS}px) scale(${pipS})`,
+            }}
+          >
+            {scene({ muted: true })}
+          </div>
+        </div>
       )}
 
       {look.lightLeak !== null && (

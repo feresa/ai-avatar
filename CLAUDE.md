@@ -10,6 +10,7 @@
 - `src/components/Hook.tsx`：開場標題、圖示斜線、小膠囊
 - `src/components/Captions.tsx`：逐字字幕
 - `src/components/Card.tsx`：重點字卡；`Insert.tsx`：插圖 / 插入影片；`Sticker.tsx`：貼圖小動畫
+- `Teach.tsx` 教學版型（螢幕錄影 `screens`、AI 對話 `chats`、提示詞打字機 `prompts`，分身小頭像 `pip` 在 `Short.tsx`）
 - `BreathGuide.tsx` 呼吸引導圈；調色（`grade`）、進度條（`progress`）在 `Short.tsx`
 - `Note.tsx` 便利貼、`Compare.tsx` 前後對比、`Phone.tsx` 手機示範、`Headlines.tsx` 頭條牆、`Orbit.tsx` 卡片環繞；聚光燈、拉遠揭曉、穿越、漏光、故障在 `Short.tsx` / `transitions.ts`（用 `@remotion/effects`）
 - 去背：`Backdrop.tsx` 背景、`DepthText.tsx` 景深大字、`Magazine.tsx` 雜誌封面；破框、剪貼、人像層在 `Short.tsx`（綠幕用 `colorKey`，AI 去背用 `matte.webm`）
@@ -72,6 +73,16 @@
 10-3. 使用者想「測試哪個開場比較好」：在 `variants` 寫 2~3 個版本（只改 hook 或開場特效），請使用者跑 `npm run variants`
 11. 效果不要太密：同一時間最多「字幕 + 一個字卡或貼圖」；開場標題那幾秒不要再放別的
 12. 改完先跑 `npm run check -- <名稱>`，有警告就照建議修到沒有；再輸出 3~4 張關鍵時間的截圖檢查（可暫時加 `"debugFace": true` 看臉的框，檢查完拿掉），再跟使用者說明加了哪些效果、在第幾秒
+
+## 教 AI、教工具的影片怎麼規劃
+
+照「照逐字稿規劃畫面」做，另外：
+
+1. 講到「打開／點／輸入」這類操作：用 `screens`。**螢幕錄影或截圖要使用者提供**（放進專案資料夾），沒有就先問；講到「點這裡」用 `focus` 放大那一區
+2. 講到「我問 AI…它回答…」：用 `chats`，`messages` 照講的內容寫，AI 回答要短（一則 40 字內），太長就摘要
+3. 講到提示詞、指令：用 `prompts`，`text` 放完整提示詞（觀眾會暫停抄），`dur` 至少 4 秒
+4. 這三種會把分身縮成右邊小頭像（`pip`），同一時間不要再放字卡、貼圖；中間穿插回到全臉講話，不要整支都是小頭像
+5. `grade` 用 `fresh`、音樂用 `upbeat`；結尾放「留言關鍵字領提示詞」的字卡，`publish.autoReply` 私訊完整提示詞
 
 ## 「從長片挑短片」怎麼做
 

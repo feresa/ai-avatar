@@ -159,6 +159,10 @@ Claude 會去改 `public/projects/breath-01/project.json`（剪輯腳本），�
 | `phones` | 手機示範：`[{ "at": 秒, "dur": 秒, "src": "app.png" }]`，螢幕裡放圖片或影片 |
 | `headlines` | 頭條牆（剪報一張張貼上）：`[{ "at": 秒, "dur": 秒, "items": [{ "text": "每天呼吸五分鐘", "tag": "頭條", "date": "2026.10.28" }] }]`，最多 6 張 |
 | `orbits` | 卡片環繞（頭上一圈卡片在轉）：`[{ "at": 秒, "dur": 秒, "items": ["腹式呼吸", "photo.jpg", "長吐氣"] }]`，可以放文字或圖片 |
+| `screens` | 螢幕錄影／截圖（教學用，分身縮成右邊圓形小頭像）：`[{ "at": 秒, "dur": 秒, "src": "screen.mp4", "label": "打開 ChatGPT", "focus": [{ "at": 秒, "dur": 秒, "x": 0.3, "y": 0.2, "scale": 2 }] }]`，`focus` 放大局部；`start` 影片從第幾秒播 |
+| `chats` | AI 對話泡泡：`[{ "at": 秒, "dur": 秒, "title": "ChatGPT", "messages": [{ "role": "user", "text": "問題" }, { "role": "ai", "text": "回答" }] }]`，一句接一句跳出來，AI 會先「打字中…」再打字；每句可以加 `at` 指定時間 |
+| `prompts` | 提示詞打字機：`[{ "at": 秒, "dur": 秒, "text": "你是一位…", "title": "提示詞" }]`，打完「複製」變「已複製」；`typeSec` 打字要幾秒 |
+| `pip` | 教學版型時分身小頭像的位置：`{ "x": 0.8, "y": 0.6, "size": 0.32 }`；某一段不要小頭像就在那一項加 `"pip": false` |
 | `greenScreen` | 綠幕去背（官方 `colorKey`）：`npm run green` 自動偵測綠布顏色並開啟；可調 `similarity`（去多少）、`spill`（去綠光） |
 | `matte` | AI 去背的影片（`npm run matte` 自動產生 `matte.webm`）；不是綠幕拍的影片用這個 |
 | `background` | 綠幕去背後的背景：圖片／影片檔名，或顏色 `"#F2E8D5"` |
