@@ -50,6 +50,7 @@
   video { width: 100%; max-height: 520px; background: #000; border-radius: 10px; margin-top: 8px; }
   .muted { color: var(--muted); font-size: 13px; }
   .hidden { display: none !important; }
+  body.is-new .proj-only, body:not(.is-new) .new-only { display: none !important; }
   #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
 </style>
 </head>
@@ -59,7 +60,7 @@
   <select id="project"></select>
   <span id="summary" class="muted"></span>
   <span style="flex:1"></span>
-  <button id="suggest">勾選建議的下一步</button>
+  <button id="suggest" class="proj-only">勾選建議的下一步</button>
   <button id="studio">開預覽畫面</button>
 </header>
 
@@ -68,7 +69,7 @@
     <section id="newBox">
       <h2>🚀 一鍵做片</h2>
       <div class="muted">建專案 → 字幕（用講稿的字）→ 字幕對時 → 找臉 → 背景音樂 → Claude 規劃畫面 → 檢查 → 輸出。做過的會跳過，中途卡住修好再按一次就會接著做</div>
-      <div class="bar" style="margin-top:8px">
+      <div class="bar new-only" style="margin-top:8px">
         <input type="text" id="newName" placeholder="專案名（英文數字，例如 challenge-d2）" style="width:250px">
         <input type="text" id="newVideo" placeholder="影片路徑（新影片才要填）" style="flex:1;min-width:200px">
       </div>
@@ -76,13 +77,14 @@
       <div class="bar" style="margin-top:8px">
         背景音樂 <select id="makeMusic"><option value="calm">calm 靜心呼吸</option><option value="warm">warm 生活分享</option><option value="upbeat">upbeat 教學清單</option></select>
         <span style="flex:1"></span>
-        <button class="primary" id="makeBtn">一鍵做片</button>
-        <button id="makeCurBtn">一鍵完成目前這支</button>
+        <button class="primary new-only" id="makeBtn">一鍵做片</button>
+        <button class="primary proj-only" id="makeCurBtn">一鍵完成這支</button>
       </div>
-      <div class="muted" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來。下面 1~4 區是進階：只想重做某一步時用</div>
+      <div class="muted new-only" style="margin-top:6px">影片路徑：在 Finder 對影片按右鍵，按住 Option，選「拷貝為路徑名稱」，再貼過來</div>
+      <div class="muted proj-only" style="margin-top:6px">做過的步驟會跳過。下面 1~4 區是進階：只想重做某一步時用</div>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2><span class="n">1</span>字幕</h2>
       <div class="step"><input type="checkbox" data-step="transcribe" id="s-transcribe"><label for="s-transcribe">上字幕 <span class="badge" data-done="transcribe"></span><div class="desc">語音轉文字，產生逐字字幕</div></label></div>
       <div class="step"><input type="checkbox" data-step="align" id="s-align"><label for="s-align">用講稿當字幕 <span class="badge" data-done="align"></span><div class="desc">字用講稿的、時間用語音的，不會有錯字</div>
@@ -90,7 +92,7 @@
       <div class="step"><input type="checkbox" data-step="lead" id="s-lead"><label for="s-lead">字幕對時 <span class="badge" data-done="lead"></span><div class="desc">量聲音和字幕差多少，自動調整字幕出現時間</div></label></div>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2><span class="n">2</span>剪輯素材</h2>
       <div class="step"><input type="checkbox" data-step="cuts" id="s-cuts"><label for="s-cuts">剪掉停頓 <span class="badge" data-done="cuts"></span><div class="desc">停頓超過幾秒就剪掉</div>
         <div class="extra">最短停頓 <input type="text" id="cutsMin" value="0.5" style="width:60px"> 秒</div></label></div>
@@ -108,7 +110,7 @@
         <div class="extra"><select id="musicStyle"><option value="calm">calm 靜心呼吸</option><option value="warm">warm 生活分享</option><option value="upbeat">upbeat 教學清單</option></select></div></label></div>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2><span class="n">3</span>畫面效果（交給 Claude）</h2>
       <div class="step"><input type="checkbox" data-prompt="plan" id="p-plan"><label for="p-plan">照逐字稿規劃畫面 <span class="badge" data-done="plan"></span><div class="desc">開場標題、重點詞、推近、字卡、貼圖、轉場</div></label></div>
       <div class="step"><input type="checkbox" data-prompt="fx" id="p-fx"><label for="p-fx">加進階特效<div class="desc">勾想要的，Claude 會挑適合的位置</div>
@@ -124,7 +126,7 @@
       </div>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2><span class="n">4</span>輸出與發佈</h2>
       <div class="step"><input type="checkbox" data-step="check" id="s-check"><label for="s-check">檢查畫面<div class="desc">有沒有擋到臉、效果太擠</div></label></div>
       <div class="step"><input type="checkbox" data-step="render" id="s-render"><label for="s-render">輸出成品 <span class="badge" data-done="render"></span></label></div>
@@ -136,9 +138,9 @@
 
   <div>
     <section>
-      <h2>▶ 直接跑</h2>
+      <h2>▶ 進度</h2>
       <div class="bar">
-        <button class="primary" id="runBtn">執行勾選的步驟</button>
+        <button class="primary proj-only" id="runBtn">執行勾選的步驟</button>
         <button id="stopBtn" disabled>停止</button>
         <span id="runInfo" class="muted"></span>
       </div>
@@ -146,7 +148,7 @@
       <pre id="log"></pre>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2>🤖 交給 Claude 的提示詞</h2>
       <div class="muted">勾第 3 區的項目或寫下想改的，提示詞會自動產生</div>
       <textarea id="prompt" rows="7" style="margin-top:8px" placeholder="（還沒勾要交給 Claude 的項目）"></textarea>
@@ -157,7 +159,7 @@
       </div>
     </section>
 
-    <section>
+    <section class="proj-only">
       <h2>🎞 成品</h2>
       <div class="outs" id="outs"><span class="muted">還沒有輸出</span></div>
       <video id="player" controls class="hidden"></video>
@@ -170,7 +172,7 @@
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
 let S = null;
-let cur = localStorage.getItem("panel.project") || "";
+let cur = ""; // "" = 新專案
 
 const FX = [["screens","螢幕錄影"],["chats","AI 對話泡泡"],["prompts","提示詞打字機"],["breaths","呼吸引導圈"],["spotlights","聚光燈"],["reveals","拉遠揭曉"],["notes","便利貼"],["headlines","頭條牆"],["orbits","卡片環繞"],["zoomblur","穿越轉場"],["lightleak","漏光轉場"],["compares","前後對比"],["phones","手機示範"]];
 const CUT = [["depthTexts","景深大字"],["magazines","雜誌封面"],["breakouts","破框"],["cutouts","剪貼"],["backgrounds","換背景"]];
@@ -189,13 +191,18 @@ const P = () => S?.projects.find((p) => p.name === cur);
 
 function render() {
   const sel = $("#project");
-  sel.innerHTML = S.projects.map((p) => `<option ${p.name === cur ? "selected" : ""}>${p.name}</option>`).join("");
-  if (!P() && S.projects.length) { cur = S.projects[0].name; sel.value = cur; }
+  sel.innerHTML = `<option value="" ${cur ? "" : "selected"}>＋ 新專案</option>` + S.projects.map((p) => `<option ${p.name === cur ? "selected" : ""}>${p.name}</option>`).join("");
   const p = P();
+  document.body.classList.toggle("is-new", !p);
   $("#claudeBtn").disabled = !S.claude;
   $("#claudeInfo").textContent = S.claude ? "" : "這台電腦沒有 claude 指令，請複製提示詞貼給 Claude";
   setRunning(!!S.running);
-  if (!p) return;
+  if (!p) {
+    $("#summary").textContent = cur ? `建立 ${cur} 中⋯` : "新影片：填專案名、貼影片路徑，按「一鍵做片」";
+    $("#outs").innerHTML = '<span class="muted">還沒有輸出</span>';
+    $("#prompt").value = "";
+    return;
+  }
   if (p.error) { $("#summary").textContent = "⚠️ " + p.error; return; }
   const d = p.done;
   const total = ["transcribe", "lead", "face", "plan", "render"];
@@ -306,7 +313,7 @@ es.addEventListener("step", (e) => {
 es.addEventListener("done", () => toast("跑完了"));
 
 // ---------- 事件 ----------
-$("#project").onchange = (e) => { cur = e.target.value; localStorage.setItem("panel.project", cur); clearBoxes(); render(); };
+$("#project").onchange = (e) => { cur = e.target.value; clearBoxes(); render(); };
 $("#suggest").onclick = suggest;
 $("#cutoutMode").onchange = (e) => $("#matteFile").classList.toggle("hidden", e.target.value !== "matteFile");
 document.addEventListener("input", (e) => { if (e.target.closest("section")) makePrompt(); });
@@ -339,7 +346,7 @@ const make = async (name, video) => {
   $("#queue").innerHTML = "";
   try {
     await api("/api/make", { name, video, script: $("#newScript").value, music: $("#makeMusic").value });
-    cur = name; localStorage.setItem("panel.project", cur);
+    cur = name;
     toast("開始一鍵做片，進度看右邊");
   } catch (e) { toast(e.message); }
 };
